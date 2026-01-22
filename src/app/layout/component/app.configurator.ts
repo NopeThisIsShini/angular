@@ -24,19 +24,19 @@ import { LayoutService } from '../service/layout.service';
 import { ConfigService } from '@app/shared/services';
 
 
-// Updated custom color palette based on #0689da and #033570
+// Updated custom color palette with on primary black
 const CUSTOM_PRIMARY_PALETTE = {
-    50: '#e6f5ff',
-    100: '#b3ddf6',
-    200: '#6ab5e5',
-    300: '#3b9ad7',
-    400: '#0689da', // main primary
-    500: '#0e4c6d',
-    600: '#034f8a',
-    700: '#033570', // dark tone base
-    800: '#021f40',
-    900: '#010d1d',
-    950: '#00050d'
+    50: '#f5f5f5',
+    100: '#e0e0e0',
+    200: '#c2c2c2',
+    300: '#a3a3a3',
+    400: '#858585',
+    500: '#666666', // primary medium
+    600: '#4d4d4d',
+    700: '#333333', // primary dark
+    800: '#1a1a1a',
+    900: '#0d0d0d', // on primary black
+    950: '#000000'  // true black
 };
 
 
@@ -182,7 +182,7 @@ export class AppConfigurator implements OnChanges, OnInit {
   private loadStaticConfig() {
     const config = {
       preset: 'Aura',
-      primary: 'custom-blue',
+      primary: 'custom-black',
       surface: 'gray',
       darkTheme: false,
       menuMode: 'static',
@@ -202,28 +202,28 @@ export class AppConfigurator implements OnChanges, OnInit {
             colorScheme: {
                 light: {
                     primary: {
-                        color: '#0e4c6d',
+                        color: '#333333',
                         contrastColor: '#ffffff',
-                        hoverColor: '#002980',
-                        activeColor: '#002066'
+                        hoverColor: '#1a1a1a',
+                        activeColor: '#0d0d0d'
                     },
                     highlight: {
-                        background: '#e6f0ff',
-                        focusBackground: '#cce0ff',
-                        color: '#00319c',
-                        focusColor: '#002980'
+                        background: '#f5f5f5',
+                        focusBackground: '#e0e0e0',
+                        color: '#333333',
+                        focusColor: '#1a1a1a'
                     }
                 },
                 dark: {
                     primary: {
-                        color: '#3385ff',
-                        contrastColor: '#001033',
-                        hoverColor: '#66a3ff',
-                        activeColor: '#99c2ff'
+                        color: '#e0e0e0',
+                        contrastColor: '#0d0d0d',
+                        hoverColor: '#ffffff',
+                        activeColor: '#ffffff'
                     },
                     highlight: {
-                        background: 'color-mix(in srgb, #3385ff, transparent 84%)',
-                        focusBackground: 'color-mix(in srgb, #3385ff, transparent 76%)',
+                        background: 'color-mix(in srgb, #e0e0e0, transparent 84%)',
+                        focusBackground: 'color-mix(in srgb, #e0e0e0, transparent 76%)',
                         color: 'rgba(255,255,255,.87)',
                         focusColor: 'rgba(255,255,255,.87)'
                     }
@@ -271,7 +271,7 @@ export class AppConfigurator implements OnChanges, OnInit {
   savePreset() {
     const payload = {
       preset: 'Aura',
-      primary: 'custom-blue',
+      primary: 'custom-black',
       surface: 'slate',
       darkTheme: this.layoutService.layoutConfig().darkTheme as boolean,
       menuMode: this.layoutService.layoutConfig().menuMode as string,

@@ -5,6 +5,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { environment } from '@env/environment';
 import { AppConfigurator } from '@app/layout/component/app.configurator';
+import { FaviconService } from '@app/shared/services';
 
 
 @Component({
@@ -19,8 +20,9 @@ import { AppConfigurator } from '@app/layout/component/app.configurator';
     `
 })
 export class AppComponent implements OnInit {
+    private favicon = inject(FaviconService);
     ngOnInit() {
         console.log(environment.apiBaseUrl);
-        
+        this.favicon.setFavicon('/assets/favicon.ico');
     }
 }
