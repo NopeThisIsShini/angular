@@ -1,0 +1,13 @@
+<div class="card">
+    <!-- Permission Tree -->
+    <NG-Tree
+        #permissionTree
+        [treeData]="permissionTreeData"
+        [initialSelection]="selectedNodes"
+        selectionMode="checkbox"
+        [enableParentChildSelection]="true"
+        (selectionChange)="onSelectionChange($event)"
+        (nodeSelectionChange)="onNodeSelectionChange($event)"
+    >
+    </NG-Tree>
+</div>

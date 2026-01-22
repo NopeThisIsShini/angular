@@ -1,0 +1,57 @@
+<div class="flex justify-center h-screen bg-[var(--surface-card)]">
+    <!-- Left side - Hero Image -->
+    <div class="hidden bg-[var(--primary-color)] bg-cover bg-center lg:block lg:w-1/2 h-full" style="background-image: url(../../../../../assets/logo/login.jpg)">
+        <div class="flex flex-col items-start justify-center h-full px-6 lg:px-8 xl:px-12 py-6 text-[var(--surface-card)]">
+            <ng-container>
+                <!-- Heading for sign in -->
+                <h2 class="text-4xl md:text-5xl xl:text-6xl font-normal m-0 mb-1 login_h2">Your Trusted</h2>
+                <h1 class="m-0 mb-4 text-4xl md:text-6xl xl:text-7xl login_h1">Tailoring Partner</h1>
+            </ng-container>
+        </div>
+    </div>
+
+    <!-- Right side - Form Container -->
+    <div class="flex justify-center items-center bg-[var(--surface-card)] w-full lg:w-1/2 px-4 lg:px-6 h-screen xl:px-6">
+        <div class="w-full max-w-md mx-auto">
+            <div class="flex flex-col justify-center">
+                <!-- Logo Section -->
+                <div class="text-center mb-8">
+                    <ng-container *ngIf="false">
+                        <h1>Boilerplate</h1>
+                    </ng-container>
+                    <h3 class="text-xl font-medium text-center">
+                        <span class="pi pi-user"></span>
+                        <span class="ml-3">Create Your Account</span>
+                    </h3>
+                </div>
+
+                <!-- Registration Form -->
+                <div class="space-y-6">
+                    <form class="w-full" [formGroup]="Signupform">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div *ngFor="let field of signupFields" class="w-full">
+                                <Input class="w-full" containerClass="w-full" inputClass="w-full" [label]="field.label" [formControlName]="field.key" [type]="field.type" [id]="field.key" [mark]="true"> </Input>
+
+                                <div *ngIf="isFieldInvalid(field.key)" class="mt-2 text-sm text-[var(--text-danger-color)]">
+                                    <span *ngFor="let error of getFieldErrors(field.key)" class="block">
+                                        {{ error }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <p-button type="submit" [disabled]="!Signupform.valid" label="Create Account" styleClass="w-full" [style]="{ height: '2.75rem' }" (onClick)="onSignup()"> </p-button>
+                        </div>
+                    </form>
+
+                    <!-- Login Link -->
+                    <p class="text-sm text-center mt-6">
+                        <span class="">Have an Account? </span>
+                        <span class="inline-block cursor-pointer text-[var(--primary-color)] hover:text-[var(--surface-hover)] focus:outline-none focus:underline hover:underline transition-colors" [routerLink]="['/auth/login']"> Back to Login </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

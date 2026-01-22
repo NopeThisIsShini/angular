@@ -1,0 +1,33 @@
+<p-floatLabel [ngClass]="containerClass" variant="on">
+    <p-multiselect
+        [id]="id"
+        [(ngModel)]="value"
+        [options]="options"
+        [optionLabel]="optionLabel"
+        [optionValue]="optionValue"
+        [placeholder]="placeholder"
+        [attr.aria-label]="label"
+        [ngClass]="selectClass"
+        size="large"
+        [disabled]="disabled"
+        [filter]="filter"
+        [maxSelectedLabels]="maxSelectedLabels"
+        [selectedItemsLabel]="selectedItemsLabel"
+        [showToggleAll]="showToggleAll"
+        [filterPlaceHolder]="filterPlaceHolder"
+        [showHeader]="showHeader"
+        [showClear]="showClear"
+        appendTo="body"
+        (onChange)="onSelectionChange($event)"
+        (onBlur)="onSelectBlur($event)"
+        (onShow)="onShow($event)"
+        (onHide)="onHide($event)"
+        (onFilter)="onFilter($event)"
+    />
+    <label *ngIf="label" [for]="id">
+        {{ label }}
+        @if (isRequired) {
+            <span class="!text-red-500">*</span>
+        }
+    </label>
+</p-floatLabel>

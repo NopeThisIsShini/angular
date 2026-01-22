@@ -1,0 +1,38 @@
+<p-table [value]="[1, 2, 3]" [rows]="10" [paginator]="false" [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" [showCurrentPageReport]="true">
+    <!-- <ng-template #caption>
+    <div class="flex items-center justify-between">
+      <p-skeleton width="8rem" height="1.5rem" />
+      <p-iconfield>
+        <p-inputicon class="pi pi-search" />
+        <p-skeleton width="12rem" height="2.5rem" borderRadius="0.375rem" />
+      </p-iconfield>
+    </div>
+  </ng-template> -->
+
+    <!-- <ng-template #header>
+    <tr>
+      <th *ngFor="let col of skeletonColumns" style="min-width: 4rem">
+        <div class="flex items-center gap-2">
+          <p-skeleton width="5rem" height="1rem" />
+        </div>
+      </th>
+      <th style="min-width: 2rem"></th>
+    </tr>
+  </ng-template> -->
+
+    <ng-template #body let-item>
+        <tr>
+            <td *ngFor="let col of skeletonColumns">
+                <p-skeleton width="8rem" height="1rem" />
+            </td>
+
+            <!-- Actions -->
+            <td>
+                <div class="flex items-center">
+                    <p-skeleton size="2.5rem" shape="circle" class="mr-2" />
+                    <p-skeleton size="2.5rem" shape="circle" />
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

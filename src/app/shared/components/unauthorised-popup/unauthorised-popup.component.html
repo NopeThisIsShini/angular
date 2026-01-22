@@ -1,0 +1,16 @@
+<div class="md:max-w-[40vw]">
+    <div class="flex items-center gap-4 p-2">
+        <div class="min-w-14 min-h-14 flex items-center justify-center rounded-full bg-yellow-100 text-yellow-600">
+            <i class="pi pi-exclamation-triangle text-2xl"></i>
+        </div>
+
+        <div>
+            <h3>Session Expired</h3>
+            <p>Your login session has expired for security reasons. Please log in again to continue using the application.</p>
+        </div>
+    </div>
+
+    <div class="flex justify-end mt-4">
+        <p-button label="Logout" (onClick)="logout()" [rounded]="true" severity="secondary" />
+    </div>
+</div>

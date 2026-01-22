@@ -1,0 +1,23 @@
+<p-floatLabel [ngClass]="containerClass" variant="on">
+    <p-select
+        appendTo="body"
+        [id]="id"
+        [ngModel]="value"
+        [options]="options"
+        [optionLabel]="optionLabel"
+        [optionValue]="optionValue"
+        [placeholder]="placeholder"
+        [attr.aria-label]="label"
+        [ngClass]="selectClass"
+        [disabled]="disabled"
+        (onChange)="onSelectionChange($event)"
+        (onBlur)="onSelectBlur($event)"
+        size="large"
+    />
+    <label *ngIf="label" [for]="id">
+        {{ label }}
+        @if (isRequired) {
+            <span class="!text-red-500">*</span>
+        }
+    </label>
+</p-floatLabel>

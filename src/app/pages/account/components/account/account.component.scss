@@ -1,0 +1,27 @@
+
+
+::ng-deep {
+    .tab_card {
+        display: flex;
+        flex-direction: column;
+        height: 80vh;
+        border-radius: 0.5rem;
+        overflow: hidden !important;
+        margin-block-end: 1.2rem;
+
+        .p-tabmenu {
+            flex-shrink: 0; // keep tab menu height fixed
+            z-index: 10;
+        }
+
+        .p-tab-active {
+            color: var(--primary-color) !important;
+        }
+
+        .tab-content {
+            flex: 1; // take remaining space
+            overflow-y: auto; // scroll only this part
+            padding: 1.2rem; // optional: add padding for content
+        }
+    }
+}

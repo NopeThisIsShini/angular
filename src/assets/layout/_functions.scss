@@ -1,0 +1,52 @@
+// functions.scss
+
+@use "sass:math";
+
+// Convert pixel value to rem
+// @function rem($pixel) {
+//   @if math.is-unitless($pixel) {
+//     @return math.div($pixel, 16) + rem;
+//   } @else {
+//     @error 'Use unitless numbers for the rem() function; only numbers are allowed.';
+//   }
+// }
+
+@function rem($value) {
+  // Check if the value has a unit
+  @if math.is-unitless($value) {
+    @return math.div($value, 16) + rem;
+  } @else if unit($value) == px {
+    // If it has a px unit, convert to rem
+    @return math.div($value, 16) + rem;
+  } @else {
+    // If the unit is not px, return the value as-is
+    @return $value;
+  }
+}
+// Scale value function
+@function scaleValue($min, $max) {
+  $viewportRange: 1280px - 320px;
+  $contentSizeRange: $max - $min;
+  $idealSize: calc($min + (100vw * $contentSizeRange / $viewportRange));
+  @return clamp($min, $idealSize, $max);
+}
+// Scale value function with rem support
+
+// @function scaleValue($min, $max, $viewportMin: 350px, $viewportMax: 1440px) {
+//     // Convert min and max values to rem if they are in pixels
+//     $min-rem: if(math.is-unitless($min), rem($min), $min);
+//     $max-rem: if(math.is-unitless($max), rem($max), $max);
+
+//     // Convert viewport range to rem if it's in pixels
+//     $viewportMin-rem: if(math.is-unitless($viewportMin), rem($viewportMin), $viewportMin);
+//     $viewportMax-rem: if(math.is-unitless($viewportMax), rem($viewportMax), $viewportMax);
+
+//     $viewportRange: $viewportMax-rem - $viewportMin-rem;
+//     $contentSizeRange: $max-rem - $min-rem;
+
+//     // Calculate ideal size with viewport range and content size range
+//     $idealSize: calc(#{$min-rem} + (100vw * #{$contentSizeRange} / #{$viewportRange}));
+
+//     // Return the scaled value clamped between min and max
+//     @return clamp(#{$min-rem}, #{$idealSize}, #{$max-rem});
+// }

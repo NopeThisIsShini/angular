@@ -1,0 +1,57 @@
+html {
+    height: 100%;
+    font-size: 14px;
+}
+
+body {
+     font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    background-color: var(--surface-ground);
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.2;
+}
+
+a {
+    text-decoration: none;
+}
+
+.layout-wrapper {
+    min-height: 100vh;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  border-radius: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: hsl(var(--primary-card) / 0.1);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--surface-ground);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--surface-border);
+}
+
+
+// datatable 
+.p-datatable-mask {
+  display: none !important;
+}
+
+.card{
+  border: 1px solid var(--surface-border);
+}
+

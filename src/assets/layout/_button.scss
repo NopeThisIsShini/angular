@@ -1,0 +1,67 @@
+// 🎨 Optional: button color variables
+$btn-bg: #fff;
+$btn-hover-bg: #141414;
+$btn-text: #000;
+$btn-text-hover: #fff;
+::ng-deep {
+.custom-btn {
+  // Target PrimeNG internal button
+  .p-button {
+    position: relative;
+    overflow: hidden;
+    background: $btn-bg !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    font-size: 15px;
+    font-weight: 600;
+    width: 120px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transform: skew(-21deg);
+    color: $btn-text !important;
+    transition: color 0.3s ease;
+
+    // Hover background effect
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      right: 100%; // full off-screen left
+      background: $btn-hover-bg;
+      opacity: 0;
+      z-index: -1;
+      transition: all 0.5s ease;
+    }
+
+    &:hover {
+      color: $btn-text-hover !important;
+
+      &::before {
+        left: 0;
+        right: 0;
+        opacity: 1;
+      }
+    }
+  }
+
+  // Fix internal label distortion
+  .p-button-label {
+    display: inline-block;
+    transform: skew(21deg);
+  }
+}
+}
+
+
+// 📱 Responsive (remove skew for mobile if wanted)
+@media (max-width: 575px) {
+  .custom-btn {
+    .p-button {
+      transform: none;
+    }
+
+    .p-button-label {
+      transform: none;
+    }
+  }
+}

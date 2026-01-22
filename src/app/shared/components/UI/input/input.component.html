@@ -1,0 +1,9 @@
+<p-floatLabel [ngClass]="containerClass" variant="on">
+    <input pInputText [id]="id" [type]="type" [placeholder]="placeholder" pSize="large" [attr.aria-label]="label" class="w-full" pStyleClass="w-full" [value]="value" (input)="onInputChange($event)" (blur)="onInputBlur($event)" [attr.min]="0" />
+    <label *ngIf="label" [for]="id"
+        >{{ label }}
+        @if (isRequired) {
+            <span class="!text-red-500">*</span>
+        }
+    </label>
+</p-floatLabel>

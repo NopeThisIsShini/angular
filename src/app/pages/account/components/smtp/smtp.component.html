@@ -1,0 +1,40 @@
+<!-- email-settings.component.html -->
+<div class="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+    <form [formGroup]="emailSettingsForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Header -->
+        <div class="mb-1">
+            <h2>Email Settings</h2>
+            <p>Configure your email server settings</p>
+        </div>
+
+        <!-- Form Fields Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+            <!-- Dynamic Form Fields -->
+            <div *ngFor="let field of formFields" class="w-full">
+                <NG-Input class="w-full" containerClass="w-full" inputClass="w-full" [label]="field.label" [formControlName]="field.key" [type]="field.type" [id]="field.key" [mark]="true"> </NG-Input>
+
+                <!-- Error Messages -->
+                <div *ngIf="isFieldInvalid(field.key)" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                    <span *ngFor="let error of getFieldErrors(field.key)" class="block">
+                        {{ error }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Checkbox Fields -->
+            <div *ngFor="let checkboxField of checkboxFields" class="w-full flex items-center">
+                <div class="flex items-center space-x-3 py-3">
+                    <p-checkbox [formControlName]="checkboxField.key" [binary]="true" [inputId]="checkboxField.key" class="flex-shrink-0"> </p-checkbox>
+                    <label [for]="checkboxField.key" class="text-sm font-medium cursor-pointer select-none">
+                        {{ checkboxField.label }}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end pt-6">
+            <p-button label="Save All" icon="pi pi-save" [loading]="false" type="submit" styleClass="p-button-primary" class="min-w-32"> </p-button>
+        </div>
+    </form>
+</div>
