@@ -5,6 +5,3 @@ export * from './storage/local.storage.service';
 export * from './api/config.service';
 export * from './api/common.service';
 export * from './favicon.service';
-export * from './tenant.service';
-export * from './tenant-context.service';
-export * from './tenant.resolver';
