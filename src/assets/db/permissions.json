@@ -1,0 +1,141 @@
+{
+    "targetUrl": null,
+    "success": true,
+    "error": null,
+    "unAuthorizedRequest": false,
+    "__abp": true,
+    "result": {
+        "permissions": [
+            {
+                "parentName": null,
+                "name": "Pages",
+                "displayName": "[Pages]",
+                "description": "Main application pages access",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "Pages",
+                "name": "Pages.Users",
+                "displayName": "[Users]",
+                "description": "User management module",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "Pages.Users",
+                "name": "Pages.Users.Create",
+                "displayName": "[Create User]",
+                "description": "Create new users",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "Pages.Users",
+                "name": "Pages.Users.Edit",
+                "displayName": "[Edit User]",
+                "description": "Edit existing users",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "Pages.Users",
+                "name": "Pages.Users.Delete",
+                "displayName": "[Delete User]",
+                "description": "Delete users",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "Pages.Users",
+                "name": "Pages.Users.Activation",
+                "displayName": "[User Activation]",
+                "description": "Activate or deactivate users",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "Pages",
+                "name": "Pages.Roles",
+                "displayName": "[Roles]",
+                "description": "Role management module",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "Pages.Roles",
+                "name": "Pages.Roles.Create",
+                "displayName": "[Create Role]",
+                "description": "Create new roles",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "Pages.Roles",
+                "name": "Pages.Roles.Edit",
+                "displayName": "[Edit Role]",
+                "description": "Edit existing roles",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "Pages.Roles",
+                "name": "Pages.Roles.Delete",
+                "displayName": "[Delete Role]",
+                "description": "Delete roles",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "Pages",
+                "name": "Pages.Products",
+                "displayName": "[Products]",
+                "description": "Product management module",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "Pages.Products",
+                "name": "Pages.Products.Create",
+                "displayName": "[Create Product]",
+                "description": "Create new products",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "Pages.Products",
+                "name": "Pages.Products.Edit",
+                "displayName": "[Edit Product]",
+                "description": "Edit existing products",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "Pages.Products",
+                "name": "Pages.Products.Delete",
+                "displayName": "[Delete Product]",
+                "description": "Delete products",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "Pages",
+                "name": "Pages.Settings",
+                "displayName": "[Settings]",
+                "description": "Application settings",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "Pages",
+                "name": "Pages.Administration",
+                "displayName": "[Administration]",
+                "description": "Administration panel access",
+                "isGrantedByDefault": false
+            }
+        ],
+        "grantedPermissionNames": [
+            "Pages",
+            "Pages.Users",
+            "Pages.Users.Create",
+            "Pages.Users.Edit",
+            "Pages.Users.Delete",
+            "Pages.Users.Activation",
+            "Pages.Roles",
+            "Pages.Roles.Create",
+            "Pages.Roles.Edit",
+            "Pages.Roles.Delete",
+            "Pages.Products",
+            "Pages.Products.Create",
+            "Pages.Products.Edit",
+            "Pages.Products.Delete",
+            "Pages.Settings",
+            "Pages.Administration"
+        ]
+    }
+}

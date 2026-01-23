@@ -1,0 +1,13 @@
+{
+    "targetUrl": null,
+    "success": true,
+    "error": null,
+    "unAuthorizedRequest": false,
+    "__abp": true,
+    "result": {
+        "accessToken": "demo_access_token_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkRlbW8gVXNlciIsImlhdCI6MTUxNjIzOTAyMn0",
+        "encryptedAccessToken": "demo_encrypted_token_abc123xyz789",
+        "expireInSeconds": 86400,
+        "userId": 1
+    }
+}

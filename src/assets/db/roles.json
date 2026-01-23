@@ -1,0 +1,64 @@
+{
+    "targetUrl": null,
+    "success": true,
+    "error": null,
+    "unAuthorizedRequest": false,
+    "__abp": true,
+    "result": {
+        "totalCount": 3,
+        "items": [
+            {
+                "id": 1,
+                "name": "Admin",
+                "displayName": "Administrator",
+                "normalizedName": "ADMIN",
+                "description": "Full system access with all permissions",
+                "grantedPermissions": [
+                    "Pages",
+                    "Pages.Users",
+                    "Pages.Users.Create",
+                    "Pages.Users.Edit",
+                    "Pages.Users.Delete",
+                    "Pages.Users.Activation",
+                    "Pages.Roles",
+                    "Pages.Roles.Create",
+                    "Pages.Roles.Edit",
+                    "Pages.Roles.Delete",
+                    "Pages.Products",
+                    "Pages.Products.Create",
+                    "Pages.Products.Edit",
+                    "Pages.Products.Delete",
+                    "Pages.Settings",
+                    "Pages.Administration"
+                ]
+            },
+            {
+                "id": 2,
+                "name": "Manager",
+                "displayName": "Manager",
+                "normalizedName": "MANAGER",
+                "description": "Can manage users and view reports",
+                "grantedPermissions": [
+                    "Pages",
+                    "Pages.Users",
+                    "Pages.Users.Create",
+                    "Pages.Users.Edit",
+                    "Pages.Products",
+                    "Pages.Products.Create",
+                    "Pages.Products.Edit"
+                ]
+            },
+            {
+                "id": 3,
+                "name": "User",
+                "displayName": "Standard User",
+                "normalizedName": "USER",
+                "description": "Basic access with limited permissions",
+                "grantedPermissions": [
+                    "Pages",
+                    "Pages.Products"
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,77 @@
+{
+    "targetUrl": null,
+    "success": true,
+    "error": null,
+    "unAuthorizedRequest": false,
+    "__abp": true,
+    "result": {
+        "totalCount": 5,
+        "items": [
+            {
+                "id": 1,
+                "userName": "admin",
+                "name": "John",
+                "surname": "Doe",
+                "fullName": "John Doe",
+                "emailAddress": "admin@demo.com",
+                "isActive": true,
+                "roleNames": ["Admin"],
+                "lastLoginTime": "2026-01-23T10:30:00Z",
+                "password": "",
+                "phoneNumber": "+1234567890"
+            },
+            {
+                "id": 2,
+                "userName": "manager1",
+                "name": "Jane",
+                "surname": "Smith",
+                "fullName": "Jane Smith",
+                "emailAddress": "jane.smith@demo.com",
+                "isActive": true,
+                "roleNames": ["Manager"],
+                "lastLoginTime": "2026-01-22T14:15:00Z",
+                "password": "",
+                "phoneNumber": "+1234567891"
+            },
+            {
+                "id": 3,
+                "userName": "user1",
+                "name": "Bob",
+                "surname": "Johnson",
+                "fullName": "Bob Johnson",
+                "emailAddress": "bob.johnson@demo.com",
+                "isActive": true,
+                "roleNames": ["User"],
+                "lastLoginTime": "2026-01-21T09:45:00Z",
+                "password": "",
+                "phoneNumber": "+1234567892"
+            },
+            {
+                "id": 4,
+                "userName": "user2",
+                "name": "Alice",
+                "surname": "Williams",
+                "fullName": "Alice Williams",
+                "emailAddress": "alice.williams@demo.com",
+                "isActive": true,
+                "roleNames": ["User"],
+                "lastLoginTime": "2026-01-20T16:20:00Z",
+                "password": "",
+                "phoneNumber": "+1234567893"
+            },
+            {
+                "id": 5,
+                "userName": "inactive_user",
+                "name": "Charlie",
+                "surname": "Brown",
+                "fullName": "Charlie Brown",
+                "emailAddress": "charlie.brown@demo.com",
+                "isActive": false,
+                "roleNames": ["User"],
+                "lastLoginTime": null,
+                "password": "",
+                "phoneNumber": "+1234567894"
+            }
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "targetUrl": null,
+    "success": true,
+    "error": null,
+    "unAuthorizedRequest": false,
+    "__abp": true,
+    "result": {
+        "application": {
+            "version": "1.0.0",
+            "releaseDate": "2026-01-23",
+            "features": {}
+        },
+        "user": {
+            "name": "John",
+            "surname": "Doe",
+            "userName": "admin",
+            "emailAddress": "admin@demo.com",
+            "id": 1
+        },
+        "tenant": null
+    }
+}
