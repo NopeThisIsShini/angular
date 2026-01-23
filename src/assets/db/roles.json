@@ -14,22 +14,26 @@
                 "normalizedName": "ADMIN",
                 "description": "Full system access with all permissions",
                 "grantedPermissions": [
-                    "Pages",
-                    "Pages.Users",
-                    "Pages.Users.Create",
-                    "Pages.Users.Edit",
-                    "Pages.Users.Delete",
-                    "Pages.Users.Activation",
-                    "Pages.Roles",
-                    "Pages.Roles.Create",
-                    "Pages.Roles.Edit",
-                    "Pages.Roles.Delete",
-                    "Pages.Products",
-                    "Pages.Products.Create",
-                    "Pages.Products.Edit",
-                    "Pages.Products.Delete",
-                    "Pages.Settings",
-                    "Pages.Administration"
+                    "dashboard",
+                    "dashboard.read",
+                    "administration",
+                    "administration.role",
+                    "administration.role.read",
+                    "administration.role.create",
+                    "administration.role.edit",
+                    "administration.role.delete",
+                    "administration.user",
+                    "administration.user.read",
+                    "administration.user.create",
+                    "administration.user.edit",
+                    "administration.user.delete",
+                    "account",
+                    "account.profile",
+                    "account.profile.read",
+                    "account.profile.edit",
+                    "account.smtp",
+                    "account.smtp.read",
+                    "account.smtp.edit"
                 ]
             },
             {
@@ -39,13 +43,17 @@
                 "normalizedName": "MANAGER",
                 "description": "Can manage users and view reports",
                 "grantedPermissions": [
-                    "Pages",
-                    "Pages.Users",
-                    "Pages.Users.Create",
-                    "Pages.Users.Edit",
-                    "Pages.Products",
-                    "Pages.Products.Create",
-                    "Pages.Products.Edit"
+                    "dashboard",
+                    "dashboard.read",
+                    "administration",
+                    "administration.user",
+                    "administration.user.read",
+                    "administration.user.create",
+                    "administration.user.edit",
+                    "account",
+                    "account.profile",
+                    "account.profile.read",
+                    "account.profile.edit"
                 ]
             },
             {
@@ -55,8 +63,12 @@
                 "normalizedName": "USER",
                 "description": "Basic access with limited permissions",
                 "grantedPermissions": [
-                    "Pages",
-                    "Pages.Products"
+                    "dashboard",
+                    "dashboard.read",
+                    "account",
+                    "account.profile",
+                    "account.profile.read",
+                    "account.profile.edit"
                 ]
             }
         ]

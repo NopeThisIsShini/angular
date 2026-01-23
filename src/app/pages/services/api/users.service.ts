@@ -10,23 +10,29 @@ export class UsersService {
     constructor(private http: HttpClient) {}
 
     getRoles(): Observable<GetAllRolesOutputModel> {
-        return this.http.get<GetAllRolesOutputModel>(`api/services/app/User/GetRoles`);
+        // DEMO: Using static JSON instead of API call
+        // Original API call:
+        // return this.http.get<GetAllRolesOutputModel>(`api/services/app/User/GetRoles`);
+        return this.http.get<GetAllRolesOutputModel>('assets/db/roles.json');
     }
 
     getallusers(input: userInputParamModel): Observable<getUserResponse> {
-        let params = new HttpParams();
-        if (input.SearchTerm) {
-            params = params.set('Keyword', input.SearchTerm);
-        }
-        if (input.MaxResultCount) {
-            params = params.set('MaxResultCount', input.MaxResultCount);
-        }
-        if (input.SkipCount) {
-            params = params.set('SkipCount', input.SkipCount);
-        }
-        return this.http.get<getUserResponse>(`api/services/app/User/GetAll`, {
-            params
-        });
+        // DEMO: Using static JSON instead of API call
+        // Original API call:
+        // let params = new HttpParams();
+        // if (input.SearchTerm) {
+        //     params = params.set('Keyword', input.SearchTerm);
+        // }
+        // if (input.MaxResultCount) {
+        //     params = params.set('MaxResultCount', input.MaxResultCount);
+        // }
+        // if (input.SkipCount) {
+        //     params = params.set('SkipCount', input.SkipCount);
+        // }
+        // return this.http.get<getUserResponse>(`api/services/app/User/GetAll`, {
+        //     params
+        // });
+        return this.http.get<getUserResponse>('assets/db/users.json');
     }
 
     saveUser(input: UsersModel, isEdit: boolean) {

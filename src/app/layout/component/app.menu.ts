@@ -24,13 +24,18 @@ export class AppMenu implements OnInit{
 
     ngOnInit() {
         this.loadModels();
-        // this.model = this.filterMenu(this.model);
+        this.model = this.filterMenu(this.model);
     }
 
     loadModels() {
         this.model = [
             {
                 items: [
+                    {
+                        label: 'Dashboard',
+                        icon: 'pi pi-fw pi-home',
+                        routerLink: [`${LOCAL_ROUTES.DASHBOARD}`]
+                    },
                     {
                         label: 'Administration',
                         icon: 'pi pi-fw pi-shield',
@@ -47,7 +52,22 @@ export class AppMenu implements OnInit{
                             }
                         ]
                     },
-                   
+                    {
+                        label: 'Account',
+                        icon: 'pi pi-fw pi-user',
+                        items: [
+                            {
+                                label: 'Profile',
+                                icon: 'pi pi-fw pi-id-card',
+                                routerLink: [`${LOCAL_ROUTES.ACCOUNT}/${LOCAL_ROUTES.PROFILE}`]
+                            },
+                            {
+                                label: 'SMTP Settings',
+                                icon: 'pi pi-fw pi-envelope',
+                                routerLink: [`${LOCAL_ROUTES.ACCOUNT}/${LOCAL_ROUTES.SMTP}`]
+                            }
+                        ]
+                    }
                 ]
             }
         ];

@@ -18,7 +18,10 @@ export class AuthService {
     ) {}
 
     login(payload: loginRequest): Observable<void> {
-        return this.http.post<loginResponse>(api_routes.login, payload).pipe(
+        // DEMO: Using static JSON instead of API call
+        // Original API call:
+        // return this.http.post<loginResponse>(api_routes.login, payload).pipe(
+        return this.http.get<loginResponse>('assets/db/login.json').pipe(
             tap((res) => {
                 if (res.success) {
                     this.localStorageService.setItem('accessToken', res.result.accessToken);

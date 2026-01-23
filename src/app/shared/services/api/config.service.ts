@@ -25,7 +25,10 @@ export class ConfigService {
     }
 
     getCurrentUserInfo(): Observable<AppInfoResponse> {
-        return this.http.get<AppInfoResponse>('api/services/app/Session/GetCurrentLoginInformations');
+        // DEMO: Using static JSON instead of API call
+        // Original API call:
+        // return this.http.get<AppInfoResponse>('api/services/app/Session/GetCurrentLoginInformations');
+        return this.http.get<AppInfoResponse>('assets/db/session.json');
     }
 
     loadUserPermissions(userId: number): Observable<void> {

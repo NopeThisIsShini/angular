@@ -61,8 +61,11 @@ export class PermissionService {
         return buildTreeStructure(rootPermissions);
     }
     getUserPermissions(id: number): Observable<ApiPermissionResponse> {
-        const params = new HttpParams().set('id', id.toString());
-        return this.http.get<ApiPermissionResponse>(`${api_routes.getUserPermissions}`, { params });
+        // DEMO: Using static JSON instead of API call
+        // Original API call:
+        // const params = new HttpParams().set('id', id.toString());
+        // return this.http.get<ApiPermissionResponse>(`${api_routes.getUserPermissions}`, { params });
+        return this.http.get<ApiPermissionResponse>('assets/db/permissions.json');
     }
     loadPermissionsFromApi(apiResponse: ApiPermissionResponse): void {
         // Convert API structure to tree structure

@@ -8,134 +8,159 @@
         "permissions": [
             {
                 "parentName": null,
-                "name": "Pages",
-                "displayName": "[Pages]",
-                "description": "Main application pages access",
+                "name": "dashboard",
+                "displayName": "[Dashboard]",
+                "description": "Dashboard access",
+                "isGrantedByDefault": true
+            },
+            {
+                "parentName": null,
+                "name": "administration",
+                "displayName": "[Administration]",
+                "description": "Administration module",
                 "isGrantedByDefault": false
             },
             {
-                "parentName": "Pages",
-                "name": "Pages.Users",
-                "displayName": "[Users]",
-                "description": "User management module",
-                "isGrantedByDefault": false
-            },
-            {
-                "parentName": "Pages.Users",
-                "name": "Pages.Users.Create",
-                "displayName": "[Create User]",
-                "description": "Create new users",
-                "isGrantedByDefault": false
-            },
-            {
-                "parentName": "Pages.Users",
-                "name": "Pages.Users.Edit",
-                "displayName": "[Edit User]",
-                "description": "Edit existing users",
-                "isGrantedByDefault": false
-            },
-            {
-                "parentName": "Pages.Users",
-                "name": "Pages.Users.Delete",
-                "displayName": "[Delete User]",
-                "description": "Delete users",
-                "isGrantedByDefault": false
-            },
-            {
-                "parentName": "Pages.Users",
-                "name": "Pages.Users.Activation",
-                "displayName": "[User Activation]",
-                "description": "Activate or deactivate users",
-                "isGrantedByDefault": false
-            },
-            {
-                "parentName": "Pages",
-                "name": "Pages.Roles",
+                "parentName": "administration",
+                "name": "administration.role",
                 "displayName": "[Roles]",
-                "description": "Role management module",
+                "description": "Role management",
                 "isGrantedByDefault": false
             },
             {
-                "parentName": "Pages.Roles",
-                "name": "Pages.Roles.Create",
+                "parentName": "administration.role",
+                "name": "administration.role.read",
+                "displayName": "[View Roles]",
+                "description": "View roles list",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "administration.role",
+                "name": "administration.role.create",
                 "displayName": "[Create Role]",
                 "description": "Create new roles",
                 "isGrantedByDefault": false
             },
             {
-                "parentName": "Pages.Roles",
-                "name": "Pages.Roles.Edit",
+                "parentName": "administration.role",
+                "name": "administration.role.edit",
                 "displayName": "[Edit Role]",
                 "description": "Edit existing roles",
                 "isGrantedByDefault": false
             },
             {
-                "parentName": "Pages.Roles",
-                "name": "Pages.Roles.Delete",
+                "parentName": "administration.role",
+                "name": "administration.role.delete",
                 "displayName": "[Delete Role]",
                 "description": "Delete roles",
                 "isGrantedByDefault": false
             },
             {
-                "parentName": "Pages",
-                "name": "Pages.Products",
-                "displayName": "[Products]",
-                "description": "Product management module",
+                "parentName": "administration",
+                "name": "administration.user",
+                "displayName": "[Users]",
+                "description": "User management",
                 "isGrantedByDefault": false
             },
             {
-                "parentName": "Pages.Products",
-                "name": "Pages.Products.Create",
-                "displayName": "[Create Product]",
-                "description": "Create new products",
+                "parentName": "administration.user",
+                "name": "administration.user.read",
+                "displayName": "[View Users]",
+                "description": "View users list",
                 "isGrantedByDefault": false
             },
             {
-                "parentName": "Pages.Products",
-                "name": "Pages.Products.Edit",
-                "displayName": "[Edit Product]",
-                "description": "Edit existing products",
+                "parentName": "administration.user",
+                "name": "administration.user.create",
+                "displayName": "[Create User]",
+                "description": "Create new users",
                 "isGrantedByDefault": false
             },
             {
-                "parentName": "Pages.Products",
-                "name": "Pages.Products.Delete",
-                "displayName": "[Delete Product]",
-                "description": "Delete products",
+                "parentName": "administration.user",
+                "name": "administration.user.edit",
+                "displayName": "[Edit User]",
+                "description": "Edit existing users",
                 "isGrantedByDefault": false
             },
             {
-                "parentName": "Pages",
-                "name": "Pages.Settings",
-                "displayName": "[Settings]",
-                "description": "Application settings",
+                "parentName": "administration.user",
+                "name": "administration.user.delete",
+                "displayName": "[Delete User]",
+                "description": "Delete users",
                 "isGrantedByDefault": false
             },
             {
-                "parentName": "Pages",
-                "name": "Pages.Administration",
-                "displayName": "[Administration]",
-                "description": "Administration panel access",
+                "parentName": null,
+                "name": "account",
+                "displayName": "[Account]",
+                "description": "Account settings module",
+                "isGrantedByDefault": true
+            },
+            {
+                "parentName": "account",
+                "name": "account.profile",
+                "displayName": "[Profile]",
+                "description": "User profile management",
+                "isGrantedByDefault": true
+            },
+            {
+                "parentName": "account.profile",
+                "name": "account.profile.read",
+                "displayName": "[View Profile]",
+                "description": "View own profile",
+                "isGrantedByDefault": true
+            },
+            {
+                "parentName": "account.profile",
+                "name": "account.profile.edit",
+                "displayName": "[Edit Profile]",
+                "description": "Edit own profile",
+                "isGrantedByDefault": true
+            },
+            {
+                "parentName": "account",
+                "name": "account.smtp",
+                "displayName": "[SMTP Settings]",
+                "description": "Email/SMTP configuration",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "account.smtp",
+                "name": "account.smtp.read",
+                "displayName": "[View SMTP]",
+                "description": "View SMTP settings",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "account.smtp",
+                "name": "account.smtp.edit",
+                "displayName": "[Edit SMTP]",
+                "description": "Edit SMTP settings",
                 "isGrantedByDefault": false
             }
         ],
         "grantedPermissionNames": [
-            "Pages",
-            "Pages.Users",
-            "Pages.Users.Create",
-            "Pages.Users.Edit",
-            "Pages.Users.Delete",
-            "Pages.Users.Activation",
-            "Pages.Roles",
-            "Pages.Roles.Create",
-            "Pages.Roles.Edit",
-            "Pages.Roles.Delete",
-            "Pages.Products",
-            "Pages.Products.Create",
-            "Pages.Products.Edit",
-            "Pages.Products.Delete",
-            "Pages.Settings",
-            "Pages.Administration"
+            "dashboard",
+            "dashboard.read",
+            "administration",
+            "administration.role",
+            "administration.role.read",
+            "administration.role.create",
+            "administration.role.edit",
+            "administration.role.delete",
+            "administration.user",
+            "administration.user.read",
+            "administration.user.create",
+            "administration.user.edit",
+            "administration.user.delete",
+            "account",
+            "account.profile",
+            "account.profile.read",
+            "account.profile.edit",
+            "account.smtp",
+            "account.smtp.read",
+            "account.smtp.edit"
         ]
     }
 }
