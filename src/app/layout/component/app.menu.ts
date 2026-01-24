@@ -17,7 +17,7 @@ import { LOCAL_ROUTES } from '@app/utils/routes';
         </ng-container>
     </ul> `
 })
-export class AppMenu implements OnInit{
+export class AppMenu implements OnInit {
     model: MenuItem[] = [];
 
     permissionService = inject(PermissionService);
@@ -46,8 +46,7 @@ export class AppMenu implements OnInit{
                                 routerLink: [`${LOCAL_ROUTES.ADMINISTRATION}/${LOCAL_ROUTES.USER}`]
                             }
                         ]
-                    },
-                   
+                    }
                 ]
             }
         ];

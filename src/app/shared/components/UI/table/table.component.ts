@@ -7,14 +7,14 @@ import { ColumnDef, TableAction } from '@app/shared/models';
 import { PrimengImports } from '@app/shared/primeng.import';
 
 @Component({
-  selector: 'NG-Table',
-  standalone: true,
-  imports: [TableModule, ...PrimengImports, CommonModule, FormsModule, TableSkeletonComponent],
-  templateUrl: './table.component.html',
-  styleUrl: './table.component.scss'
+    selector: 'NG-Table',
+    standalone: true,
+    imports: [TableModule, ...PrimengImports, CommonModule, FormsModule, TableSkeletonComponent],
+    templateUrl: './table.component.html',
+    styleUrl: './table.component.scss'
 })
-export class TableComponent implements OnChanges{
-  @ViewChild('dt') table!: Table;
+export class TableComponent implements OnChanges {
+    @ViewChild('dt') table!: Table;
     @ViewChild('filter') filter!: ElementRef;
     @Input() value: any[] = [];
     @Input() totalCount: number = 0;

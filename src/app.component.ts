@@ -7,7 +7,6 @@ import { environment } from '@env/environment';
 import { AppConfigurator } from '@app/layout/component/app.configurator';
 import { FaviconService } from '@app/shared/services';
 
-
 @Component({
     selector: 'app-root',
     standalone: true,

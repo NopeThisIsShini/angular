@@ -7,24 +7,13 @@ import { DividerModule } from 'primeng/divider';
 
 import { CommonModule } from '@angular/common';
 
-
 @Component({
     selector: 'app-landing',
     standalone: true,
-    imports: [
-        RouterModule,
-        RippleModule,
-        StyleClassModule,
-        ButtonModule,
-        DividerModule,
-        CommonModule,
-    
-    ],
+    imports: [RouterModule, RippleModule, StyleClassModule, ButtonModule, DividerModule, CommonModule],
     template: `
         <div class="">
-            <div id="home" class="landing-wrapper">
-               landing works!
-            </div>
+            <div id="home" class="landing-wrapper">landing works!</div>
         </div>
     `,
     styles: [``]

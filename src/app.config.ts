@@ -15,7 +15,7 @@ export const appConfig: ApplicationConfig = {
         provideRouter(
             appRoutes,
             withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }),
-            withEnabledBlockingInitialNavigation(),
+            withEnabledBlockingInitialNavigation()
             // withHashLocation()
         ),
         // provideAppInitializer(() => inject(ConfigService).loadUserAndPermissions()),

@@ -4,11 +4,11 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { TextareaModule } from 'primeng/textarea';
 
 @Component({
-  selector: 'NG-Textarea',
-  imports: [TextareaModule, FloatLabelModule],
-  templateUrl: './textarea.component.html',
-  styleUrl: './textarea.component.scss',
-   providers: [
+    selector: 'NG-Textarea',
+    imports: [TextareaModule, FloatLabelModule],
+    templateUrl: './textarea.component.html',
+    styleUrl: './textarea.component.scss',
+    providers: [
         {
             provide: NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => TextareaComponent),
@@ -16,8 +16,8 @@ import { TextareaModule } from 'primeng/textarea';
         }
     ]
 })
-export class TextareaComponent implements ControlValueAccessor{
- @Input() id: string = '';
+export class TextareaComponent implements ControlValueAccessor {
+    @Input() id: string = '';
     @Input() rows: string = '10';
     @Input() cols: string = '30';
     @Input() label: string = '';

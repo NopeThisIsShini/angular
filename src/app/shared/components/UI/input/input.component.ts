@@ -6,21 +6,21 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { StyleClass } from 'primeng/styleclass';
 
 @Component({
-  selector: 'NG-Input',
-  standalone: true,
-  imports: [CommonModule, InputTextModule, FloatLabelModule, StyleClass],
-  templateUrl: './input.component.html',
-  styleUrl: './input.component.scss',
-   providers: [
-          {
-              provide: NG_VALUE_ACCESSOR,
-              useExisting: forwardRef(() => InputComponent),
-              multi: true // Allows multiple form controls
-          }
-      ]
+    selector: 'NG-Input',
+    standalone: true,
+    imports: [CommonModule, InputTextModule, FloatLabelModule, StyleClass],
+    templateUrl: './input.component.html',
+    styleUrl: './input.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => InputComponent),
+            multi: true // Allows multiple form controls
+        }
+    ]
 })
 export class InputComponent implements ControlValueAccessor {
-@Input() id: string = '';
+    @Input() id: string = '';
     @Input() type: string = 'text';
     @Input() placeholder: string = '';
     @Input() label: string = '';

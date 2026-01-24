@@ -30,7 +30,7 @@
                     <form class="w-full" [formGroup]="Signupform">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                             <div *ngFor="let field of signupFields" class="w-full">
-                                <Input class="w-full" containerClass="w-full" inputClass="w-full" [label]="field.label" [formControlName]="field.key" [type]="field.type" [id]="field.key" [mark]="true"> </Input>
+                                <NG-Input class="w-full" containerClass="w-full" inputClass="w-full" [label]="field.label" [formControlName]="field.key" [type]="field.type" [id]="field.key" [mark]="true"></NG-Input>
 
                                 <div *ngIf="isFieldInvalid(field.key)" class="mt-2 text-sm text-[var(--text-danger-color)]">
                                     <span *ngFor="let error of getFieldErrors(field.key)" class="block">

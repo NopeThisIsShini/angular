@@ -9,16 +9,7 @@
 
     <!-- Main Table -->
 
-    <NG-Table
-        [value]="users"
-        [columns]="columns"
-        [actions]="actions"
-        [totalCount]="totalCount"
-        [loading]="loading"
-        [rows]="10"
-        [globalSearchFields]="['fullName', 'emailAddress', 'phoneNumber', 'isActive']"
-        [lazyLoadFn]="getallusers.bind(this)"
-    >
+    <NG-Table [value]="users" [columns]="columns" [actions]="actions" [totalCount]="totalCount" [loading]="loading" [rows]="10" [globalSearchFields]="['fullName', 'emailAddress', 'phoneNumber', 'isActive']" [lazyLoadFn]="getallusers.bind(this)">
     </NG-Table>
 </div>
 <ng-template #isActiveTemplate let-row>

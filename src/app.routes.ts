@@ -11,7 +11,7 @@ export const appRoutes: Routes = [
     // },
     {
         path: '',
-        component: AppLayout    ,
+        component: AppLayout,
         // canActivate: [authGuard],
         children: [
             {
@@ -34,6 +34,6 @@ export const appRoutes: Routes = [
         path: LOCAL_ROUTES.AUTH,
         loadChildren: () => import('./app/pages/auth/auth.routes')
     },
-    
+
     { path: '**', redirectTo: 'notfound' }
 ];
