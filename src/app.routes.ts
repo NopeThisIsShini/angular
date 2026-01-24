@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { Landing } from '@app/pages/landing/landing';
 import { AppLayout } from '@app/layout/component/app.layout';
 import { LOCAL_ROUTES } from '@app/utils/routes';
-import { authGuard } from '@app/utils/guard';
+import { authGuard, hostGuard } from '@app/utils/guard';
 
 export const appRoutes: Routes = [
     // {
@@ -26,6 +26,11 @@ export const appRoutes: Routes = [
             {
                 path: LOCAL_ROUTES.ACCOUNT,
                 loadChildren: () => import('./app/pages/account/account.routes')
+            },
+            {
+                path: LOCAL_ROUTES.HOST,
+                loadChildren: () => import('./app/pages/host/host.routes'),
+                canActivate: [hostGuard]
             }
         ]
     },

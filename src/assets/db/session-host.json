@@ -1,0 +1,26 @@
+{
+    "targetUrl": null,
+    "success": true,
+    "error": null,
+    "unAuthorizedRequest": false,
+    "__abp": true,
+    "result": {
+        "application": {
+            "version": "1.0.0",
+            "releaseDate": "2026-01-24",
+            "features": {}
+        },
+        "user": {
+            "id": 0,
+            "name": "System",
+            "surname": "Host",
+            "userName": "host.admin",
+            "emailAddress": "host@system.com",
+            "roleNames": ["Host"],
+            "organizationUnitId": null,
+            "organizationUnitPath": null,
+            "organizationUnitName": null
+        },
+        "tenant": null
+    }
+}

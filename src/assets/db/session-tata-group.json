@@ -1,0 +1,30 @@
+{
+    "targetUrl": null,
+    "success": true,
+    "error": null,
+    "unAuthorizedRequest": false,
+    "__abp": true,
+    "result": {
+        "application": {
+            "version": "1.0.0",
+            "releaseDate": "2026-01-24",
+            "features": {}
+        },
+        "user": {
+            "id": 1,
+            "name": "Ratan",
+            "surname": "Tata",
+            "userName": "admin",
+            "emailAddress": "admin@tatagroup.com",
+            "roleNames": ["Admin"],
+            "organizationUnitId": 1,
+            "organizationUnitPath": "/1/",
+            "organizationUnitName": "Tata Group"
+        },
+        "tenant": {
+            "id": 1,
+            "name": "Tata Group",
+            "tenancyName": "tata"
+        }
+    }
+}

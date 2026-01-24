@@ -1,0 +1,106 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="card p-0 mb-6">
+    <p-toolbar>
+        <ng-template #start>
+            <h3>Organization Units</h3>
+        </ng-template>
+        <ng-template #end>
+            <p-button icon="pi pi-plus" label="Add Root Unit" (onClick)="createRootUnit()"></p-button>
+        </ng-template>
+    </p-toolbar>
+</div>
+
+<div class="grid">
+    <!-- Left Panel: Organization Tree -->
+    <div class="col-12 lg:col-4">
+        <p-card header="Organization Structure">
+            @if (organizationTree.length > 0) {
+                <app-organization-tree
+                    [tree]="organizationTree"
+                    [selectable]="true"
+                    [draggable]="true"
+                    (onNodeSelect)="onNodeSelect($event)"
+                    (onAddChild)="onAddChild($event)"
+                    (onEdit)="onEdit($event)"
+                    (onDelete)="onDelete($event)"
+                ></app-organization-tree>
+            } @else {
+                <div class="text-center p-5">
+                    <i class="pi pi-sitemap text-4xl text-300 mb-3 block"></i>
+                    <p class="text-500 mb-4">No organization units yet.</p>
+                </div>
+            }
+        </p-card>
+    </div>
+
+    <!-- Right Panel: Selected Unit Details -->
+    <div class="col-12 lg:col-8">
+        @if (selectedUnit) {
+            <p-card>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center justify-content-between p-4 border-bottom-1 surface-border">
+                        <div>
+                            <h3 class="m-0">{{ selectedUnit.displayName }}</h3>
+                            <p class="text-500 text-sm m-0 mt-1">Path: {{ selectedUnit.path }}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button pButton icon="pi pi-pencil" tooltipPosition="top" pTooltip="Edit Unit" class="p-button-outlined p-button-secondary p-button-sm" (click)="onEdit(selectedUnit)"></button>
+                            <button pButton icon="pi pi-trash" tooltipPosition="top" pTooltip="Delete Unit" class="p-button-outlined p-button-danger p-button-sm" (click)="onDelete(selectedUnit)"></button>
+                        </div>
+                    </div>
+                </ng-template>
+
+                <!-- Members Header -->
+                <div class="flex align-items-center justify-content-between mb-4">
+                    <h4 class="m-0">Members</h4>
+                    <p-button icon="pi pi-user-plus" label="Add Member" class="p-button-sm p-button-outlined"></p-button>
+                </div>
+
+                <!-- Members Table using NG-Table -->
+                <NG-Table
+                    [value]="unitUsers"
+                    [columns]="columns"
+                    [actions]="actions"
+                    [totalCount]="totalCount"
+                    [loading]="loading"
+                    [rows]="5"
+                    [showGlobalSearch]="false"
+                >
+                </NG-Table>
+            </p-card>
+        } @else {
+            <p-card>
+                <div class="text-center p-8">
+                    <i class="pi pi-building text-6xl text-200 mb-4 block"></i>
+                    <h4 class="text-400">Select a unit to view members</h4>
+                </div>
+            </p-card>
+        }
+    </div>
+</div>
+
+<!-- Create/Edit Unit Dialog -->
+<p-dialog [(visible)]="unitDialogVisible" [header]="editMode ? 'Edit Unit' : (parentUnit ? 'Add Child Unit' : 'Create Root Unit')" [modal]="true" [style]="{ width: '400px' }">
+    <div class="flex flex-column gap-3 py-3">
+        @if (parentUnit) {
+            <div class="surface-ground p-2 border-round text-sm">
+                <span class="text-500">Parent Unit: </span>
+                <span class="font-bold">{{ parentUnit.displayName }}</span>
+            </div>
+        }
+        <NG-Input
+            id="displayName"
+            [(ngModel)]="unitForm.displayName"
+            label="Name"
+            placeholder="e.g. Marketing"
+            containerClass="w-full"
+            [mark]="true"
+        ></NG-Input>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" severity="secondary" variant="text" (onClick)="unitDialogVisible = false"></p-button>
+        <p-button label="Save Unit" icon="pi pi-check" (onClick)="saveUnit()" [disabled]="!unitForm.displayName"></p-button>
+    </ng-template>
+</p-dialog>

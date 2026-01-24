@@ -1,0 +1,111 @@
+  <div class="card">
+    <p-toolbar class="mb-6">
+        <ng-template #start>
+            <h3>Host Dashboard</h3>
+        </ng-template>
+    </p-toolbar>
+
+    <div class="grid">
+            <!-- Stats Cards -->
+            <div class="col-12 md:col-6 lg:col-3">
+                <p-card styleClass="h-full">
+                    <div class="flex align-items-center justify-content-between">
+                        <div>
+                            <span class="block text-500 font-medium mb-2">Total Tenants</span>
+                            <div class="text-4xl font-bold text-primary">{{ totalTenants }}</div>
+                        </div>
+                        <div class="flex align-items-center justify-content-center bg-primary border-round" style="width: 3rem; height: 3rem">
+                            <i class="pi pi-building text-white text-xl"></i>
+                        </div>
+                    </div>
+                </p-card>
+            </div>
+
+            <div class="col-12 md:col-6 lg:col-3">
+                <p-card styleClass="h-full">
+                    <div class="flex align-items-center justify-content-between">
+                        <div>
+                            <span class="block text-500 font-medium mb-2">Active Tenants</span>
+                            <div class="text-4xl font-bold text-green-500">{{ activeTenants }}</div>
+                        </div>
+                        <div class="flex align-items-center justify-content-center bg-green-500 border-round" style="width: 3rem; height: 3rem">
+                            <i class="pi pi-check-circle text-white text-xl"></i>
+                        </div>
+                    </div>
+                </p-card>
+            </div>
+
+            <div class="col-12 md:col-6 lg:col-3">
+                <p-card styleClass="h-full">
+                    <div class="flex align-items-center justify-content-between">
+                        <div>
+                            <span class="block text-500 font-medium mb-2">Total Users</span>
+                            <div class="text-4xl font-bold text-blue-500">{{ totalUsers | number }}</div>
+                        </div>
+                        <div class="flex align-items-center justify-content-center bg-blue-500 border-round" style="width: 3rem; height: 3rem">
+                            <i class="pi pi-users text-white text-xl"></i>
+                        </div>
+                    </div>
+                </p-card>
+            </div>
+
+            <div class="col-12 md:col-6 lg:col-3">
+                <p-card styleClass="h-full">
+                    <div class="flex align-items-center justify-content-between">
+                        <div>
+                            <span class="block text-500 font-medium mb-2">Editions</span>
+                            <div class="text-4xl font-bold text-orange-500">{{ editions.length }}</div>
+                        </div>
+                        <div class="flex align-items-center justify-content-center bg-orange-500 border-round" style="width: 3rem; height: 3rem">
+                            <i class="pi pi-box text-white text-xl"></i>
+                        </div>
+                    </div>
+                </p-card>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="col-12">
+                <p-card header="Quick Actions">
+                    <div class="flex gap-2">
+                        <button pButton label="Manage Tenants" icon="pi pi-building" [routerLink]="['../' + tenantsRoute]"></button>
+                        <button pButton label="Manage Editions" icon="pi pi-box" severity="secondary" [routerLink]="['../' + editionsRoute]"></button>
+                    </div>
+                </p-card>
+            </div>
+
+            <!-- Recent Tenants -->
+            <div class="col-12">
+                <p-card header="Recent Tenants">
+                    <p-table [value]="tenants" [rows]="5" styleClass="p-datatable-sm">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Name</th>
+                                <th>Tenancy Name</th>
+                                <th>Edition</th>
+                                <th>Users</th>
+                                <th>Status</th>
+                                <th>Subscription End</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-tenant>
+                            <tr>
+                                <td>{{ tenant.name }}</td>
+                                <td><code>{{ tenant.tenancyName }}</code></td>
+                                <td>{{ tenant.editionName }}</td>
+                                <td>{{ tenant.userCount | number }}</td>
+                                <td>
+                                    <p-tag [severity]="tenant.isActive ? 'success' : 'danger'" [value]="tenant.isActive ? 'Active' : 'Inactive'"></p-tag>
+                                </td>
+                                <td>{{ tenant.subscriptionEndDate | date:'mediumDate' }}</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="6" class="text-center">No tenants found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-card>
+            </div>
+        </div>
+</div>

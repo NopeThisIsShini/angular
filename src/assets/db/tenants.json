@@ -1,0 +1,48 @@
+{
+    "targetUrl": null,
+    "success": true,
+    "error": null,
+    "unAuthorizedRequest": false,
+    "__abp": true,
+    "result": {
+        "totalCount": 3,
+        "items": [
+            {
+                "id": 1,
+                "tenancyName": "tata-group",
+                "name": "Tata Group",
+                "editionId": 3,
+                "editionName": "Enterprise",
+                "isActive": true,
+                "subscriptionEndDate": "2027-01-01T00:00:00Z",
+                "maxUsers": null,
+                "userCount": 10500,
+                "createdAt": "2026-01-01T00:00:00Z"
+            },
+            {
+                "id": 2,
+                "tenancyName": "reliance",
+                "name": "Reliance Industries",
+                "editionId": 3,
+                "editionName": "Enterprise",
+                "isActive": true,
+                "subscriptionEndDate": "2027-06-01T00:00:00Z",
+                "maxUsers": null,
+                "userCount": 8200,
+                "createdAt": "2026-02-15T00:00:00Z"
+            },
+            {
+                "id": 3,
+                "tenancyName": "infosys",
+                "name": "Infosys Ltd",
+                "editionId": 2,
+                "editionName": "Professional",
+                "isActive": true,
+                "subscriptionEndDate": "2026-12-31T00:00:00Z",
+                "maxUsers": 500,
+                "userCount": 350,
+                "createdAt": "2026-03-10T00:00:00Z"
+            }
+        ]
+    }
+}

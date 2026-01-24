@@ -1,0 +1,23 @@
+<p-tree
+    [value]="treeNodes"
+    [selectionMode]="selectable ? 'single' : undefined"
+    [(selection)]="selectedTreeNode"
+    (onNodeSelect)="onNodeSelectHandler($event)"
+    [draggableNodes]="draggable"
+    [droppableNodes]="draggable"
+    (onNodeDrop)="onNodeDropHandler($any($event))"
+    [contextMenu]="cm"
+    (onNodeContextMenuSelect)="onContextMenuSelect($event)"
+    styleClass="w-full"
+>
+    <ng-template let-node pTemplate="default">
+        <div class="flex align-items-center gap-2">
+            <span>{{ node.label }}</span>
+            @if (node.data?.memberCount) {
+                <p-badge [value]="node.data.memberCount.toString()" severity="info" styleClass="ml-2"></p-badge>
+            }
+        </div>
+    </ng-template>
+</p-tree>
+
+<p-contextMenu #cm [model]="contextMenuItems"></p-contextMenu>

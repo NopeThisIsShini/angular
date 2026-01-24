@@ -23,9 +23,9 @@
         </div>
     </div>
 
-    <!-- Right Side - Login Form (Your Original Code) -->
-    <div class="flex bg-[var(--surface-card)] items-center w-full max-w-md px-6 mx-auto lg:w-2/6">
-        <div class="flex-1">
+    <!-- Right Side - Login Form -->
+    <div class="flex bg-[var(--surface-card)] items-center w-full max-w-md px-6 mx-auto lg:w-2/6 overflow-y-auto">
+        <div class="flex-1 py-8">
             <div class="text-center">
                 <div class="flex justify-center mx-auto">
                     <i class="pi pi-user"></i>
@@ -68,8 +68,46 @@
                     <p-button type="submit" [loading]="isLoading" [disabled]="!loginForm.valid" label="Sign In" styleClass="w-full" [style]="{ height: '3rem' }" (onClick)="onSignIn()" [loading]="isLoading"> </p-button>
                 </form>
 
+                <!-- Demo Quick Login Section -->
+                <div class="mt-8 pt-6 border-t border-[var(--surface-border)]">
+                    <div class="text-center mb-4">
+                        <span class="text-sm text-[var(--text-color-secondary)] bg-[var(--surface-card)] px-3">
+                            🔐 OU Scoping Demo - Quick Login
+                        </span>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div *ngFor="let user of demoUsers" 
+                             class="demo-login-card p-3 rounded-lg border border-[var(--surface-border)] cursor-pointer hover:border-[var(--primary-color)] hover:bg-[var(--surface-hover)] transition-all"
+                             [class.border-primary]="loadingProfile === user.key"
+                             (click)="quickLogin(user.key)">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-[var(--primary-color)] flex items-center justify-center">
+                                    <i [class]="user.icon" class="text-white"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="font-semibold text-[var(--text-color)]">{{ user.name }}</div>
+                                    <div class="text-xs text-[var(--text-color-secondary)]">
+                                        <span class="font-medium">{{ user.role }}</span>
+                                        <span *ngIf="user.ouPath"> · Path: <code class="bg-[var(--surface-200)] px-1 rounded">{{ user.ouPath }}</code></span>
+                                        <span *ngIf="!user.ouPath"> · <code class="bg-[var(--surface-200)] px-1 rounded">No OU Limit</code></span>
+                                    </div>
+                                    <div class="text-xs text-[var(--text-color-secondary)] mt-1 opacity-75">{{ user.description }}</div>
+                                </div>
+                                <div *ngIf="loadingProfile === user.key">
+                                    <i class="pi pi-spin pi-spinner text-[var(--primary-color)]"></i>
+                                </div>
+                                <div *ngIf="loadingProfile !== user.key">
+                                    <i class="pi pi-arrow-right text-[var(--text-color-secondary)]"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <p class="mt-6 text-sm text-center">Don&#x27;t have an account yet? <a href="#" class="focus:outline-none focus:underline hover:underline text-[var(--primary-color)] hover:text-[var(--surface-hover)]">Sign up</a>.</p>
             </div>
         </div>
     </div>
 </div>
+

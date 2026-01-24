@@ -1,0 +1,40 @@
+# Integrating Users and Roles with Organization Units (Phase 3 & 4)
+
+This plan outlines the steps to integrate Organization Units (OUs) into the User and Role management flows, providing hierarchical scoping for users and permissions.
+
+## Proposed Changes
+
+### [Models]
+
+#### [MODIFY] [users.model.ts](file:///d:/angular/src/app/pages/models/api/users.model.ts)
+- Add `organizationUnitId: number | null` to [UsersModel](file:///d:/angular/src/app/pages/models/api/users.model.ts#3-16).
+
+#### [MODIFY] [roles.model.ts](file:///d:/angular/src/app/pages/models/api/roles.model.ts)
+- Add `organizationUnitId: number | null` to [RolesModel](file:///d:/angular/src/app/pages/models/api/roles.model.ts#3-11).
+
+### [Administration - Users]
+
+#### [MODIFY] [user.component.ts](file:///d:/angular/src/app/pages/administration/components/user/user.component.ts)
+- Inject [OrganizationService](file:///d:/angular/src/app/pages/services/api/organization.service.ts#18-101).
+- Load OU tree data on initialization.
+- Flatten the tree structure for dropdown display (e.g., "Parent > Child > Grandchild").
+- Add `organizationUnitId` to `formFields`.
+
+#### [MODIFY] [user.component.html](file:///d:/angular/src/app/pages/administration/components/user/user.component.html)
+- Add `NG-Select` for Organization selection in the user dialog.
+
+### [Administration - Roles]
+
+#### [MODIFY] [role.component.ts](file:///d:/angular/src/app/pages/administration/components/role/role.component.ts)
+- Load OU tree data.
+- Add `organizationUnitId` to `formFields`.
+
+#### [MODIFY] [role.component.html](file:///d:/angular/src/app/pages/administration/components/role/role.component.html)
+- Add `NG-Select` for Organization Scope selection in the role dialog.
+
+## Verification Plan
+
+### Manual Verification
+- **User Integration**: Create a new user and assign them to an OU (e.g., "Sales Team"). Verify the assignment saves correctly.
+- **Role Integration**: Create a role and scope it to an OU (e.g., "Titan"). Verfiy the scope is saved.
+- **Hierarchy Proof**: Verify that the dropdown shows the correct heirarchical names for easier selection.

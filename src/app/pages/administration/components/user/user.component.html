@@ -1,7 +1,30 @@
 <div class="card">
+    <!-- OU Scoping Info Banner -->
+    <div *ngIf="currentUserScope" class="mb-4 p-3 rounded-lg bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20">
+        <div class="flex items-center gap-3">
+            <i class="pi pi-sitemap text-primary text-xl"></i>
+            <div>
+                <span class="text-sm text-[var(--text-color-secondary)]">Logged in as:</span>
+                <span class="font-semibold ml-2">{{ currentUserScope.userName }}</span>
+                <span class="mx-2">·</span>
+                <span class="text-sm">
+                    <span *ngIf="currentUserScope.organizationUnitPath" class="text-primary font-mono bg-primary/10 px-2 py-0.5 rounded">
+                        {{ currentUserScope.organizationUnitName }} ({{ currentUserScope.organizationUnitPath }})
+                    </span>
+                    <span *ngIf="!currentUserScope.organizationUnitPath" class="text-green-600 font-semibold">
+                        🌐 Host Admin - No OU Restrictions
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+
     <!-- Toolbar with Create Button -->
     <p-toolbar class="mb-6">
-        <ng-template #start> <h3>Manage Users</h3> </ng-template>
+        <ng-template #start> 
+            <h3>Manage Users</h3>
+            <span class="ml-4 text-sm text-[var(--text-color-secondary)]">({{ users.length }} users in scope)</span>
+        </ng-template>
         <ng-template #end>
             <p-button label="Add New User" icon="pi pi-plus" class="mr-2" (onClick)="triggerEditUser(null, false)" />
         </ng-template>
@@ -16,7 +39,7 @@
         [totalCount]="totalCount"
         [loading]="loading"
         [rows]="10"
-        [globalSearchFields]="['fullName', 'emailAddress', 'phoneNumber', 'isActive']"
+        [globalSearchFields]="['fullName', 'emailAddress', 'phoneNumber', 'isActive', 'organizationUnitName']"
         [lazyLoadFn]="getallusers.bind(this)"
     >
     </NG-Table>
@@ -54,6 +77,21 @@
                     selectClass="w-full"
                     [mark]="true"
                 ></NG-Select>
+
+                <!-- OU Select -->
+                <NG-Select
+                    *ngIf="field.key === 'organizationUnitId'"
+                    id="organizationUnitId"
+                    formControlName="organizationUnitId"
+                    [options]="organizationUnits"
+                    optionLabel="displayName"
+                    optionValue="id"
+                    label="Organization Unit"
+                    containerClass="w-full shadow-none"
+                    selectClass="w-full"
+                    [mark]="false"
+                ></NG-Select>
+
 
                 <!-- Error Messages -->
                 <div *ngIf="isFieldInvalid(field.key)" class="mt-1">

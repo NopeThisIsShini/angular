@@ -3,22 +3,26 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table, TableLazyLoadEvent } from 'primeng/table';
 import { SharedModule } from '@app/shared/shared.imports';
-import { ColumnDef, FormField } from '@app/shared/models';
+import { ColumnDef, FormField, UserScopeContext } from '@app/shared/models';
 import { validationConstants } from '@app/utils/constant';
 import { RolesModel, UsersModel } from '@app/pages/models';
 import { getFilterValues, getSeverity } from '@app/shared/functions';
-import { UsersService } from '@app/pages/services';
+import { UsersService, OrganizationService } from '@app/pages/services';
+import { OUScopingService } from '@app/shared/services/ou-scoping.service';
 
 @Component({
     selector: 'app-user',
+    standalone: true,
     imports: [SharedModule],
     templateUrl: './user.component.html',
     styleUrl: './user.component.scss'
 })
 export class UserComponent implements OnInit, AfterViewInit {
     @ViewChild('dt') dt!: Table;
+
     items: any[] = [];
     rolesList: RolesModel[] = [];
+    organizationUnits: any[] = [];
     getSeverity = getSeverity;
     formFields: FormField[] = [
         {
@@ -89,6 +93,13 @@ export class UserComponent implements OnInit, AfterViewInit {
             errorMessages: {
                 required: 'Role is required.'
             }
+        },
+        {
+            key: 'organizationUnitId',
+            label: 'Organization Unit',
+            type: 'select',
+            validators: [],
+            errorMessages: {}
         }
     ];
     users: UsersModel[] = [];
@@ -100,16 +111,23 @@ export class UserComponent implements OnInit, AfterViewInit {
     showCreateEditUserDialog: boolean = false;
     form!: FormGroup;
     isEditMode: boolean = false;
+    currentUserScope: UserScopeContext | null = null;
     constructor(
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
         private fb: FormBuilder,
-        private userService: UsersService
+        private userService: UsersService,
+        private organizationService: OrganizationService,
+        private ouScopingService: OUScopingService
     ) {}
     columns: ColumnDef[] = [
         {
             field: 'fullName',
             header: 'Name'
+        },
+        {
+            field: 'organizationUnitName',
+            header: 'Organization Unit'
         },
         {
             field: 'emailAddress',
@@ -146,9 +164,18 @@ export class UserComponent implements OnInit, AfterViewInit {
         }
     ];
     ngOnInit(): void {
+        this.currentUserScope = this.ouScopingService.getCurrentUser();
         this.getAllRoles();
+        this.getOrganizationUnits();
         this.initializeForm();
     }
+
+    getOrganizationUnits() {
+        this.organizationService.getTree().subscribe((res: any) => {
+            this.organizationUnits = res.result.items;
+        });
+    }
+
     ngAfterViewInit(): void {
         this.columns.find((col) => col.field === 'status')!.template = this.isActiveTemplate;
     }

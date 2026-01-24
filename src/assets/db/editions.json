@@ -1,0 +1,47 @@
+{
+    "targetUrl": null,
+    "success": true,
+    "error": null,
+    "unAuthorizedRequest": false,
+    "__abp": true,
+    "result": {
+        "items": [
+            {
+                "id": 1,
+                "name": "Starter",
+                "displayName": "Starter Plan",
+                "monthlyPrice": 29,
+                "yearlyPrice": 290,
+                "trialDays": 14,
+                "maxUsers": 50,
+                "maxOrganizationUnits": 5,
+                "features": ["Basic RBAC", "Email Support"],
+                "isActive": true
+            },
+            {
+                "id": 2,
+                "name": "Professional",
+                "displayName": "Professional Plan",
+                "monthlyPrice": 99,
+                "yearlyPrice": 990,
+                "trialDays": 14,
+                "maxUsers": 500,
+                "maxOrganizationUnits": 50,
+                "features": ["Organization Units", "Phone Support", "API Access"],
+                "isActive": true
+            },
+            {
+                "id": 3,
+                "name": "Enterprise",
+                "displayName": "Enterprise Plan",
+                "monthlyPrice": null,
+                "yearlyPrice": null,
+                "trialDays": 30,
+                "maxUsers": null,
+                "maxOrganizationUnits": null,
+                "features": ["Unlimited Everything", "SSO", "Dedicated Support", "SLA", "Custom Integrations"],
+                "isActive": true
+            }
+        ]
+    }
+}

@@ -3,6 +3,7 @@ import { roleResponse, RolesModel } from '../../../models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { RoleService } from '../../../services/api/role.service';
+import { OrganizationService } from '@app/pages/services';
 import { Table, TableLazyLoadEvent } from 'primeng/table';
 import { PermissionComponent } from '../../../../shared/components';
 import { ColumnDef, FormField, TableAction } from '../../../../shared/models';
@@ -32,6 +33,7 @@ export class RoleComponent implements OnInit {
     showCreateEditRole: boolean = false;
     form!: FormGroup;
     selectedRoleData: RolesModel | null = null;
+    organizationUnits: any[] = [];
     @ViewChild('permissionComponent') permissionComponent!: PermissionComponent;
 
     formFields: FormField[] = [
@@ -61,6 +63,13 @@ export class RoleComponent implements OnInit {
             key: 'description',
             label: 'Description',
             type: 'text',
+            validators: [],
+            errorMessages: {}
+        },
+        {
+            key: 'organizationUnitId',
+            label: 'Organization Scope',
+            type: 'select',
             validators: [],
             errorMessages: {}
         }
@@ -94,13 +103,34 @@ export class RoleComponent implements OnInit {
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
         private roleService: RoleService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private organizationService: OrganizationService
     ) {}
 
     ngOnInit() {
         this.initializeForm();
         this.loadTabs();
+        this.getOrganizationUnits();
     }
+
+    getOrganizationUnits() {
+        this.organizationService.getTree().subscribe((res: any) => {
+            this.organizationUnits = this.flattenUnits(res.result.items);
+        });
+    }
+
+    flattenUnits(items: any[], parentName: string = ''): any[] {
+        let result: any[] = [];
+        items.forEach((item) => {
+            const displayName = parentName ? `${parentName} > ${item.displayName}` : item.displayName;
+            result.push({ id: item.id, displayName: displayName });
+            if (item.children && item.children.length > 0) {
+                result = result.concat(this.flattenUnits(item.children, displayName));
+            }
+        });
+        return result;
+    }
+
 
     private initializeForm(): void {
         const formControls: any = {};
@@ -239,7 +269,8 @@ export class RoleComponent implements OnInit {
             displayName: details.displayName,
             description: details.description,
             normalizedName: details.normalizedName,
-            grantedPermissions: details.grantedPermissions
+            grantedPermissions: details.grantedPermissions,
+            organizationUnitId: details.organizationUnitId
         });
         this.permissionComponent.loadPermissionsFromApiResponse(details.grantedPermissions);
     }

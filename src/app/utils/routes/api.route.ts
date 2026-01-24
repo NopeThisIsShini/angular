@@ -46,5 +46,35 @@ export const api_routes = {
 
     //Smtp
     getMyEmailSettings: 'api/services/app/HostSettings/GetEmailSettings',
-    updateAllSettings: 'api/services/app/HostSettings/UpdateAllSettings'
+    updateAllSettings: 'api/services/app/HostSettings/UpdateAllSettings',
+
+    // Host - Tenant Management
+    getAllTenants: 'api/services/app/Tenant/GetAll',
+    getTenantById: 'api/services/app/Tenant/Get',
+    createTenant: 'api/services/app/Tenant/Create',
+    updateTenant: 'api/services/app/Tenant/Update',
+    deleteTenant: 'api/services/app/Tenant/Delete',
+    activateTenant: 'api/services/app/Tenant/Activate',
+    deactivateTenant: 'api/services/app/Tenant/Deactivate',
+
+    // Host - Edition/Plan Management
+    getAllEditions: 'api/services/app/Edition/GetAll',
+    createEdition: 'api/services/app/Edition/Create',
+    updateEdition: 'api/services/app/Edition/Update',
+    deleteEdition: 'api/services/app/Edition/Delete',
+
+    // Host - Impersonation
+    impersonate: 'api/services/app/Account/Impersonate',
+
+    // Organization Units
+    getAllOrganizationUnits: 'api/services/app/OrganizationUnit/GetAll',
+    getOrganizationUnitTree: 'api/services/app/OrganizationUnit/GetTree',
+    getOrganizationUnitById: 'api/services/app/OrganizationUnit/Get',
+    createOrganizationUnit: 'api/services/app/OrganizationUnit/Create',
+    updateOrganizationUnit: 'api/services/app/OrganizationUnit/Update',
+    deleteOrganizationUnit: 'api/services/app/OrganizationUnit/Delete',
+    moveOrganizationUnit: 'api/services/app/OrganizationUnit/Move',
+    getOrganizationUnitUsers: 'api/services/app/OrganizationUnit/GetUsers',
+    assignUserToOrganizationUnit: 'api/services/app/OrganizationUnit/AddUser',
+    removeUserFromOrganizationUnit: 'api/services/app/OrganizationUnit/RemoveUser'
 };

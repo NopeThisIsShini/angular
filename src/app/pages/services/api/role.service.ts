@@ -1,31 +1,21 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { CommonModel, inputParamModel } from '@app/shared/models';
 import { GetAllRolesOutputModel, roleResponse, RolesModel } from '@app/pages/models';
+import { OUScopingService } from '@app/shared/services/ou-scoping.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RoleService {
-    constructor(private http: HttpClient) {}
+    constructor(
+        private http: HttpClient,
+        private ouScopingService: OUScopingService
+    ) {}
 
-    getallRoles(input: inputParamModel) {
+    getallRoles(input: inputParamModel): Observable<GetAllRolesOutputModel> {
         // DEMO: Using static JSON instead of API call
-        // Original API call:
-        // let params = new HttpParams();
-        // if (input.SearchTerm) {
-        //     params = params.set('SearchTerm', input.SearchTerm);
-        // }
-        // if (input.MaxResultCount) {
-        //     params = params.set('MaxResultCount', input.MaxResultCount);
-        // }
-        // if (input.SkipCount) {
-        //     params = params.set('SkipCount', input.SkipCount);
-        // }
-        // return this.http.get<GetAllRolesOutputModel>(`api/services/app/Role/GetAll`, {
-        //     params
-        // });
         return this.http.get<GetAllRolesOutputModel>('assets/db/roles.json');
     }
     saveRole(roleData: RolesModel, isUpdate: boolean): Observable<roleResponse> {
@@ -41,3 +31,4 @@ export class RoleService {
         });
     }
 }
+

@@ -1,0 +1,52 @@
+{
+    "targetUrl": null,
+    "success": true,
+    "error": null,
+    "unAuthorizedRequest": false,
+    "__abp": true,
+    "result": {
+        "totalCount": 4,
+        "items": [
+            {
+                "id": 1,
+                "userId": 2,
+                "organizationUnitId": 10,
+                "userName": "john.sales",
+                "name": "John",
+                "surname": "Sales",
+                "emailAddress": "john.sales@demo.com",
+                "addedTime": "2026-01-15T10:00:00Z"
+            },
+            {
+                "id": 2,
+                "userId": 3,
+                "organizationUnitId": 10,
+                "userName": "jane.sales",
+                "name": "Jane",
+                "surname": "Sales",
+                "emailAddress": "jane.sales@demo.com",
+                "addedTime": "2026-01-16T14:30:00Z"
+            },
+            {
+                "id": 3,
+                "userId": 4,
+                "organizationUnitId": 10,
+                "userName": "bob.sales",
+                "name": "Bob",
+                "surname": "Johnson",
+                "emailAddress": "bob.johnson@demo.com",
+                "addedTime": "2026-01-17T09:15:00Z"
+            },
+            {
+                "id": 4,
+                "userId": 5,
+                "organizationUnitId": 10,
+                "userName": "alice.sales",
+                "name": "Alice",
+                "surname": "Williams",
+                "emailAddress": "alice.williams@demo.com",
+                "addedTime": "2026-01-18T11:45:00Z"
+            }
+        ]
+    }
+}

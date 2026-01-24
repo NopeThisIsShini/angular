@@ -15,6 +15,69 @@
             },
             {
                 "parentName": null,
+                "name": "host",
+                "displayName": "[Host]",
+                "description": "Host management (Software Provider)",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "host",
+                "name": "host.dashboard",
+                "displayName": "[Host Dashboard]",
+                "description": "Host dashboard overview",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "host.dashboard",
+                "name": "host.dashboard.read",
+                "displayName": "[View Host Dashboard]",
+                "description": "View host dashboard",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "host",
+                "name": "host.tenants",
+                "displayName": "[Tenants]",
+                "description": "Tenant management",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "host.tenants",
+                "name": "host.tenants.read",
+                "displayName": "[View Tenants]",
+                "description": "View tenants list",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "host.tenants",
+                "name": "host.tenants.create",
+                "displayName": "[Create Tenant]",
+                "description": "Create new tenants",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "host.tenants",
+                "name": "host.tenants.edit",
+                "displayName": "[Edit Tenant]",
+                "description": "Edit existing tenants",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "host",
+                "name": "host.editions",
+                "displayName": "[Editions]",
+                "description": "Edition/Plan management",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": "host.editions",
+                "name": "host.editions.read",
+                "displayName": "[View Editions]",
+                "description": "View editions list",
+                "isGrantedByDefault": false
+            },
+            {
+                "parentName": null,
                 "name": "administration",
                 "displayName": "[Administration]",
                 "description": "Administration module",
@@ -143,6 +206,15 @@
         "grantedPermissionNames": [
             "dashboard",
             "dashboard.read",
+            "host",
+            "host.dashboard",
+            "host.dashboard.read",
+            "host.tenants",
+            "host.tenants.read",
+            "host.tenants.create",
+            "host.tenants.edit",
+            "host.editions",
+            "host.editions.read",
             "administration",
             "administration.role",
             "administration.role.read",
@@ -154,6 +226,11 @@
             "administration.user.create",
             "administration.user.edit",
             "administration.user.delete",
+            "administration.organization",
+            "administration.organization.read",
+            "administration.organization.create",
+            "administration.organization.edit",
+            "administration.organization.delete",
             "account",
             "account.profile",
             "account.profile.read",

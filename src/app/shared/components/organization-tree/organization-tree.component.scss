@@ -1,0 +1,29 @@
+::ng-deep {
+    .p-tree {
+        border: none;
+        padding: 0;
+
+        .p-tree-container {
+            .p-treenode {
+                .p-treenode-content {
+                    padding: 0.5rem;
+                    border-radius: 6px;
+
+                    &:hover {
+                        background-color: var(--surface-hover);
+                    }
+
+                    &.p-highlight {
+                        background-color: var(--primary-color);
+                        color: var(--primary-color-text);
+
+                        .p-badge {
+                            background-color: var(--surface-0);
+                            color: var(--primary-color);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

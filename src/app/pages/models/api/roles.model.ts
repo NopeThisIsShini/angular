@@ -7,6 +7,9 @@ export interface RolesModel {
     normalizedName: string;
     description: string;
     grantedPermissions: string[];
+    organizationUnitId: number | null;
+    organizationUnitPath?: string;
+    organizationUnitName?: string;
 }
 export interface PermissionModule {
     id: number;

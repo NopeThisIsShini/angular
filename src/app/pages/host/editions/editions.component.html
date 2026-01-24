@@ -1,0 +1,65 @@
+<div class="card">
+    <p-toolbar class="mb-6">
+        <ng-template #start>
+            <h3>Manage Editions</h3>
+        </ng-template>
+
+        <ng-template #end>
+            <p-button label="Add Edition" icon="pi pi-plus" class="mr-2" (onClick)="openCreateDialog()" />
+        </ng-template>
+    </p-toolbar>
+
+    <NG-Table
+        [value]="editions"
+        [columns]="columns"
+        [actions]="actions"
+        [totalCount]="totalCount"
+        [loading]="loading"
+        [rows]="10"
+        [globalSearchFields]="['name', 'displayName']"
+        [lazyLoadFn]="loadEditions.bind(this)"
+    >
+    </NG-Table>
+</div>
+
+<p-dialog
+    [(visible)]="dialogVisible"
+    [header]="editMode ? 'Update Edition' : 'Create Edition'"
+    [style]="{ width: '450px' }"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+>
+    <form [formGroup]="form" (ngSubmit)="saveEdition()">
+        <div class="flex flex-col gap-6">
+            @for (field of formFields; track field.key) {
+                <div class="w-full">
+                    <NG-Input
+                        [id]="field.key"
+                        [formControlName]="field.key"
+                        [label]="field.label"
+                        [type]="field.type"
+                        containerClass="w-full"
+                        [mark]="field.mark || false"
+                    ></NG-Input>
+
+                    @if (isFieldInvalid(field.key)) {
+                        <div class="mt-1">
+                            @for (error of getFieldErrors(field.key); track error) {
+                                <span class="block text-sm text-[var(--text-danger-color)]">
+                                    {{ error }}
+                                </span>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="w-full h-px bg-gray-200 my-6"></div>
+        <div class="flex justify-end gap-3">
+            <p-button label="Cancel" severity="secondary" (onClick)="dialogVisible = false"></p-button>
+            <p-button [label]="editMode ? 'Update' : 'Save'" type="submit" [disabled]="form.invalid"></p-button>
+        </div>
+    </form>
+</p-dialog>

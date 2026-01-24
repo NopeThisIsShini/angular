@@ -1,0 +1,78 @@
+<div class="card">
+    <p-toolbar class="mb-6">
+        <ng-template #start>
+            <h3>Manage Tenants</h3>
+        </ng-template>
+
+        <ng-template #end>
+            <p-button label="Add Tenant" icon="pi pi-plus" class="mr-2" (onClick)="openCreateDialog()" />
+        </ng-template>
+    </p-toolbar>
+
+    <NG-Table
+        [value]="tenants"
+        [columns]="columns"
+        [actions]="actions"
+        [totalCount]="totalCount"
+        [loading]="loading"
+        [rows]="10"
+        [globalSearchFields]="['name', 'tenancyName', 'editionName']"
+        [lazyLoadFn]="loadTenants.bind(this)"
+    >
+    </NG-Table>
+</div>
+
+<p-dialog
+    [(visible)]="dialogVisible"
+    [header]="editMode ? 'Update Tenant' : 'Create Tenant'"
+    [style]="{ width: '450px' }"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+>
+    <form [formGroup]="form" (ngSubmit)="saveTenant()">
+        <div class="flex flex-col gap-6">
+            @for (field of formFields; track field.key) {
+                <div class="w-full">
+                    @if (field.type === 'select') {
+                        <NG-Select
+                            [id]="field.key"
+                            [formControlName]="field.key"
+                            [options]="editions"
+                            optionLabel="displayName"
+                            optionValue="id"
+                            [label]="field.label"
+                            containerClass="w-full"
+                            [mark]="field.mark || false"
+                        ></NG-Select>
+                    } @else {
+                        <NG-Input
+                            [id]="field.key"
+                            [formControlName]="field.key"
+                            [label]="field.label"
+                            [type]="field.type"
+                            containerClass="w-full"
+                            [mark]="field.mark || false"
+                        ></NG-Input>
+                    }
+
+                    @if (isFieldInvalid(field.key)) {
+                        <div class="mt-1">
+                            @for (error of getFieldErrors(field.key); track error) {
+                                <span class="block text-sm text-[var(--text-danger-color)]">
+                                    {{ error }}
+                                </span>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="w-full h-px bg-gray-200 my-6"></div>
+        <div class="flex justify-end gap-3">
+            <p-button label="Cancel" severity="secondary" (onClick)="dialogVisible = false"></p-button>
+            <p-button [label]="editMode ? 'Update' : 'Save'" type="submit" [disabled]="form.invalid"></p-button>
+        </div>
+    </form>
+</p-dialog>

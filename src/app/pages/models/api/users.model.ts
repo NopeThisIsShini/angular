@@ -12,6 +12,9 @@ export interface UsersModel {
     password: string;
     id: number;
     phoneNumber: string;
+    organizationUnitId: number | null;
+    organizationUnitPath?: string;      // OU Path for scoping (e.g., '/1/2/')
+    organizationUnitName?: string;      // Display name of the OU
 }
 
 export interface getUserResponse extends CommonModel {

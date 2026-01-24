@@ -1,13 +1,17 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { GetAllRolesOutputModel, getUserResponse, userInputParamModel, UsersModel } from '@app/pages/models';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { OUScopingService } from '@app/shared/services/ou-scoping.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UsersService {
-    constructor(private http: HttpClient) {}
+    constructor(
+        private http: HttpClient,
+        private ouScopingService: OUScopingService
+    ) {}
 
     getRoles(): Observable<GetAllRolesOutputModel> {
         // DEMO: Using static JSON instead of API call
@@ -18,20 +22,6 @@ export class UsersService {
 
     getallusers(input: userInputParamModel): Observable<getUserResponse> {
         // DEMO: Using static JSON instead of API call
-        // Original API call:
-        // let params = new HttpParams();
-        // if (input.SearchTerm) {
-        //     params = params.set('Keyword', input.SearchTerm);
-        // }
-        // if (input.MaxResultCount) {
-        //     params = params.set('MaxResultCount', input.MaxResultCount);
-        // }
-        // if (input.SkipCount) {
-        //     params = params.set('SkipCount', input.SkipCount);
-        // }
-        // return this.http.get<getUserResponse>(`api/services/app/User/GetAll`, {
-        //     params
-        // });
         return this.http.get<getUserResponse>('assets/db/users.json');
     }
 
@@ -43,3 +33,4 @@ export class UsersService {
         }
     }
 }
+

@@ -19,6 +19,9 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { DividerModule } from 'primeng/divider';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { CardModule } from 'primeng/card';
+import { TooltipModule } from 'primeng/tooltip';
+import { ToastModule } from 'primeng/toast';
 
 // Standalone components
 import { Dialog } from 'primeng/dialog';
@@ -55,6 +58,9 @@ export const PrimengImports = [
     DividerModule,
     IconFieldModule,
     InputIconModule,
+    CardModule,
+    TooltipModule,
+    ToastModule,
 
     // Standalone components
     Dialog,

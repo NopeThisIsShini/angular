@@ -37,6 +37,27 @@ export class AppMenu implements OnInit{
                         routerLink: [`${LOCAL_ROUTES.DASHBOARD}`]
                     },
                     {
+                        label: 'Host',
+                        icon: 'pi pi-fw pi-server',
+                        items: [
+                            {
+                                label: 'Dashboard',
+                                icon: 'pi pi-fw pi-chart-bar',
+                                routerLink: [`${LOCAL_ROUTES.HOST}/${LOCAL_ROUTES.DASHBOARD}`]
+                            },
+                            {
+                                label: 'Tenants',
+                                icon: 'pi pi-fw pi-building',
+                                routerLink: [`${LOCAL_ROUTES.HOST}/${LOCAL_ROUTES.TENANTS}`]
+                            },
+                            {
+                                label: 'Editions',
+                                icon: 'pi pi-fw pi-box',
+                                routerLink: [`${LOCAL_ROUTES.HOST}/${LOCAL_ROUTES.EDITIONS}`]
+                            }
+                        ]
+                    },
+                    {
                         label: 'Administration',
                         icon: 'pi pi-fw pi-shield',
                         items: [
@@ -49,6 +70,11 @@ export class AppMenu implements OnInit{
                                 label: 'Users',
                                 icon: 'pi pi-fw pi-users',
                                 routerLink: [`${LOCAL_ROUTES.ADMINISTRATION}/${LOCAL_ROUTES.USER}`]
+                            },
+                            {
+                                label: 'Organization',
+                                icon: 'pi pi-fw pi-building',
+                                routerLink: [`${LOCAL_ROUTES.ADMINISTRATION}/${LOCAL_ROUTES.ORGANIZATION}`]
                             }
                         ]
                     },
