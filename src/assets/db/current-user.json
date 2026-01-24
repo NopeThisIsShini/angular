@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "result": {
+    "user": {
+      "id": 1,
+      "name": "Test",
+      "surname": "User",
+      "userName": "testuser",
+      "emailAddress": "test.user@example.com",
+      "isEmailConfirmed": true,
+      "roles": [
+        {
+          "roleId": 1,
+          "roleName": "Admin"
+        }
+      ],
+      "creationTime": "2026-01-01T00:00:00Z",
+      "lastLoginTime": "2026-01-24T18:30:00Z"
+    },
+    "tenant": null,
+    "application": {
+      "version": "1.0.0",
+      "releaseDate": "2026-01-01T00:00:00Z",
+      "features": {}
+    }
+  },
+  "error": null,
+  "unAuthorizedRequest": false,
+  "__abp": true
+}

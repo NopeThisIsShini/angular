@@ -1,0 +1,35 @@
+{
+  "success": true,
+  "result": {
+    "totalCount": 3,
+    "items": [
+      {
+        "id": 1,
+        "name": "Admin",
+        "displayName": "Administrator",
+        "normalizedName": "ADMIN",
+        "description": "Full system access with all permissions",
+        "grantedPermissions": ["Pages.Users", "Pages.Roles", "Pages.Settings", "Pages.Dashboard"]
+      },
+      {
+        "id": 2,
+        "name": "Manager",
+        "displayName": "Manager",
+        "normalizedName": "MANAGER",
+        "description": "Can manage users and view reports",
+        "grantedPermissions": ["Pages.Users", "Pages.Dashboard"]
+      },
+      {
+        "id": 3,
+        "name": "User",
+        "displayName": "Standard User",
+        "normalizedName": "USER",
+        "description": "Basic user access",
+        "grantedPermissions": ["Pages.Dashboard"]
+      }
+    ]
+  },
+  "error": null,
+  "unAuthorizedRequest": false,
+  "__abp": true
+}

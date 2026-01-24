@@ -1,0 +1,14 @@
+{
+  "success": true,
+  "result": {
+    "name": "Test",
+    "surName": "User",
+    "emailAddress": "test.user@example.com",
+    "userName": "testuser",
+    "profileName": "Test User",
+    "profilePicture": ""
+  },
+  "error": null,
+  "unAuthorizedRequest": false,
+  "__abp": true
+}

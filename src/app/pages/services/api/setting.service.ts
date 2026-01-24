@@ -8,7 +8,10 @@ import { smtpSettingsPayload } from '@app/pages/models';
 export class SettingService {
     constructor(private http: HttpClient) {}
     getEmailSettings() {
-        return this.http.get('get_email_setting');
+        // API Call - uncomment for production
+        // return this.http.get('get_email_setting');
+        // Local DB for testing
+        return this.http.get('assets/db/email-settings.json');
     }
 
     updateEmailSettings(settings: smtpSettingsPayload) {

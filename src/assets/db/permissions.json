@@ -1,0 +1,106 @@
+{
+  "success": true,
+  "result": {
+    "permissions": [
+      {
+        "name": "Pages",
+        "displayName": "[Pages]",
+        "description": "Pages access",
+        "parentName": null,
+        "isGrantedByDefault": false
+      },
+      {
+        "name": "Pages.Dashboard",
+        "displayName": "[Dashboard]",
+        "description": "Dashboard access",
+        "parentName": "Pages",
+        "isGrantedByDefault": true
+      },
+      {
+        "name": "Pages.Users",
+        "displayName": "[Users]",
+        "description": "Users management",
+        "parentName": "Pages",
+        "isGrantedByDefault": false
+      },
+      {
+        "name": "Pages.Users.Create",
+        "displayName": "[Create User]",
+        "description": "Create new users",
+        "parentName": "Pages.Users",
+        "isGrantedByDefault": false
+      },
+      {
+        "name": "Pages.Users.Edit",
+        "displayName": "[Edit User]",
+        "description": "Edit users",
+        "parentName": "Pages.Users",
+        "isGrantedByDefault": false
+      },
+      {
+        "name": "Pages.Users.Delete",
+        "displayName": "[Delete User]",
+        "description": "Delete users",
+        "parentName": "Pages.Users",
+        "isGrantedByDefault": false
+      },
+      {
+        "name": "Pages.Roles",
+        "displayName": "[Roles]",
+        "description": "Roles management",
+        "parentName": "Pages",
+        "isGrantedByDefault": false
+      },
+      {
+        "name": "Pages.Roles.Create",
+        "displayName": "[Create Role]",
+        "description": "Create new roles",
+        "parentName": "Pages.Roles",
+        "isGrantedByDefault": false
+      },
+      {
+        "name": "Pages.Roles.Edit",
+        "displayName": "[Edit Role]",
+        "description": "Edit roles",
+        "parentName": "Pages.Roles",
+        "isGrantedByDefault": false
+      },
+      {
+        "name": "Pages.Roles.Delete",
+        "displayName": "[Delete Role]",
+        "description": "Delete roles",
+        "parentName": "Pages.Roles",
+        "isGrantedByDefault": false
+      },
+      {
+        "name": "Pages.Settings",
+        "displayName": "[Settings]",
+        "description": "Settings management",
+        "parentName": "Pages",
+        "isGrantedByDefault": false
+      }
+    ],
+    "grantedPermissionNames": [
+      "Pages",
+      "Pages.Dashboard",
+      "Pages.Users",
+      "Pages.Users.Create",
+      "Pages.Users.Edit",
+      "Pages.Users.Delete",
+      "Pages.Roles",
+      "Pages.Roles.Create",
+      "Pages.Roles.Edit",
+      "Pages.Roles.Delete",
+      "Pages.Settings"
+    ],
+    "role": {
+      "id": 1,
+      "name": "Admin",
+      "displayName": "Administrator",
+      "description": "Full system access"
+    }
+  },
+  "error": null,
+  "unAuthorizedRequest": false,
+  "__abp": true
+}

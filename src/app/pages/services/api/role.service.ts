@@ -11,19 +11,22 @@ export class RoleService {
     constructor(private http: HttpClient) {}
 
     getallRoles(input: inputParamModel) {
-        let params = new HttpParams();
-        if (input.SearchTerm) {
-            params = params.set('SearchTerm', input.SearchTerm);
-        }
-        if (input.MaxResultCount) {
-            params = params.set('MaxResultCount', input.MaxResultCount);
-        }
-        if (input.SkipCount) {
-            params = params.set('SkipCount', input.SkipCount);
-        }
-        return this.http.get<GetAllRolesOutputModel>(`api/services/app/Role/GetAll`, {
-            params
-        });
+        // API Call - uncomment for production
+        // let params = new HttpParams();
+        // if (input.SearchTerm) {
+        //     params = params.set('SearchTerm', input.SearchTerm);
+        // }
+        // if (input.MaxResultCount) {
+        //     params = params.set('MaxResultCount', input.MaxResultCount);
+        // }
+        // if (input.SkipCount) {
+        //     params = params.set('SkipCount', input.SkipCount);
+        // }
+        // return this.http.get<GetAllRolesOutputModel>(`api/services/app/Role/GetAll`, {
+        //     params
+        // });
+        // Local DB for testing
+        return this.http.get<GetAllRolesOutputModel>('assets/db/roles.json');
     }
     saveRole(roleData: RolesModel, isUpdate: boolean): Observable<roleResponse> {
         const url = isUpdate ? 'api/services/app/Role/Update' : 'api/services/app/Role/Create';

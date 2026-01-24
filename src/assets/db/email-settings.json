@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "result": {
+    "email": {
+      "defaultFromAddress": "noreply@example.com",
+      "defaultFromDisplayName": "Example App",
+      "smtpHost": "smtp.example.com",
+      "smtpPort": 587,
+      "smtpUserName": "smtp_user",
+      "smtpPassword": "",
+      "smtpEnableSsl": true,
+      "smtpUseDefaultCredentials": false,
+      "smtpDomain": "example.com"
+    }
+  },
+  "error": null,
+  "unAuthorizedRequest": false,
+  "__abp": true
+}

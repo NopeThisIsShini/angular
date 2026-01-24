@@ -1,0 +1,50 @@
+{
+  "success": true,
+  "result": {
+    "totalCount": 3,
+    "items": [
+      {
+        "userName": "admin",
+        "name": "Admin",
+        "surname": "User",
+        "fullName": "Admin User",
+        "emailAddress": "admin@example.com",
+        "isActive": true,
+        "roleNames": ["Admin"],
+        "lastLoginTime": "2026-01-24T18:30:00Z",
+        "password": "",
+        "id": 1,
+        "phoneNumber": "+1234567890"
+      },
+      {
+        "userName": "john.doe",
+        "name": "John",
+        "surname": "Doe",
+        "fullName": "John Doe",
+        "emailAddress": "john.doe@example.com",
+        "isActive": true,
+        "roleNames": ["User"],
+        "lastLoginTime": "2026-01-23T10:15:00Z",
+        "password": "",
+        "id": 2,
+        "phoneNumber": "+1987654321"
+      },
+      {
+        "userName": "jane.smith",
+        "name": "Jane",
+        "surname": "Smith",
+        "fullName": "Jane Smith",
+        "emailAddress": "jane.smith@example.com",
+        "isActive": false,
+        "roleNames": ["Manager", "User"],
+        "lastLoginTime": "2026-01-20T14:45:00Z",
+        "password": "",
+        "id": 3,
+        "phoneNumber": "+1122334455"
+      }
+    ]
+  },
+  "error": null,
+  "unAuthorizedRequest": false,
+  "__abp": true
+}

@@ -18,7 +18,7 @@ export const appConfig: ApplicationConfig = {
             withEnabledBlockingInitialNavigation()
             // withHashLocation()
         ),
-        // provideAppInitializer(() => inject(ConfigService).loadUserAndPermissions()),
+        provideAppInitializer(() => inject(ConfigService).loadUserAndPermissions()),
         provideHttpClient(withFetch(), withInterceptors([baseUrlInterceptor, errorInterceptor, authInterceptor])),
         provideAnimationsAsync(),
         providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } }),

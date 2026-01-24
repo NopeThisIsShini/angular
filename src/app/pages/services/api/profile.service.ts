@@ -23,7 +23,10 @@ export class ProfileService {
     constructor(private httpclint: HttpClient) {}
 
     getMyProfile(): Observable<UserProfileResult> {
-        return this.httpclint.get<UserProfileResult>(api_routes.getMyProfile);
+        // API Call - uncomment for production
+        // return this.httpclint.get<UserProfileResult>(api_routes.getMyProfile);
+        // Local DB for testing
+        return this.httpclint.get<UserProfileResult>('assets/db/profile.json');
     }
 
     updateProfile(profileData: ProfileData): Observable<UserProfileResult> {

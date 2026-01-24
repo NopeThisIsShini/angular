@@ -11,7 +11,10 @@ export class SmtpService {
     constructor(private httpClint: HttpClient) {}
 
     getMyEmailSettings(): Observable<EmailSettingsResult> {
-        return this.httpClint.get<EmailSettingsResult>(api_routes.getMyEmailSettings);
+        // API Call - uncomment for production
+        // return this.httpClint.get<EmailSettingsResult>(api_routes.getMyEmailSettings);
+        // Local DB for testing
+        return this.httpClint.get<EmailSettingsResult>('assets/db/smtp-settings.json');
     }
 
     updateAllSettings(payload: EmailSettingsResponse): Observable<EmailSettings> {
