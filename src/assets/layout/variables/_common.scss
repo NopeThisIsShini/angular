@@ -17,6 +17,6 @@
     --focus-ring-color: var(--p-focus-ring-color);
     --focus-ring-offset: var(--p-focus-ring-offset);
     --focus-ring-shadow: var(--p-focus-ring-shadow);
-    --primary-gradient: linear-gradient(to right, #0689DA, #0E4C6D);
-    --primary-shadow: 0 15px 30px -5px rgba(59, 130, 246, 0.1);
+    --primary-gradient: linear-gradient(to right, var(--primary-color), color-mix(in srgb, var(--primary-color), transparent 30%));
+    --primary-shadow: 0 15px 30px -5px color-mix(in srgb, var(--primary-color), transparent 90%);
 }

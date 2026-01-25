@@ -12,7 +12,11 @@
         &.layout-overlay {
             .layout-main-container {
                 margin-left: 0;
-                padding-left: 2rem;
+            }
+
+            .layout-topbar {
+                left: 0;
+                width: 100%;
             }
 
             .layout-sidebar {
@@ -41,7 +45,7 @@
 
         &.layout-static {
             .layout-main-container {
-                margin-left: 22rem;
+                margin-left: 18rem;
             }
 
             &.layout-static-inactive {
@@ -52,7 +56,11 @@
 
                 .layout-main-container {
                     margin-left: 0;
-                    padding-left: 2rem;
+                }
+
+                .layout-topbar {
+                    left: 0;
+                    width: 100%;
                 }
             }
         }

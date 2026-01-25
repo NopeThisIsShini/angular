@@ -4,38 +4,17 @@
     position: fixed;
     height: 4rem;
     z-index: 997;
-    left: 0;
+    left: 18rem;
     top: 0;
-    width: 100%;
+    width: calc(100% - 18rem);
     padding: 0 2rem;
-    background-color: var(--surface-card);
-    transition: left var(--layout-section-transition-duration);
+    background-color: color-mix(in srgb, var(--surface-ground), transparent 40%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: left var(--layout-section-transition-duration), width var(--layout-section-transition-duration);
     display: flex;
     align-items: center;
-
-    .layout-topbar-logo-container {
-        width: 20rem;
-        display: flex;
-        align-items: center;
-    }
-
-    .layout-topbar-logo {
-        display: inline-flex;
-        align-items: center;
-        font-size: 1.5rem;
-        border-radius: var(--content-border-radius);
-        color: var(--text-color);
-        font-weight: 500;
-        gap: 0.5rem;
-
-        svg {
-            width: 3rem;
-        }
-
-        &:focus-visible {
-            @include focused();
-        }
-    }
+    border-bottom: 0 none;
 
     .layout-topbar-action {
         display: inline-flex;
@@ -99,11 +78,13 @@
 
 @media (max-width: 991px) {
     .layout-topbar {
-        padding: 0 2rem;
-
-        .layout-topbar-logo-container {
-            width: auto;
-        }
+        left: 0;
+        width: 100%;
+        padding: 0 1rem;
+        background-color: color-mix(in srgb, var(--surface-overlay), transparent 20%);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--surface-border);
 
         .layout-menu-button {
             margin-left: 0;
