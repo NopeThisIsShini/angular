@@ -9,5 +9,8 @@ export const LOCAL_ROUTES = {
     SMTP: 'smtp',
     DASHBOARD: 'dashboard',
     ADMINISTRATION: 'administration',
-    ACCOUNT: 'account'
+    ACCOUNT: 'account',
+    TENANTS: 'tenants',
+    EDITIONS: 'editions',
+    HOST: 'host',
 };

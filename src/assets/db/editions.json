@@ -1,0 +1,76 @@
+{
+  "success": true,
+  "result": {
+    "totalCount": 5,
+    "items": [
+      {
+        "id": 1,
+        "name": "Free",
+        "displayName": "Free Edition",
+        "monthlyPrice": null,
+        "annualPrice": null,
+        "trialDayCount": null,
+        "waitingDayAfterExpire": 1,
+        "expiringEditionId": null,
+        "isActive": true,
+        "isFree": true,
+        "creationTime": "2025-01-01T00:00:00Z"
+      },
+      {
+        "id": 2,
+        "name": "Standard",
+        "displayName": "Standard Edition",
+        "monthlyPrice": 29.99,
+        "annualPrice": 299.99,
+        "trialDayCount": 14,
+        "waitingDayAfterExpire": 7,
+        "expiringEditionId": 1,
+        "isActive": true,
+        "isFree": false,
+        "creationTime": "2025-01-05T10:30:00Z"
+      },
+      {
+        "id": 3,
+        "name": "Professional",
+        "displayName": "Professional Edition",
+        "monthlyPrice": 79.99,
+        "annualPrice": 799.99,
+        "trialDayCount": 30,
+        "waitingDayAfterExpire": 14,
+        "expiringEditionId": 2,
+        "isActive": true,
+        "isFree": false,
+        "creationTime": "2025-01-10T14:45:00Z"
+      },
+      {
+        "id": 4,
+        "name": "Enterprise",
+        "displayName": "Enterprise Edition",
+        "monthlyPrice": 199.99,
+        "annualPrice": 1999.99,
+        "trialDayCount": 30,
+        "waitingDayAfterExpire": 30,
+        "expiringEditionId": 3,
+        "isActive": true,
+        "isFree": false,
+        "creationTime": "2025-01-15T09:00:00Z"
+      },
+      {
+        "id": 5,
+        "name": "Custom",
+        "displayName": "Custom Enterprise",
+        "monthlyPrice": null,
+        "annualPrice": null,
+        "trialDayCount": null,
+        "waitingDayAfterExpire": 60,
+        "expiringEditionId": null,
+        "isActive": false,
+        "isFree": false,
+        "creationTime": "2025-01-20T16:20:00Z"
+      }
+    ]
+  },
+  "error": null,
+  "unAuthorizedRequest": false,
+  "__abp": true
+}

@@ -26,6 +26,10 @@ export const appRoutes: Routes = [
             {
                 path: LOCAL_ROUTES.ACCOUNT,
                 loadChildren: () => import('./app/pages/account/account.routes')
+            },
+            {
+                path: LOCAL_ROUTES.HOST,
+                loadChildren: () => import('./app/pages/host/host.routes')
             }
         ]
     },

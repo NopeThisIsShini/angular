@@ -9,7 +9,7 @@
         "displayName": "Administrator",
         "normalizedName": "ADMIN",
         "description": "Full system access with all permissions",
-        "grantedPermissions": ["Pages.Users", "Pages.Roles", "Pages.Settings", "Pages.Dashboard"]
+        "grantedPermissions": ["Pages.Users", "Pages.Roles", "Pages.Tenants", "Pages.Editions", "Pages.Settings", "Pages.Dashboard"]
       },
       {
         "id": 2,

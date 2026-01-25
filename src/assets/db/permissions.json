@@ -73,6 +73,20 @@
         "isGrantedByDefault": false
       },
       {
+        "name": "Pages.Tenants",
+        "displayName": "[Tenants]",
+        "description": "Tenants management",
+        "parentName": "Pages",
+        "isGrantedByDefault": false
+      },
+      {
+        "name": "Pages.Editions",
+        "displayName": "[Editions]",
+        "description": "Editions management",
+        "parentName": "Pages",
+        "isGrantedByDefault": false
+      },
+      {
         "name": "Pages.Settings",
         "displayName": "[Settings]",
         "description": "Settings management",
@@ -91,6 +105,8 @@
       "Pages.Roles.Create",
       "Pages.Roles.Edit",
       "Pages.Roles.Delete",
+      "Pages.Tenants",
+      "Pages.Editions",
       "Pages.Settings"
     ],
     "role": {

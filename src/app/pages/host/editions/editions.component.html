@@ -1,0 +1,100 @@
+<div class="card">
+    <p-toolbar class="mb-6">
+        <ng-template #start>
+            <h3>Manage Editions</h3>
+        </ng-template>
+
+        <ng-template #end>
+            <p-button label="Create Edition" icon="pi pi-plus" class="mr-2" (onClick)="openCreateDialog()" />
+        </ng-template>
+    </p-toolbar>
+
+    <NG-Table
+        [value]="editionsData"
+        [columns]="columns"
+        [actions]="actions"
+        [totalCount]="totalCount"
+        [loading]="loading"
+        [rows]="10"
+        [globalSearchFields]="['name', 'displayName']"
+        [lazyLoadFn]="getAllEditions.bind(this)"
+    >
+        <!-- Custom Template for Price Columns -->
+        <ng-template let-row pTemplate="monthlyPrice">
+            {{ formatPrice(row.monthlyPrice) }}
+        </ng-template>
+        <ng-template let-row pTemplate="annualPrice">
+            {{ formatPrice(row.annualPrice) }}
+        </ng-template>
+    </NG-Table>
+
+    <p-dialog [(visible)]="showCreateEditDialog" [style]="{ minWidth: '40vw' }" [header]="editMode ? 'Update Edition' : 'Create Edition'" [modal]="true" (onHide)="hideDialog()">
+        <form [formGroup]="form" class="p-2 flex flex-col space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+                <!-- Name -->
+                <div class="w-full">
+                    <NG-Input [label]="'Name'" [formControlName]="'name'" [id]="'name'" [mark]="true" class="w-full"></NG-Input>
+                    <div *ngIf="isFieldInvalid('name')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                        <span *ngFor="let error of getFieldErrors('name')" class="block">{{ error }}</span>
+                    </div>
+                </div>
+
+                <!-- Display Name -->
+                <div class="w-full">
+                    <NG-Input [label]="'Display Name'" [formControlName]="'displayName'" [id]="'displayName'" [mark]="true" class="w-full"></NG-Input>
+                    <div *ngIf="isFieldInvalid('displayName')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                        <span *ngFor="let error of getFieldErrors('displayName')" class="block">{{ error }}</span>
+                    </div>
+                </div>
+
+                <!-- Is Free Checkbox -->
+                <div class="w-full flex items-center gap-2 pt-4">
+                    <p-checkbox formControlName="isFree" [binary]="true" inputId="isFree"></p-checkbox>
+                    <label for="isFree">Is Free</label>
+                </div>
+
+                <!-- Empty space for grid alignment -->
+                <div class="w-full"></div>
+
+                @if (!form.get('isFree')?.value) {
+                    <!-- Monthly Price -->
+                    <div class="w-full">
+                        <NG-Input [label]="'Monthly Price'" [type]="'number'" [formControlName]="'monthlyPrice'" [id]="'monthlyPrice'" class="w-full"></NG-Input>
+                        <div *ngIf="isFieldInvalid('monthlyPrice')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                            <span *ngFor="let error of getFieldErrors('monthlyPrice')" class="block">{{ error }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Annual Price -->
+                    <div class="w-full">
+                        <NG-Input [label]="'Annual Price'" [type]="'number'" [formControlName]="'annualPrice'" [id]="'annualPrice'" class="w-full"></NG-Input>
+                        <div *ngIf="isFieldInvalid('annualPrice')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                            <span *ngFor="let error of getFieldErrors('annualPrice')" class="block">{{ error }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Trial Days -->
+                    <div class="w-full">
+                        <NG-Input [label]="'Trial Days'" [type]="'number'" [formControlName]="'trialDayCount'" [id]="'trialDayCount'" class="w-full"></NG-Input>
+                        <div *ngIf="isFieldInvalid('trialDayCount')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                            <span *ngFor="let error of getFieldErrors('trialDayCount')" class="block">{{ error }}</span>
+                        </div>
+                    </div>
+                }
+
+                <!-- Waiting Day After Expire -->
+                <div class="w-full">
+                    <NG-Input [label]="'Waiting Days After Expire'" [type]="'number'" [formControlName]="'waitingDayAfterExpire'" [id]="'waitingDayAfterExpire'" class="w-full"></NG-Input>
+                    <div *ngIf="isFieldInvalid('waitingDayAfterExpire')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                        <span *ngFor="let error of getFieldErrors('waitingDayAfterExpire')" class="block">{{ error }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 mt-4">
+                <p-button label="Cancel" severity="secondary" (onClick)="hideDialog()" />
+                <p-button [label]="editMode ? 'Update' : 'Create'" (onClick)="saveEdition()" [disabled]="!form.valid" />
+            </div>
+        </form>
+    </p-dialog>
+</div>

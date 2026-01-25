@@ -5,3 +5,5 @@ export * from './roles.model';
 export * from './smtp.model';
 export * from './login.model';
 export * from './profile.model';
+export * from './editions.model';
+export * from './tenants.model';

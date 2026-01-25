@@ -41,14 +41,30 @@ export class AppMenu implements OnInit {
                                 routerLink: [`${LOCAL_ROUTES.ADMINISTRATION}/${LOCAL_ROUTES.ROLE}`]
                             },
                             {
-                                label: 'Users',
-                                icon: 'pi pi-fw pi-users',
-                                routerLink: [`${LOCAL_ROUTES.ADMINISTRATION}/${LOCAL_ROUTES.USER}`]
-                            }
-                        ]
-                    }
-                ]
-            }
+                                 label: 'Users',
+                                 icon: 'pi pi-fw pi-users',
+                                 routerLink: [`${LOCAL_ROUTES.ADMINISTRATION}/${LOCAL_ROUTES.USER}`]
+                             }
+                         ]
+                     },
+                     {
+                         label: 'Host',
+                         icon: 'pi pi-fw pi-server',
+                         items: [
+                             {
+                                 label: 'Tenants',
+                                 icon: 'pi pi-fw pi-building',
+                                 routerLink: [`/${LOCAL_ROUTES.HOST}/${LOCAL_ROUTES.TENANTS}`]
+                             },
+                             {
+                                 label: 'Editions',
+                                 icon: 'pi pi-fw pi-star',
+                                 routerLink: [`/${LOCAL_ROUTES.HOST}/${LOCAL_ROUTES.EDITIONS}`]
+                             }
+                         ]
+                     }
+                 ]
+             }
         ];
     }
 

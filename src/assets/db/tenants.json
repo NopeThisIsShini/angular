@@ -1,0 +1,115 @@
+{
+  "success": true,
+  "result": {
+    "totalCount": 8,
+    "items": [
+      {
+        "id": 1,
+        "tenancyName": "default",
+        "name": "Default Tenant",
+        "adminEmailAddress": "admin@default.com",
+        "connectionString": null,
+        "isActive": true,
+        "editionId": 1,
+        "editionDisplayName": "Free Edition",
+        "subscriptionEndDateUtc": null,
+        "isInTrialPeriod": false,
+        "creationTime": "2025-01-01T00:00:00Z"
+      },
+      {
+        "id": 2,
+        "tenancyName": "acmecorp",
+        "name": "Acme Corporation",
+        "adminEmailAddress": "admin@acmecorp.com",
+        "connectionString": null,
+        "isActive": true,
+        "editionId": 3,
+        "editionDisplayName": "Professional Edition",
+        "subscriptionEndDateUtc": "2026-06-15T23:59:59Z",
+        "isInTrialPeriod": false,
+        "creationTime": "2025-02-10T09:30:00Z"
+      },
+      {
+        "id": 3,
+        "tenancyName": "techstartup",
+        "name": "Tech Startup Inc",
+        "adminEmailAddress": "admin@techstartup.io",
+        "connectionString": null,
+        "isActive": true,
+        "editionId": 2,
+        "editionDisplayName": "Standard Edition",
+        "subscriptionEndDateUtc": "2026-03-01T23:59:59Z",
+        "isInTrialPeriod": true,
+        "creationTime": "2025-03-01T14:45:00Z"
+      },
+      {
+        "id": 4,
+        "tenancyName": "globalenterprises",
+        "name": "Global Enterprises Ltd",
+        "adminEmailAddress": "it@globalenterprises.com",
+        "connectionString": "Server=db.globalenterprises.com;Database=tenant4;",
+        "isActive": true,
+        "editionId": 4,
+        "editionDisplayName": "Enterprise Edition",
+        "subscriptionEndDateUtc": "2027-01-01T23:59:59Z",
+        "isInTrialPeriod": false,
+        "creationTime": "2025-01-20T11:00:00Z"
+      },
+      {
+        "id": 5,
+        "tenancyName": "smallbiz",
+        "name": "Small Business Co",
+        "adminEmailAddress": "owner@smallbiz.com",
+        "connectionString": null,
+        "isActive": true,
+        "editionId": 1,
+        "editionDisplayName": "Free Edition",
+        "subscriptionEndDateUtc": null,
+        "isInTrialPeriod": false,
+        "creationTime": "2025-04-05T08:20:00Z"
+      },
+      {
+        "id": 6,
+        "tenancyName": "inactiveclient",
+        "name": "Inactive Client LLC",
+        "adminEmailAddress": "admin@inactiveclient.com",
+        "connectionString": null,
+        "isActive": false,
+        "editionId": 2,
+        "editionDisplayName": "Standard Edition",
+        "subscriptionEndDateUtc": "2025-12-31T23:59:59Z",
+        "isInTrialPeriod": false,
+        "creationTime": "2024-06-15T10:30:00Z"
+      },
+      {
+        "id": 7,
+        "tenancyName": "retailchain",
+        "name": "Retail Chain Group",
+        "adminEmailAddress": "tech@retailchain.com",
+        "connectionString": null,
+        "isActive": true,
+        "editionId": 3,
+        "editionDisplayName": "Professional Edition",
+        "subscriptionEndDateUtc": "2026-08-20T23:59:59Z",
+        "isInTrialPeriod": false,
+        "creationTime": "2025-02-28T16:45:00Z"
+      },
+      {
+        "id": 8,
+        "tenancyName": "newtrial",
+        "name": "New Trial Company",
+        "adminEmailAddress": "hello@newtrial.com",
+        "connectionString": null,
+        "isActive": true,
+        "editionId": 4,
+        "editionDisplayName": "Enterprise Edition",
+        "subscriptionEndDateUtc": "2026-02-15T23:59:59Z",
+        "isInTrialPeriod": true,
+        "creationTime": "2026-01-15T12:00:00Z"
+      }
+    ]
+  },
+  "error": null,
+  "unAuthorizedRequest": false,
+  "__abp": true
+}

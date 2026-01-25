@@ -1,0 +1,100 @@
+<div class="card">
+    <p-toolbar class="mb-6">
+        <ng-template #start>
+            <h3>Manage Tenants</h3>
+        </ng-template>
+
+        <ng-template #end>
+            <p-button label="Create Tenant" icon="pi pi-plus" class="mr-2" (onClick)="openCreateDialog()" />
+        </ng-template>
+    </p-toolbar>
+
+    <NG-Table
+        [value]="tenantsData"
+        [columns]="columns"
+        [actions]="actions"
+        [totalCount]="totalCount"
+        [loading]="loading"
+        [rows]="10"
+        [globalSearchFields]="['tenancyName', 'name']"
+        [lazyLoadFn]="getAllTenants.bind(this)"
+    >
+        <!-- Custom Template for Status Column -->
+        <ng-template let-row pTemplate="isActive">
+            <p-tag [severity]="row.isActive ? 'success' : 'danger'" [value]="row.isActive ? 'Active' : 'Inactive'"></p-tag>
+        </ng-template>
+
+        <!-- Custom Template for Date Column -->
+        <ng-template let-row pTemplate="subscriptionEndDateUtc">
+            {{ formatDate(row.subscriptionEndDateUtc) }}
+        </ng-template>
+    </NG-Table>
+
+    <p-dialog [(visible)]="showCreateEditDialog" [style]="{ minWidth: '50vw' }" [header]="editMode ? 'Update Tenant' : 'Create Tenant'" [modal]="true" (onHide)="hideDialog()">
+        <form [formGroup]="form" class="p-2 flex flex-col space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+                <!-- Tenancy Name -->
+                <div class="w-full">
+                    <NG-Input [label]="'Tenancy Name'" [formControlName]="'tenancyName'" [id]="'tenancyName'" [mark]="true" class="w-full"></NG-Input>
+                    <div *ngIf="isFieldInvalid('tenancyName')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                        <span *ngFor="let error of getFieldErrors('tenancyName')" class="block">{{ error }}</span>
+                    </div>
+                </div>
+
+                <!-- Name -->
+                <div class="w-full">
+                    <NG-Input [label]="'Name'" [formControlName]="'name'" [id]="'name'" [mark]="true" class="w-full"></NG-Input>
+                    <div *ngIf="isFieldInvalid('name')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                        <span *ngFor="let error of getFieldErrors('name')" class="block">{{ error }}</span>
+                    </div>
+                </div>
+
+                <!-- Admin Email -->
+                <div class="w-full">
+                    <NG-Input [label]="'Admin Email'" [type]="'text'" [formControlName]="'adminEmailAddress'" [id]="'adminEmailAddress'" [mark]="true" class="w-full"></NG-Input>
+                    <div *ngIf="isFieldInvalid('adminEmailAddress')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                        <span *ngFor="let error of getFieldErrors('adminEmailAddress')" class="block">{{ error }}</span>
+                    </div>
+                </div>
+
+                <!-- Edition dropdown -->
+                <div class="w-full">
+                    <NG-Select [label]="'Edition'" [formControlName]="'editionId'" [options]="editions" [id]="'editionId'" class="w-full"></NG-Select>
+                </div>
+
+                @if (!editMode) {
+                    <!-- Password (only for creation) -->
+                    <div class="w-full">
+                        <NG-Input [label]="'Admin Password'" [type]="'password'" [formControlName]="'adminPassword'" [id]="'adminPassword'" [mark]="true" class="w-full"></NG-Input>
+                        <div *ngIf="isFieldInvalid('adminPassword')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                            <span *ngFor="let error of getFieldErrors('adminPassword')" class="block">{{ error }}</span>
+                        </div>
+                    </div>
+                }
+
+                <!-- Subscription End Date -->
+                <div class="w-full flex flex-col">
+                    <label class="mb-1 text-sm font-medium">Subscription End Date</label>
+                    <p-datepicker formControlName="subscriptionEndDateUtc" [showIcon]="true" appendTo="body" class="w-full"></p-datepicker>
+                </div>
+
+                <!-- Active Status -->
+                <div class="w-full flex items-center gap-4 pt-4">
+                    <div class="flex items-center gap-2">
+                        <p-checkbox formControlName="isActive" [binary]="true" inputId="isActive"></p-checkbox>
+                        <label for="isActive">Is Active</label>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <p-checkbox formControlName="isInTrialPeriod" [binary]="true" inputId="isInTrialPeriod"></p-checkbox>
+                        <label for="isInTrialPeriod">In Trial Period</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 mt-4">
+                <p-button label="Cancel" severity="secondary" (onClick)="hideDialog()" />
+                <p-button [label]="editMode ? 'Update' : 'Create'" (onClick)="saveTenant()" [disabled]="!form.valid" />
+            </div>
+        </form>
+    </p-dialog>
+</div>
