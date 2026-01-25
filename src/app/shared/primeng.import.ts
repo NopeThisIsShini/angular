@@ -31,6 +31,7 @@ import { Toolbar } from 'primeng/toolbar';
 import { SplitButton } from 'primeng/splitbutton';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 export const PrimengImports = [
     // Module-based imports
@@ -55,6 +56,7 @@ export const PrimengImports = [
     DividerModule,
     IconFieldModule,
     InputIconModule,
+    ProgressBarModule,
 
     // Standalone components
     Dialog,
