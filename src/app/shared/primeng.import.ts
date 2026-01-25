@@ -19,7 +19,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { DividerModule } from 'primeng/divider';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-
+import { BreadcrumbModule } from 'primeng/breadcrumb';
 // Standalone components
 import { Dialog } from 'primeng/dialog';
 import { FloatLabel } from 'primeng/floatlabel';
@@ -57,7 +57,7 @@ export const PrimengImports = [
     IconFieldModule,
     InputIconModule,
     ProgressBarModule,
-
+    BreadcrumbModule,
     // Standalone components
     Dialog,
     FloatLabel,

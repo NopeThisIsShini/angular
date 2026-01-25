@@ -117,6 +117,21 @@
         }
     }
 
+    .layout-topbar-breadcrumb {
+        margin-left: 1rem;
+        flex: 1;
+
+        .p-breadcrumb {
+            background: transparent;
+            border: 0 none;
+            padding: 0;
+
+            .p-breadcrumb-list {
+                padding: 0;
+            }
+        }
+    }
+
     .layout-config-menu {
         display: flex;
         gap: 1rem;

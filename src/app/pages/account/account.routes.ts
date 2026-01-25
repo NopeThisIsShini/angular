@@ -6,6 +6,7 @@ export default [
     {
         path: '',
         component: AccountComponent,
+        data: { breadcrumb: 'Account' },
         children: [
             {
                 path: '',
@@ -14,11 +15,13 @@ export default [
             },
             {
                 path: LOCAL_ROUTES.PROFILE,
-                loadComponent: () => import('./components/profile/profile.component').then((m) => m.ProfileComponent)
+                loadComponent: () => import('./components/profile/profile.component').then((m) => m.ProfileComponent),
+                data: { breadcrumb: 'Profile' }
             },
             {
                 path: LOCAL_ROUTES.SMTP,
-                loadComponent: () => import('./components/smtp/smtp.component').then((m) => m.SmtpComponent)
+                loadComponent: () => import('./components/smtp/smtp.component').then((m) => m.SmtpComponent),
+                data: { breadcrumb: 'SMTP' }
             }
         ]
     }

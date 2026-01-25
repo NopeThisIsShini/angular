@@ -8,16 +8,23 @@ import { LayoutService } from '../service/layout.service';
 
 import { AvatarModule } from 'primeng/avatar';
 import { MenuModule } from 'primeng/menu';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { AuthService } from '@app/pages/services';
+import { ActivatedRoute, Event, NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, AvatarModule, MenuModule],
+    imports: [RouterModule, CommonModule, StyleClassModule, AvatarModule, MenuModule, BreadcrumbModule],
     template: ` <div class="layout-topbar">
         <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
             <i class="pi pi-bars"></i>
         </button>
+
+        <div class="layout-topbar-breadcrumb">
+            <p-breadcrumb [model]="breadcrumbItems" [home]="homeItem" />
+        </div>
 
         <div class="layout-topbar-actions">
             <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
@@ -60,7 +67,43 @@ export class AppTopbar {
         }
     ];
 
-    constructor(public layoutService: LayoutService, private authService: AuthService) {}
+    breadcrumbItems: MenuItem[] = [];
+    homeItem: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
+
+    constructor(
+        public layoutService: LayoutService,
+        private authService: AuthService,
+        private router: Router,
+        private activatedRoute: ActivatedRoute
+    ) {
+        this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: Event) => {
+            this.breadcrumbItems = this.createBreadcrumbs(this.activatedRoute.root);
+        });
+    }
+
+    createBreadcrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: MenuItem[] = []): MenuItem[] {
+        const children: ActivatedRoute[] = route.children;
+
+        if (children.length === 0) {
+            return breadcrumbs;
+        }
+
+        for (const child of children) {
+            const routeURL: string = child.snapshot.url.map((segment) => segment.path).join('/');
+            if (routeURL !== '') {
+                url += `/${routeURL}`;
+            }
+
+            const label = child.snapshot.data['breadcrumb'] || routeURL;
+            if (label && routeURL !== '') {
+                breadcrumbs.push({ label: label.charAt(0).toUpperCase() + label.slice(1), routerLink: url });
+            }
+
+            return this.createBreadcrumbs(child, url, breadcrumbs);
+        }
+
+        return breadcrumbs;
+    }
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));

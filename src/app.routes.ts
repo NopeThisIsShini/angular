@@ -21,7 +21,8 @@ export const appRoutes: Routes = [
             },
             {
                 path: LOCAL_ROUTES.ADMINISTRATION,
-                loadChildren: () => import('./app/pages/administration/administration.routes')
+                loadChildren: () => import('./app/pages/administration/administration.routes'),
+                data: { breadcrumb: 'Administration' }
             },
             {
                 path: LOCAL_ROUTES.ACCOUNT,
