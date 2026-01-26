@@ -1,17 +1,17 @@
 @mixin focused() {
-    outline-width: var(--focus-ring-width);
-    outline-style: var(--focus-ring-style);
-    outline-color: var(--focus-ring-color);
-    outline-offset: var(--focus-ring-offset);
-    box-shadow: var(--focus-ring-shadow);
-    transition:
-        box-shadow var(--transition-duration),
-        outline-color var(--transition-duration);
+  outline-width: var(--focus-ring-width);
+  outline-style: var(--focus-ring-style);
+  outline-color: var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-shadow);
+  transition:
+    box-shadow var(--transition-duration),
+    outline-color var(--transition-duration);
 }
 
 @mixin focused-inset() {
-    outline-offset: -1px;
-    box-shadow: inset var(--focus-ring-shadow);
+  outline-offset: -1px;
+  box-shadow: inset var(--focus-ring-shadow);
 }
 
 @mixin displayFlex($dir, $align, $justify) {
@@ -28,10 +28,30 @@
   top: $t;
   bottom: $b;
 }
+
 @mixin abMidposition {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   @content;
+}
+
+@mixin apply-button-style($background, $border: 0, $show-hover: true) {
+  .p-button {
+    background: $background !important;
+    border: $border !important;
+
+    @if $show-hover {
+      transition: filter var(--transition-duration) ease;
+
+      &:enabled:hover {
+        filter: brightness(1.1);
+      }
+
+      &:enabled:active {
+        filter: brightness(0.95);
+      }
+    }
+  }
 }

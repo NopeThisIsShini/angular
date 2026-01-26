@@ -1,6 +1,28 @@
-// p-button.btn-gradient {
-//     .p-button {
-//         background: var(--primary-gradient) !important;
-//         border: 0 !important;
-//     }
-// }
+@use 'mixins' as *;
+
+// Map definition for easy expansion
+// Add any new class name and its corresponding background value here
+$button-variants: (
+    'btn-gradient': var(--primary-gradient),
+);
+
+// Auto-generate helper classes
+@each $name, $bg in $button-variants {
+    p-button.#{$name} {
+        @include apply-button-style($bg);
+    }
+}
+
+// Special case for custom borders or complex styles
+p-button.btn-outline-gradient {
+    @include apply-button-style(transparent, 1px solid var(--primary-color));
+
+    .p-button {
+        color: var(--primary-color) !important;
+
+        &:enabled:hover {
+            background: var(--primary-color) !important;
+            color: var(--primary-contrast-color) !important;
+        }
+    }
+}
