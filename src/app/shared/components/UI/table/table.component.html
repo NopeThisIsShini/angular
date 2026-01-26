@@ -1,29 +1,44 @@
-<p-table #dt [value]="value" [lazy]="lazy" (onLazyLoad)="onLazyLoad($event)" [totalRecords]="totalCount" [loading]="loading" [rows]="rows" [paginator]="true" [rowHover]="true" [globalFilterFields]="globalSearchFields" dataKey="id">
+<p-table #dt [value]="value" [lazy]="lazy" (onLazyLoad)="onLazyLoad($event)" [totalRecords]="totalCount"
+    [loading]="loading" [rows]="rows" [paginator]="true" [rowHover]="true" [globalFilterFields]="globalSearchFields"
+    dataKey="id">
     <ng-template pTemplate="caption" *ngIf="showGlobalSearch">
         <div class="flex justify-between items-center mb-3">
-            <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash" (click)="clear(dt)"></button>
-            <p-iconfield iconPosition="left">
+            <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+                (click)="clear(dt)"></button>
+            <!-- <p-iconfield iconPosition="left">
                 <p-inputicon styleClass="pi pi-search" />
                 <input type="text" pInputText placeholder="Filter by search" (input)="onGlobalFilter(dt, $event)" />
-            </p-iconfield>
+            </p-iconfield> -->
+            <p-floatlabel variant="on">
+                <p-iconfield>
+                    <p-inputicon class="pi pi-search" />
+                    <input type="text" pInputText (input)="onGlobalFilter(dt, $event)" />
+                </p-iconfield>
+                <label>Filter by search</label>
+            </p-floatlabel>
         </div>
     </ng-template>
 
     <!-- Table Header -->
     <ng-template pTemplate="header">
         <tr>
-            <th *ngFor="let col of columns" [pSortableColumn]="col.sortable ? col.field : undefined" style="min-width: 60px">
+            <th *ngFor="let col of columns" [pSortableColumn]="col.sortable ? col.field : undefined"
+                style="min-width: 60px">
                 <div class="flex justify-between items-center">
                     {{ col.header }}
                     <p-sortIcon *ngIf="col.sortable" [field]="col.field"></p-sortIcon>
                     <!-- Column Filter -->
-                    <p-columnFilter *ngIf="col.filterable" [field]="col.field" matchMode="contains" [showOperator]="false" [showMatchModes]="false" [showAddButton]="false" display="menu">
+                    <p-columnFilter *ngIf="col.filterable" [field]="col.field" matchMode="contains"
+                        [showOperator]="false" [showMatchModes]="false" [showAddButton]="false" display="menu">
                         <ng-template #filter let-value let-filter="filterCallback">
                             <!-- Text Filter -->
-                            <input *ngIf="col.filterType === 'text'" type="text" pInputText [ngModel]="value" (ngModelChange)="filter($event)" class="w-full" />
+                            <input *ngIf="col.filterType === 'text'" type="text" pInputText [ngModel]="value"
+                                (ngModelChange)="filter($event)" class="w-full" />
                             <!-- Dropdown Filter -->
                             <p-floatLabel *ngIf="col.filterType === 'select'" variant="on">
-                                <p-select [ngModel]="value" [options]="col.filterOptions || []" (onChange)="filter($event.value)" [filter]="true" filterBy="label" optionLabel="label" styleClass="w-full">
+                                <p-select [ngModel]="value" [options]="col.filterOptions || []"
+                                    (onChange)="filter($event.value)" [filter]="true" filterBy="label"
+                                    optionLabel="label" styleClass="w-full">
                                     <ng-template let-option #item>
                                         <div class="flex items-center gap-2 w-44">
                                             <span>{{ option.label }}</span>
@@ -40,7 +55,8 @@
                             </p-floatLabel>
                             <!-- Date Filter -->
                             <p-floatLabel variant="on" *ngIf="col.filterType === 'date'">
-                                <p-datepicker [ngModel]="value" (ngModelChange)="filter($event)" selectionMode="range" dateFormat="yy-mm-dd" styleClass="w-full"></p-datepicker>
+                                <p-datepicker [ngModel]="value" (ngModelChange)="filter($event)" selectionMode="range"
+                                    dateFormat="yy-mm-dd" styleClass="w-full"></p-datepicker>
                                 <label>Date Range</label>
                             </p-floatLabel>
                         </ng-template>
@@ -67,7 +83,8 @@
             <td *ngIf="actions.length > 0" class="align-middle">
                 <div class="flex space-x-2">
                     <ng-container *ngFor="let action of actions">
-                        <p-button [icon]="action.icon" [severity]="action.severity" [outlined]="action.outlined" (click)="action.command(row)"> </p-button>
+                        <p-button [icon]="action.icon" [severity]="action.severity" [outlined]="action.outlined"
+                            (click)="action.command(row)"> </p-button>
                     </ng-container>
                 </div>
             </td>
