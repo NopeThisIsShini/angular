@@ -4,6 +4,8 @@ import { Observable, of, switchMap, tap, map } from 'rxjs';
 import { AppInfoResponse, userPreferenceConfig, UserPreferences } from '../../models/api/common.model';
 import { ApiPermissionResponse } from '../../models/permission.model';
 import { PermissionService } from '../permission.service';
+import { api_routes } from '@app/utils/routes';
+import { LocalStorageService } from '../storage/local.storage.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +15,8 @@ export class ConfigService {
 
     constructor(
         private http: HttpClient,
-        private permissionService: PermissionService
+        private permissionService: PermissionService,
+        private lSService: LocalStorageService
     ) {}
 
     getUserPreferences(): Observable<UserPreferences> {
@@ -26,9 +29,9 @@ export class ConfigService {
 
     getCurrentUserInfo(): Observable<AppInfoResponse> {
         // API Call - uncomment for production
-        // return this.http.get<AppInfoResponse>('api/services/app/Session/GetCurrentLoginInformations');
+        return this.http.get<AppInfoResponse>(`${api_routes.userInfo}`);
         // Local DB for testing
-        return this.http.get<AppInfoResponse>('assets/db/current-user.json');
+        // return this.http.get<AppInfoResponse>('assets/db/current-user.json');
     }
 
     loadUserPermissions(userId: number): Observable<void> {
@@ -41,19 +44,24 @@ export class ConfigService {
     }
 
     loadUserAndPermissions(): Observable<void> {
-        return this.getCurrentUserInfo().pipe(
+        if(this.lSService.getItem('accessToken')){
+             return this.getCurrentUserInfo().pipe(
             switchMap((appInfoResp: AppInfoResponse) => {
                 const userId = appInfoResp.result.user?.id ?? null;
                 this.currentUserId = userId;
 
-                if (userId) {
+                // if (userId) {
                     // Chain: Load Permissions (extendable in future)
                     return this.loadUserPermissions(userId);
-                }
+                // }
 
                 // No user logged in → skip permission loading
-                return of(void 0);
+                // return of(void 0);
             })
         );
+        }else{
+            return of(void 0);
+        }
+       
     }
 }

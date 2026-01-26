@@ -11,9 +11,9 @@ export class UsersService {
 
     getRoles(): Observable<GetAllRolesOutputModel> {
         // API Call - uncomment for production
-        // return this.http.get<GetAllRolesOutputModel>(`api/services/app/User/GetRoles`);
+        return this.http.get<GetAllRolesOutputModel>(`role/roles`);
         // Local DB for testing
-        return this.http.get<GetAllRolesOutputModel>('assets/db/roles.json');
+        // return this.http.get<GetAllRolesOutputModel>('assets/db/roles.json');
     }
 
     getallusers(input: userInputParamModel): Observable<getUserResponse> {

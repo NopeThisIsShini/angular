@@ -228,7 +228,7 @@ export class UserComponent implements OnInit, AfterViewInit {
     triggerEditUser(data: UsersModel | null, isEdit: boolean = false) {
         let matchedRole: RolesModel | undefined;
         if (data && isEdit) {
-            matchedRole = this.rolesList.find((r) => r.normalizedName === data.roleNames[0]);
+            // matchedRole = this.rolesList.find((r) => r.normalizedName === data.roleNames[0]);
         }
         this.form.patchValue({
             ...data, // spread object properties

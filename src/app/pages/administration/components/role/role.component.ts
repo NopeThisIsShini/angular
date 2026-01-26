@@ -47,13 +47,13 @@ export class RoleComponent implements OnInit {
             }
         },
         {
-            key: 'displayName',
-            label: 'Display Name',
+            key: 'slug',
+            label: 'Slug',
             type: 'text',
             mark: true,
             validators: [Validators.required, Validators.pattern(validationConstants.NAME_PATTERN)],
             errorMessages: {
-                required: 'Display Name is required.',
+                required: 'Slug is required.',
                 pattern: 'Only alphabet values are allowed.'
             }
         },
@@ -67,8 +67,8 @@ export class RoleComponent implements OnInit {
     ];
     columns: ColumnDef[] = [
         { field: 'name', header: 'Name' },
-        { field: 'displayName', header: 'Display Name' },
-        { field: 'normalizedName', header: 'Normalized Name' },
+        { field: 'slug', header: 'Slug' },
+        // { field: 'normalizedName', header: 'Normalized Name' },
         { field: 'description', header: 'Description' }
     ];
     actions: TableAction[] = [
@@ -108,15 +108,15 @@ export class RoleComponent implements OnInit {
         this.formFields.forEach((field) => {
             formControls[field.key] = ['', field.validators || []];
         });
-        formControls['normalizedName'] = ['', [Validators.required]];
+        // formControls['normalizedName'] = ['', [Validators.required]];
         formControls['grantedPermissions'] = ['', [Validators.required]];
         formControls['id'] = [0, [Validators.required]];
         this.form = this.fb.group(formControls);
 
-        this.form.get('name')?.valueChanges.subscribe((nameValue: string) => {
-            const normalized = nameValue ? nameValue.toUpperCase() : '';
-            this.form.get('normalizedName')?.setValue(normalized, { emitEvent: false });
-        });
+        // this.form.get('name')?.valueChanges.subscribe((nameValue: string) => {
+        //     const normalized = nameValue ? nameValue.toUpperCase() : '';
+        //     this.form.get('normalizedName')?.setValue(normalized, { emitEvent: false });
+        // });
     }
     isFieldInvalid(fieldKey: string): boolean {
         const field = this.form.get(fieldKey);
@@ -150,7 +150,7 @@ export class RoleComponent implements OnInit {
             })
             .subscribe({
                 next: (res) => {
-                    this.Rolesdata = res.result.items;
+                    this.Rolesdata = res.result;
                     this.totalCount = res.result.totalCount;
                     this.loading = false;
                 },
@@ -233,18 +233,21 @@ export class RoleComponent implements OnInit {
     }
 
     getRoleDetails(details: RolesModel) {
+        console.log(details);
+        
         this.form.patchValue({
             id: details.id,
             name: details.name,
-            displayName: details.displayName,
+            slug: details.slug,
             description: details.description,
-            normalizedName: details.normalizedName,
+            // normalizedName: details.normalizedName,
             grantedPermissions: details.grantedPermissions
         });
         this.permissionComponent.loadPermissionsFromApiResponse(details.grantedPermissions);
     }
 
     hideDialog() {
+        this.editMode = false;
         this.showCreateEditRole = false;
         this.form.reset();
         this.permissionComponent.loadPermissionsFromApiResponse([]);

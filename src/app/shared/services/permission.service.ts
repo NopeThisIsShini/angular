@@ -63,9 +63,9 @@ export class PermissionService {
     getUserPermissions(id: number): Observable<ApiPermissionResponse> {
         // API Call - uncomment for production
         // const params = new HttpParams().set('id', id.toString());
-        // return this.http.get<ApiPermissionResponse>(`${api_routes.getUserPermissions}`, { params });
+        return this.http.get<ApiPermissionResponse>(`${api_routes.getUserPermissions}`);
         // Local DB for testing
-        return this.http.get<ApiPermissionResponse>('assets/db/permissions.json');
+        // return this.http.get<ApiPermissionResponse>('assets/db/permissions.json');
     }
     loadPermissionsFromApi(apiResponse: ApiPermissionResponse): void {
         // Convert API structure to tree structure
@@ -73,7 +73,7 @@ export class PermissionService {
 
         // Set granted permissions
         const grantedPermissions: PermissionData = {};
-        apiResponse.result.grantedPermissionNames.forEach((permName) => {
+        apiResponse.result.granted_permission_names.forEach((permName) => {
             grantedPermissions[permName] = true;
         });
 
@@ -162,7 +162,9 @@ export class PermissionService {
      * Check if user has specific permission
      */
     hasPermission(permission: string): boolean {
-        return !!this.storedPermissions[permission];
+        if (this.storedPermissions[permission]) return true;
+        const lowerPerm = permission.toLowerCase();
+        return Object.keys(this.storedPermissions).some((key) => key.toLowerCase() === lowerPerm);
     }
 
     /**

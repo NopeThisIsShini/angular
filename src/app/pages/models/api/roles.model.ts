@@ -3,8 +3,8 @@ import { CommonModel } from '@app/shared/models';
 export interface RolesModel {
     id: number;
     name: string;
-    displayName: string;
-    normalizedName: string;
+    slug: string;
+    // normalizedName: string;
     description: string;
     grantedPermissions: string[];
 }
@@ -25,10 +25,12 @@ export interface GetAllPermissionsOutputModel extends CommonModel {
     };
 }
 export interface GetAllRolesOutputModel extends CommonModel {
-    result: {
-        totalCount: number;
-        items: RolesModel[];
-    };
+    // result: {
+        
+    //     // totalCount: number;
+    //     // items: RolesModel[];
+    // };
+    result:any
 }
 export interface GetallRolesInputParamsModel extends CommonModel {
     Keyword: string;

@@ -1,6 +1,7 @@
 export const api_routes = {
-    login: 'api/TokenAuth/Authenticate',
+    login: 'auth/login',
     signup: 'api/services/app/Account/Register',
+    userInfo: 'user/getCurrentUser',
     //Tax Module
     getAllTaxes: 'api/services/app/Product/GetAllProductTax',
     createTax: 'api/services/app/Product/CreateProductTax',
@@ -38,7 +39,7 @@ export const api_routes = {
     getProductLayOutById: 'api/services/app/Product/GetProductLayout',
     deleteProductLayOut: 'api/services/app/Product/DeleteProductLayout',
     //Permissions
-    getUserPermissions: 'api/services/app/Role/GetRoleForEdit',
+    getUserPermissions: 'user/permissions',
 
     //profiles
     getMyProfile: 'api/services/app/Profile/GetProfile',

@@ -22,8 +22,8 @@ export class AuthService {
             tap((res) => {
                 if (res.success) {
                     this.localStorageService.setItem('accessToken', res.result.accessToken);
-                    this.localStorageService.setItem('encryptedAccessToken', res.result.encryptedAccessToken);
-                    this.localStorageService.setItem('userId', res.result.userId.toString());
+                    // this.localStorageService.setItem('encryptedAccessToken', res.result.encryptedAccessToken);
+                    // this.localStorageService.setItem('userId', res.result.user.id.toString());
                 }
             }),
             switchMap((res) => {

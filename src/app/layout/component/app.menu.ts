@@ -24,7 +24,7 @@ export class AppMenu implements OnInit {
 
     ngOnInit() {
         this.loadModels();
-        // this.model = this.filterMenu(this.model);
+        this.model = this.filterMenu(this.model);
     }
 
     loadModels() {
@@ -49,11 +49,11 @@ export class AppMenu implements OnInit {
                      },
                      {
                          label: 'Host',
-                         icon: 'pi pi-fw pi-server',
+                         icon: 'icon-host',
                          items: [
                              {
                                  label: 'Tenants',
-                                 icon: 'pi pi-fw pi-building',
+                                 icon: 'icon-tenants',
                                  routerLink: [`/${LOCAL_ROUTES.HOST}/${LOCAL_ROUTES.TENANTS}`]
                              },
                              {
@@ -80,6 +80,7 @@ export class AppMenu implements OnInit {
                 if (cloned.routerLink) {
                     const key = this.mapRouterToPermission(cloned.routerLink[0]);
                     if (!this.permissionService.hasPermission(key)) {
+                        
                         return null;
                     }
                 }
@@ -95,6 +96,6 @@ export class AppMenu implements OnInit {
 
     mapRouterToPermission(router: string): string {
         const key = router.replace(/^\//, '').replace(/\//g, '.');
-        return key + '.read';
+        return key + '.view';
     }
 }

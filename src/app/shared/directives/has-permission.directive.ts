@@ -2,7 +2,8 @@ import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 import { PermissionService } from '../services/permission.service';
 
 @Directive({
-    selector: '[appHasPermission]'
+    selector: '[appHasPermission]',
+    standalone: true
 })
 export class HasPermissionDirective {
     constructor(

@@ -5,8 +5,8 @@
         </ng-template>
 
         <ng-template #end>
-            <p-button label="Create Role" icon="pi pi-plus" rounded class="mr-2 btn-gradient"
-                (onClick)="createNewRole()" />
+            <p-button *appHasPermission="'Administration.Roles.Create'" label="Create Role" icon="pi pi-plus" rounded
+                class="mr-2 btn-gradient" (onClick)="createNewRole()" />
         </ng-template>
     </p-toolbar>
 

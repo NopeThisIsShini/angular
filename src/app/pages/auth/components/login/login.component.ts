@@ -33,9 +33,9 @@ export class LoginComponent {
     onSignIn(): void {
         if (this.loginForm.valid) {
             const payload = {
-                userNameOrEmailAddress: this.loginForm.controls['email'].value,
+                email: this.loginForm.controls['email'].value,
                 password: this.loginForm.controls['password'].value,
-                rememberClient: this.loginForm.controls['rememberMe'].value
+                // rememberClient: this.loginForm.controls['rememberMe'].value
             };
 
             this.isLoading = true;

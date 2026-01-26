@@ -94,7 +94,7 @@
         "isGrantedByDefault": false
       }
     ],
-    "grantedPermissionNames": [
+    "granted_permission_names": [
       "Pages",
       "Pages.Dashboard",
       "Pages.Users",
