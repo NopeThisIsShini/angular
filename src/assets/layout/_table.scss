@@ -1,4 +1,50 @@
-.p-datatable-table {
-    // border-radius: var(--card-border-radius);
-    // border: 1px solid var(--surface-border);
-}
+// .p-datatable {
+
+//     // 1. Header Styling
+//     .p-datatable-thead>tr>th {
+//         background: var(--surface-card);
+//         color: var(--text-color);
+//         font-weight: 700;
+//         text-transform: uppercase;
+//         font-size: 0.8rem;
+//         letter-spacing: 0.05em;
+//         padding: 1rem 1.5rem;
+//         transition: background-color var(--transition-duration);
+
+//         // Styling the sort icon if present
+//         .p-sortable-column-icon {
+//             color: var(--primary-color);
+//             margin-left: 0.5rem;
+//         }
+
+//         &:hover {
+//             background: var(--surface-hover) !important;
+//         }
+//     }
+
+//     // 2. Body Cell Styling
+//     .p-datatable-tbody>tr {
+//         background: var(--surface-card);
+//         transition: background-color var(--transition-duration);
+
+//         >td {
+//             padding: 1rem 1.5rem;
+//             color: var(--text-color-secondary);
+//             border-bottom: 1px solid var(--surface-border);
+//             font-size: 0.9rem;
+//         }
+
+//         &:hover {
+//             background: var(--surface-hover) !important;
+
+//             >td {
+//                 color: var(--text-color); // Darken text on hover
+//             }
+//         }
+
+//         // Remove border from the last row
+//         &:last-child>td {
+//             border-bottom: 0 none;
+//         }
+//     }
+// }

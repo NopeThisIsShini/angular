@@ -1,50 +1,40 @@
 <div class="card">
     <!-- Toolbar with Create Button -->
     <p-toolbar class="mb-6">
-        <ng-template #start> <h3>Manage Users</h3> </ng-template>
+        <ng-template #start>
+            <h3>Manage Users</h3>
+        </ng-template>
         <ng-template #end>
-            <p-button label="Add New User" icon="pi pi-plus" class="mr-2" (onClick)="triggerEditUser(null, false)" />
+            <p-button label="Add New User" rounded icon="pi pi-plus" class="mr-2 btn-gradient"
+                (onClick)="triggerEditUser(null, false)" />
         </ng-template>
     </p-toolbar>
 
     <!-- Main Table -->
 
-    <NG-Table [value]="users" [columns]="columns" [actions]="actions" [totalCount]="totalCount" [loading]="loading" [rows]="10" [globalSearchFields]="['fullName', 'emailAddress', 'phoneNumber', 'isActive']" [lazyLoadFn]="getallusers.bind(this)">
+    <NG-Table [value]="users" [columns]="columns" [actions]="actions" [totalCount]="totalCount" [loading]="loading"
+        [rows]="10" [globalSearchFields]="['fullName', 'emailAddress', 'phoneNumber', 'isActive']"
+        [lazyLoadFn]="getallusers.bind(this)">
     </NG-Table>
 </div>
 <ng-template #isActiveTemplate let-row>
     <p-tag [value]="row.isActive === true ? 'Active' : 'Inactive'" [severity]="getSeverity(row.isActive)" />
 </ng-template>
-<p-dialog
-    (onHide)="closeDialog()"
-    header="{{ isEditMode ? 'Update User' : 'Create User' }}"
-    [(visible)]="showCreateEditUserDialog"
-    [breakpoints]="{ '1300px': '60vw', '960px': '60vw' }"
-    [style]="{ width: '50vw' }"
-    [modal]="true"
-    [draggable]="false"
-    (onHide)="closeDialog()"
-    [resizable]="false"
->
+<p-dialog (onHide)="closeDialog()" header="{{ isEditMode ? 'Update User' : 'Create User' }}"
+    [(visible)]="showCreateEditUserDialog" [breakpoints]="{ '1300px': '60vw', '960px': '60vw' }"
+    [style]="{ width: '50vw' }" [modal]="true" [draggable]="false" (onHide)="closeDialog()" [resizable]="false">
     <form [formGroup]="form" (ngSubmit)="createEditUser(isEditMode)">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-2">
             <!-- Loop through form fields -->
             <div *ngFor="let field of formFields" class="w-full">
-                <NG-Input *ngIf="field.key !== 'roleNames'" class="w-full" containerClass="w-full" inputClass="w-full" [label]="field.label" [formControlName]="field.key" [type]="field.type" [id]="field.key" [mark]="true"></NG-Input>
+                <NG-Input *ngIf="field.key !== 'roleNames'" class="w-full" containerClass="w-full" inputClass="w-full"
+                    [label]="field.label" [formControlName]="field.key" [type]="field.type" [id]="field.key"
+                    [mark]="true"></NG-Input>
 
                 <!-- Role Single Select -->
-                <NG-Select
-                    *ngIf="field.key === 'roleNames'"
-                    id="roleNames"
-                    formControlName="roleNames"
-                    [options]="rolesList"
-                    optionLabel="displayName"
-                    optionValue="name"
-                    label="Role"
-                    containerClass="w-full shadow-none"
-                    selectClass="w-full"
-                    [mark]="true"
-                ></NG-Select>
+                <NG-Select *ngIf="field.key === 'roleNames'" id="roleNames" formControlName="roleNames"
+                    [options]="rolesList" optionLabel="displayName" optionValue="name" label="Role"
+                    containerClass="w-full shadow-none" selectClass="w-full" [mark]="true"></NG-Select>
 
                 <!-- Error Messages -->
                 <div *ngIf="isFieldInvalid(field.key)" class="mt-1">
