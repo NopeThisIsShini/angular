@@ -4,8 +4,9 @@ import { RouterLink } from '@angular/router';
 import { InputComponent, SelectComponent, TableComponent } from './components';
 import { NgModule } from '@angular/core';
 import { PrimengImports } from './primeng.import';
+import { CustomIconDirective } from './directives';
 
-const SharedImports = [CommonModule, FormsModule, ReactiveFormsModule, ...PrimengImports, InputComponent, TableComponent, SelectComponent, RouterLink];
+const SharedImports = [CommonModule, FormsModule, ReactiveFormsModule, ...PrimengImports, InputComponent, TableComponent, SelectComponent, RouterLink, CustomIconDirective];
 @NgModule({
     imports: [...SharedImports],
     exports: [...SharedImports]

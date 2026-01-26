@@ -33,16 +33,16 @@ export class AppMenu implements OnInit {
                 items: [
                     {
                         label: 'Administration',
-                        icon: 'pi pi-fw pi-shield',
+                        icon: 'icon-admin',
                         items: [
                             {
                                 label: 'Roles',
-                                icon: 'pi pi-fw pi-sitemap',
+                                icon: 'icon-roles',
                                 routerLink: [`${LOCAL_ROUTES.ADMINISTRATION}/${LOCAL_ROUTES.ROLE}`]
                             },
                             {
                                  label: 'Users',
-                                 icon: 'pi pi-fw pi-users',
+                                 icon: 'icon-users',
                                  routerLink: [`${LOCAL_ROUTES.ADMINISTRATION}/${LOCAL_ROUTES.USER}`]
                              }
                          ]

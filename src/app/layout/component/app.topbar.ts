@@ -19,7 +19,7 @@ import { filter } from 'rxjs';
     imports: [RouterModule, CommonModule, StyleClassModule, AvatarModule, MenuModule, BreadcrumbModule],
     template: ` <div class="layout-topbar">
         <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
-            <i class="pi pi-bars"></i>
+            <i class="icon-bars"></i>
         </button>
 
         <div class="layout-topbar-breadcrumb">
@@ -34,11 +34,11 @@ import { filter } from 'rxjs';
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
                     <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
-                        <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
+                        <i [ngClass]="{ 'icon-moon': layoutService.isDarkTheme(), 'icon-sun': !layoutService.isDarkTheme() }"></i>
                         <span>Theme</span>
                     </button>
                     <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-bell"></i>
+                        <i class="icon-alert"></i>
                         <span>Notifications</span>
                     </button>
                     
@@ -68,7 +68,7 @@ export class AppTopbar {
     ];
 
     breadcrumbItems: MenuItem[] = [];
-    homeItem: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
+    homeItem: MenuItem = { icon: 'icon-home', routerLink: '/' };
 
     constructor(
         public layoutService: LayoutService,

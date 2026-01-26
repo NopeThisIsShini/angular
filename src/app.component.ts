@@ -8,19 +8,22 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { environment } from '@env/environment';
 import { AppConfigurator } from '@app/layout/component/app.configurator';
 import { FaviconService, LoadingService } from '@app/shared/services';
+import { CustomIconDirective } from '@app/shared/directives';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterModule, RouterOutlet, ToastModule, AppConfigurator, ConfirmDialogModule, ProgressBarModule, CommonModule],
+    imports: [RouterModule, RouterOutlet, ToastModule, AppConfigurator, ConfirmDialogModule, ProgressBarModule, CommonModule, CustomIconDirective],
     template: `
-        @if (loadingService.loading()) {
-            <p-progressbar mode="indeterminate" [style]="{ height: '4px', position: 'fixed', top: '0', left: '0', width: '100%', 'z-index': '9999' }" />
-        }
-        <router-outlet />
-        <app-configurator />
-        <p-confirmdialog />
-        <p-toast />
+        <div [customIconGlobal]="true" class="h-full">
+            @if (loadingService.loading()) {
+                <p-progressbar mode="indeterminate" [style]="{ height: '4px', position: 'fixed', top: '0', left: '0', width: '100%', 'z-index': '9999' }" />
+            }
+            <router-outlet />
+            <app-configurator />
+            <p-confirmdialog />
+            <p-toast />
+        </div>
     `
 })
 export class AppComponent implements OnInit {
