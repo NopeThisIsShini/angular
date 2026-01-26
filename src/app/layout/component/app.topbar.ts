@@ -19,7 +19,7 @@ import { filter } from 'rxjs';
             <i class="icon-bars"></i>
         </button>
 
-        <div class="layout-topbar-breadcrumb">
+        <div class="layout-topbar-breadcrumb hidden lg:block">
             <p-breadcrumb [model]="breadcrumbItems" [home]="homeItem" />
         </div>
 

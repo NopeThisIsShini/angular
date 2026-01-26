@@ -1,4 +1,7 @@
 :root {
+    // prime override 
+    // --p-content-border-radius: 1.5rem !important;
+    --card-border-radius: 1.5rem !important;
     --primary-color: var(--p-primary-color);
     --primary-contrast-color: var(--p-primary-contrast-color);
     --text-color: var(--p-text-color);

@@ -1,15 +1,17 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { AppMenu } from './app.menu';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
 import { AuthService } from '@app/pages/services';
+import { SharedModule } from '@app/shared';
+import { LOCAL_ROUTES } from '@app/utils/routes';
 
 @Component({
     selector: 'app-sidebar',
     standalone: true,
-    imports: [AppMenu, RouterModule, CommonModule, AvatarModule],
-    template: ` <div class="layout-sidebar">
+    imports: [AppMenu, RouterModule, CommonModule, AvatarModule, SharedModule],
+    template: ` <div class="layout-sidebar !rounded-r-3xl">
         <div class="sidebar-header">
             <a class="layout-sidebar-logo" routerLink="/">
                 <!-- SVG omitted for brevity in instruction, keeping it in replacement -->
@@ -41,20 +43,106 @@ import { AuthService } from '@app/pages/services';
                 <div class="sidebar-user-info">
                     <span class="sidebar-user-name">Iona Rollins</span>
                 </div>
-                <button class="sidebar-logout-button" (click)="logout()">
-                    <i class="pi pi-sign-out"></i>
+                <button class="sidebar-logout-button"  (click)="menu.toggle($event)">
+                    <i class="pi pi-ellipsis-h"></i>
                 </button>
             </div>
         </div>
-    </div>`
+    </div>
+    <p-menu
+  #menu
+  [popup]="true"
+  appendTo="body"
+  [model]="items"
+  class="flex justify-center"
+  styleClass="w-full md:w-60"
+>
+ 
+  <ng-template #submenuheader let-item>
+    <span class="text-primary font-bold">{{ item.label }}</span>
+  </ng-template>
+  <ng-template #item let-item>
+    <a pRipple class="flex items-center p-menu-item-link">
+      <span [class]="item.icon"></span>
+      <span class="ml-2">{{ item.label }}</span>
+      <!-- <p-badge *ngIf="item.badge" class="ml-auto" [value]="item.badge" /> -->
+      <span
+        *ngIf="item.shortcut"
+        class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1"
+      >
+        {{ item.shortcut }}
+      </span>
+    </a>
+  </ng-template>
+  
+</p-menu>
+
+    
+    
+    `
 })
-export class AppSidebar {
+export class AppSidebar implements OnInit {
+    items: any[] = [];
     constructor(
         public el: ElementRef,
-        private authService: AuthService
-    ) {}
+        private authService: AuthService,
+        private router: Router
+    ) { }
+
+    ngOnInit(): void {
+        this.items = [
+            // {
+            //     separator: true
+            // },
+            {
+                label: 'Documents',
+                items: [
+                    {
+                        label: 'New',
+                        icon: 'pi pi-plus',
+                        shortcut: '⌘+N'
+                    },
+                    {
+                        label: 'Search',
+                        icon: 'pi pi-search',
+                        shortcut: '⌘+S'
+                    }
+                ]
+            },
+            {
+                label: 'Profile',
+                items: [
+                    {
+                        label: 'Account',
+                        icon: 'pi pi-cog',
+                        shortcut: '⌘+O',
+                        command: () => this.goToSettings()
+                    },
+                    {
+                        label: 'Messages',
+                        icon: 'pi pi-inbox',
+                        badge: '2'
+                    },
+                    {
+                        label: 'Logout',
+                        icon: 'pi pi-sign-out',
+                        shortcut: '⌘+Q',
+                        command: () => {
+                            this.logout();
+                        }
+                    }
+                ]
+            },
+            // {
+            //     separator: true
+            // }
+        ];
+    }
 
     logout() {
         this.authService.logout();
+    }
+    goToSettings() {
+        this.router.navigate([`${LOCAL_ROUTES.ACCOUNT}`]);
     }
 }
