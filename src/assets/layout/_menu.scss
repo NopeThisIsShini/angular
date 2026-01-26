@@ -7,7 +7,7 @@
     width: 18rem;
     height: 100vh;
     z-index: 999;
-    overflow-y: auto;
+    overflow-y: hidden;
     user-select: none;
     transition:
         transform var(--layout-section-transition-duration),
@@ -21,10 +21,10 @@
     box-shadow: 4px 0 24px var(--primary-shadow);
 
     .sidebar-header {
-        height: 6rem;
+        height: 5rem;
         display: flex;
         align-items: center;
-        padding: 0 2rem;
+        padding: 0 1.5rem;
         flex-shrink: 0;
 
         .layout-sidebar-logo {
@@ -49,7 +49,67 @@
 
     app-menu {
         flex: 1;
-        padding: 0.5rem 1.5rem;
+        padding: 0.5rem 1rem;
+        overflow-y: auto;
+    }
+
+    .sidebar-footer {
+        padding: 1rem;
+        // border-top: 1px solid var(--surface-border);
+        margin-top: auto;
+    }
+
+    .sidebar-user {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem;
+        border-radius: 12px;
+        background: color-mix(in srgb, var(--surface-ground), transparent 50%);
+        transition: background-color 0.2s;
+
+        &:hover {
+            background: var(--surface-hover);
+        }
+
+        .sidebar-user-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+
+            .sidebar-user-name {
+                font-weight: 600;
+                font-size: 0.95rem;
+                color: var(--text-color);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        .sidebar-logout-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-color-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+                background: color-mix(in srgb, var(--red-500), transparent 90%);
+                color: var(--red-500);
+            }
+
+            i {
+                font-size: 1.25rem;
+            }
+        }
     }
 }
 
@@ -102,9 +162,9 @@
             outline: 0 none;
             color: var(--text-color);
             cursor: pointer;
-            padding: 1rem 1.25rem;
+            padding: 0.75rem 1rem;
             border-radius: 12px;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
             transition:
                 background-color var(--element-transition-duration),
                 color var(--element-transition-duration);

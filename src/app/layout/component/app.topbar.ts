@@ -6,17 +6,14 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
 
-import { AvatarModule } from 'primeng/avatar';
-import { MenuModule } from 'primeng/menu';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
-import { AuthService } from '@app/pages/services';
 import { ActivatedRoute, Event, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, AvatarModule, MenuModule, BreadcrumbModule],
+    imports: [RouterModule, CommonModule, StyleClassModule, BreadcrumbModule],
     template: ` <div class="layout-topbar">
         <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
             <i class="icon-bars"></i>
@@ -41,38 +38,17 @@ import { filter } from 'rxjs';
                         <i class="icon-alert"></i>
                         <span>Notifications</span>
                     </button>
-                    
-                    <div class="layout-topbar-user" (click)="menu.toggle($event)">
-                        <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" />
-                        <div class="layout-topbar-user-info">
-                            <span class="layout-topbar-user-name">Totok Michael</span>
-                            <span class="layout-topbar-user-email">tmichael20mail.com</span>
-                        </div>
-                        <i class="pi pi-chevron-down" [ngClass]="{ 'rotate-180': isUserMenuOpen }" style="font-size: 0.8rem; margin-left: 0.5rem; color: var(--text-color-secondary); transition: transform 0.2s"></i>
-                    </div>
-                    <p-menu #menu [model]="userMenuItems" [popup]="true" appendTo="body" (onShow)="isUserMenuOpen = true" (onHide)="isUserMenuOpen = false" />
                 </div>
             </div>
         </div>
     </div>`
 })
 export class AppTopbar {
-    isUserMenuOpen = false;
-    userMenuItems: MenuItem[] = [
-        {
-            items: [
-                { label: 'Account', icon: 'pi pi-user', command: () => this.authService.logout() },
-                { label: 'Logout', icon: 'pi pi-sign-out', command: () => this.authService.logout() }
-            ]
-        }
-    ];
-
     breadcrumbItems: MenuItem[] = [];
     homeItem: MenuItem = { icon: 'icon-home', routerLink: '/' };
 
     constructor(
         public layoutService: LayoutService,
-        private authService: AuthService,
         private router: Router,
         private activatedRoute: ActivatedRoute
     ) {

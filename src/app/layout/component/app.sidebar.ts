@@ -2,14 +2,17 @@ import { Component, ElementRef } from '@angular/core';
 import { AppMenu } from './app.menu';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AvatarModule } from 'primeng/avatar';
+import { AuthService } from '@app/pages/services';
 
 @Component({
     selector: 'app-sidebar',
     standalone: true,
-    imports: [AppMenu, RouterModule, CommonModule],
+    imports: [AppMenu, RouterModule, CommonModule, AvatarModule],
     template: ` <div class="layout-sidebar">
         <div class="sidebar-header">
             <a class="layout-sidebar-logo" routerLink="/">
+                <!-- SVG omitted for brevity in instruction, keeping it in replacement -->
                 <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         fill-rule="evenodd"
@@ -31,8 +34,27 @@ import { CommonModule } from '@angular/common';
             </a>
         </div>
         <app-menu></app-menu>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" size="large" />
+                <div class="sidebar-user-info">
+                    <span class="sidebar-user-name">Iona Rollins</span>
+                </div>
+                <button class="sidebar-logout-button" (click)="logout()">
+                    <i class="pi pi-sign-out"></i>
+                </button>
+            </div>
+        </div>
     </div>`
 })
 export class AppSidebar {
-    constructor(public el: ElementRef) {}
+    constructor(
+        public el: ElementRef,
+        private authService: AuthService
+    ) {}
+
+    logout() {
+        this.authService.logout();
+    }
 }
