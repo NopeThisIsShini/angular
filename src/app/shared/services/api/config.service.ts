@@ -44,7 +44,7 @@ export class ConfigService {
     }
 
     loadUserAndPermissions(): Observable<void> {
-        if(this.lSService.getItem('accessToken')){
+        if(this.lSService.getItem('access_token')){
              return this.getCurrentUserInfo().pipe(
             switchMap((appInfoResp: AppInfoResponse) => {
                 const userId = appInfoResp.result.user?.id ?? null;

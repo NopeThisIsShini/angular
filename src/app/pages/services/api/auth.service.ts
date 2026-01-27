@@ -21,7 +21,7 @@ export class AuthService {
         return this.http.post<loginResponse>(api_routes.login, payload).pipe(
             tap((res) => {
                 if (res.success) {
-                    this.localStorageService.setItem('accessToken', res.result.accessToken);
+                    this.localStorageService.setItem('access_token', res.result.access_token);
                     // this.localStorageService.setItem('encryptedAccessToken', res.result.encryptedAccessToken);
                     // this.localStorageService.setItem('userId', res.result.user.id.toString());
                 }
@@ -43,7 +43,7 @@ export class AuthService {
         return this.http.post<signupResponse>(api_routes.signup, payload);
     }
     isAuthenticated(): boolean {
-        return !!this.localStorageService.getItem('accessToken');
+        return !!this.localStorageService.getItem('access_token');
     }
     logout(): void {
         this.localStorageService.clear();

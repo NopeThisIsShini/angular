@@ -1,5 +1,5 @@
 export interface inputParamModel {
-    SearchTerm?: string;
-    MaxResultCount?: number;
-    SkipCount?: number;
+    keyword?: string;
+    maxResultCount?: number;
+    skipCount?: number;
 }

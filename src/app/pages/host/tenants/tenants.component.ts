@@ -80,7 +80,7 @@ export class TenantsComponent implements OnInit {
     }
 
     private loadEditions(): void {
-        this.editionService.getAllEditions({ MaxResultCount: 1000 }).subscribe({
+        this.editionService.getAllEditions({ maxResultCount: 1000 }).subscribe({
             next: (res) => {
                 this.editions = res.result.items.map((e: EditionModel) => ({
                     label: e.displayName,
@@ -94,9 +94,9 @@ export class TenantsComponent implements OnInit {
         this.loading = true;
         this.tenantService
             .getAllTenants({
-                SearchTerm: typeof event.globalFilter === 'string' ? event.globalFilter : undefined,
-                SkipCount: event.first ?? 0,
-                MaxResultCount: event.rows ?? 10
+                keyword: typeof event.globalFilter === 'string' ? event.globalFilter : undefined,
+                skipCount: event.first ?? 0,
+                maxResultCount: event.rows ?? 10
             })
             .subscribe({
                 next: (res) => {

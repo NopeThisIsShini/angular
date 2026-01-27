@@ -20,8 +20,8 @@ export class EditionService {
     getAllEditions(input: inputParamModel): Observable<GetAllEditionsResponse> {
         // API Call - uncomment for production
         // let params = new HttpParams();
-        // if (input.SearchTerm) {
-        //     params = params.set('SearchTerm', input.SearchTerm);
+        // if (input.Keyword) {
+        //     params = params.set('Keyword', input.Keyword);
         // }
         // if (input.MaxResultCount) {
         //     params = params.set('MaxResultCount', input.MaxResultCount);

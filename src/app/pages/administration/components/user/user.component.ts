@@ -21,14 +21,24 @@ export class UserComponent implements OnInit, AfterViewInit {
     rolesList: RolesModel[] = [];
     getSeverity = getSeverity;
     formFields: FormField[] = [
+        // {
+        //     key: 'userName',
+        //     label: 'User Name',
+        //     type: 'text',
+        //     validators: [Validators.required, Validators.pattern(validationConstants.NAME_PATTERN)],
+        //     errorMessages: {
+        //         required: 'User Name is required.',
+        //         pattern: 'Only alphabet values are allowed.'
+        //     }
+        // },
         {
-            key: 'userName',
-            label: 'User Name',
+            key: 'email',
+            label: 'Email Address',
             type: 'text',
-            validators: [Validators.required, Validators.pattern(validationConstants.NAME_PATTERN)],
+            validators: [Validators.required, Validators.email],
             errorMessages: {
-                required: 'User Name is required.',
-                pattern: 'Only alphabet values are allowed.'
+                required: 'Email Address is required.',
+                email: 'Email Address must be a valid email.'
             }
         },
         {
@@ -42,7 +52,7 @@ export class UserComponent implements OnInit, AfterViewInit {
             }
         },
         {
-            key: 'name',
+            key: 'firstName',
             label: 'First Name',
             type: 'text',
             validators: [Validators.required],
@@ -52,7 +62,7 @@ export class UserComponent implements OnInit, AfterViewInit {
             }
         },
         {
-            key: 'surname',
+            key: 'lastName',
             label: 'Last Name',
             type: 'text',
             validators: [Validators.required],
@@ -61,18 +71,9 @@ export class UserComponent implements OnInit, AfterViewInit {
                 whitespace: 'Last Name cannot be empty.'
             }
         },
+        
         {
-            key: 'emailAddress',
-            label: 'Email Address',
-            type: 'text',
-            validators: [Validators.required, Validators.email],
-            errorMessages: {
-                required: 'Email Address is required.',
-                email: 'Email Address must be a valid email.'
-            }
-        },
-        {
-            key: 'phoneNumber',
+            key: 'phone',
             label: 'Phone Number',
             type: 'text',
             validators: [Validators.required, Validators.pattern(/^\d{10}$/)],
@@ -82,7 +83,7 @@ export class UserComponent implements OnInit, AfterViewInit {
             }
         },
         {
-            key: 'roleNames',
+            key: 'roleIds',
             label: 'Role',
             type: 'select', // handled by app-select
             validators: [Validators.required],
@@ -108,15 +109,15 @@ export class UserComponent implements OnInit, AfterViewInit {
     ) {}
     columns: ColumnDef[] = [
         {
-            field: 'fullName',
+            field: 'firstName',
             header: 'Name'
         },
         {
-            field: 'emailAddress',
+            field: 'email',
             header: 'Email Address'
         },
         {
-            field: 'phoneNumber',
+            field: 'phone',
             header: 'Phone Number'
         },
         {
@@ -164,9 +165,9 @@ export class UserComponent implements OnInit, AfterViewInit {
         this.loading = true;
         this.userService
             .getallusers({
-                SearchTerm: typeof event.globalFilter === 'string' ? event.globalFilter : undefined,
-                SkipCount: event.first ?? 0,
-                MaxResultCount: event.rows ?? undefined
+                keyword: typeof event.globalFilter === 'string' ? event.globalFilter : undefined,
+                skipCount: event.first ?? 0,
+                maxResultCount: event.rows ?? undefined
             })
             .subscribe({
                 next: (res) => {
@@ -183,6 +184,8 @@ export class UserComponent implements OnInit, AfterViewInit {
     getAllRoles() {
         this.userService.getRoles().subscribe((res) => {
             this.rolesList = res.result.items;
+            console.log(this.rolesList);
+            
         });
     }
 
@@ -194,7 +197,7 @@ export class UserComponent implements OnInit, AfterViewInit {
         const input: UsersModel = {
             ...formValue,
             isActive,
-            roleNames: [formValue.roleNames],
+            roleIds: [formValue.roleIds],
             id: isEdit ? formValue.id : 0
         };
         this.userService.saveUser(input, isEdit).subscribe({
@@ -228,11 +231,11 @@ export class UserComponent implements OnInit, AfterViewInit {
     triggerEditUser(data: UsersModel | null, isEdit: boolean = false) {
         let matchedRole: RolesModel | undefined;
         if (data && isEdit) {
-            // matchedRole = this.rolesList.find((r) => r.normalizedName === data.roleNames[0]);
+            matchedRole = this.rolesList.find((r) => r.id === data.roleIds[0]);
         }
         this.form.patchValue({
             ...data, // spread object properties
-            roleNames: matchedRole?.name // override/ensure roleNames is patched
+            roleIds: matchedRole?.id // override/ensure roleNames is patched
         });
 
         this.isEditMode = isEdit;

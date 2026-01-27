@@ -144,13 +144,13 @@ export class RoleComponent implements OnInit {
     getallRoles(event: TableLazyLoadEvent) {
         this.roleService
             .getallRoles({
-                SearchTerm: typeof event.globalFilter === 'string' ? event.globalFilter : undefined,
-                SkipCount: event.first ?? 0,
-                MaxResultCount: event.rows ?? undefined
+                keyword: typeof event.globalFilter === 'string' ? event.globalFilter : undefined,
+                skipCount: event.first ?? 0,
+                maxResultCount: event.rows ?? undefined
             })
             .subscribe({
                 next: (res) => {
-                    this.Rolesdata = res.result;
+                    this.Rolesdata = res.result.items;
                     this.totalCount = res.result.totalCount;
                     this.loading = false;
                 },

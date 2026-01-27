@@ -25,12 +25,11 @@ export interface GetAllPermissionsOutputModel extends CommonModel {
     };
 }
 export interface GetAllRolesOutputModel extends CommonModel {
-    // result: {
+    result: {
         
-    //     // totalCount: number;
-    //     // items: RolesModel[];
-    // };
-    result:any
+        totalCount: number;
+        items: RolesModel[];
+    };
 }
 export interface GetallRolesInputParamsModel extends CommonModel {
     Keyword: string;

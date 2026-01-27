@@ -18,28 +18,26 @@ export class UsersService {
 
     getallusers(input: userInputParamModel): Observable<getUserResponse> {
         // API Call - uncomment for production
-        // let params = new HttpParams();
-        // if (input.SearchTerm) {
-        //     params = params.set('Keyword', input.SearchTerm);
-        // }
-        // if (input.MaxResultCount) {
-        //     params = params.set('MaxResultCount', input.MaxResultCount);
-        // }
-        // if (input.SkipCount) {
-        //     params = params.set('SkipCount', input.SkipCount);
-        // }
-        // return this.http.get<getUserResponse>(`api/services/app/User/GetAll`, {
-        //     params
-        // });
+        let params = new HttpParams();
+        if (input.keyword) {
+            params = params.set('keyword', input.keyword);
+        }
+        if (input.maxResultCount) {
+            params = params.set('maxResultCount', input.maxResultCount);
+        }
+        if (input.skipCount) {
+            params = params.set('skipCount', input.skipCount);
+        }
+        return this.http.get<getUserResponse>(`user/users`, { params });
         // Local DB for testing
-        return this.http.get<getUserResponse>('assets/db/users.json');
+        // return this.http.get<getUserResponse>('assets/db/users.json');
     }
 
     saveUser(input: UsersModel, isEdit: boolean) {
         if (isEdit) {
-            return this.http.put<UsersModel>(`api/services/app/User/Update`, input);
+            return this.http.patch<UsersModel>(`user/users`, input);
         } else {
-            return this.http.post<UsersModel>(`api/services/app/User/Create`, input);
+            return this.http.post<UsersModel>(`user/users`, input);
         }
     }
 }

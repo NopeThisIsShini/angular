@@ -1,7 +1,7 @@
 export const api_routes = {
     login: 'auth/login',
     signup: 'api/services/app/Account/Register',
-    userInfo: 'user/getCurrentUser',
+    userInfo: 'user/users/profile',
     //Tax Module
     getAllTaxes: 'api/services/app/Product/GetAllProductTax',
     createTax: 'api/services/app/Product/CreateProductTax',

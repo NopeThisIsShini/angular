@@ -8,7 +8,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
         // 'Content-Type': 'application/json',
     };
     const lStorage = inject(LocalStorageService);
-    const token = lStorage.getItem('accessToken');
+    const token = lStorage.getItem('access_token');
     const router = inject(Router);
 
     const currentRoute = router.url; // Get the current route

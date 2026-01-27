@@ -9,7 +9,7 @@ export interface loginRequest {
 
 export interface loginResponse extends CommonModel {
     result: {
-        accessToken: string;
+        access_token: string;
         refreshToken: string;
         // encryptedAccessToken: string;
         // expireInSeconds: number;
@@ -35,6 +35,6 @@ export interface User {
 }
 
 export interface Tokens {
-  accessToken: string;
+  access_token: string;
   refreshToken: string;
 }

@@ -13,14 +13,14 @@ export class RoleService {
     getallRoles(input: inputParamModel) {
         // API Call - uncomment for production
         let params = new HttpParams();
-        if (input.SearchTerm) {
-            params = params.set('SearchTerm', input.SearchTerm);
+        if (input.keyword) {
+            params = params.set('keyword', input.keyword);
         }
-        if (input.MaxResultCount) {
-            params = params.set('MaxResultCount', input.MaxResultCount);
+        if (input.maxResultCount) {
+            params = params.set('maxResultCount', input.maxResultCount);
         }
-        if (input.SkipCount) {
-            params = params.set('SkipCount', input.SkipCount);
+        if (input.skipCount) {
+            params = params.set('skipCount', input.skipCount);
         }
         return this.http.get<GetAllRolesOutputModel>(`role/roles`, {
             params

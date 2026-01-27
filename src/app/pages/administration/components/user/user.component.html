@@ -5,7 +5,7 @@
             <h3>Manage Users</h3>
         </ng-template>
         <ng-template #end>
-            <p-button label="Add New User" rounded icon="pi pi-plus" class="mr-2 btn-gradient"
+            <p-button label="Add New User" *appHasPermission="'Administration.Users.Create'" rounded icon="pi pi-plus" class="mr-2 btn-gradient"
                 (onClick)="triggerEditUser(null, false)" />
         </ng-template>
     </p-toolbar>
@@ -18,7 +18,7 @@
     </NG-Table>
 </div>
 <ng-template #isActiveTemplate let-row>
-    <p-tag [value]="row.isActive === true ? 'Active' : 'Inactive'" [severity]="getSeverity(row.isActive)" />
+    <p-tag [value]="row.status === 'active' ? 'Active' : 'Inactive'" [severity]="getSeverity(row.status)" />
 </ng-template>
 <p-dialog (onHide)="closeDialog()" header="{{ isEditMode ? 'Update User' : 'Create User' }}"
     [(visible)]="showCreateEditUserDialog" [breakpoints]="{ '1300px': '60vw', '960px': '60vw' }"
@@ -27,13 +27,13 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-2">
             <!-- Loop through form fields -->
             <div *ngFor="let field of formFields" class="w-full">
-                <NG-Input *ngIf="field.key !== 'roleNames'" class="w-full" containerClass="w-full" inputClass="w-full"
+                <NG-Input *ngIf="field.key !== 'roleIds'" class="w-full" containerClass="w-full" inputClass="w-full"
                     [label]="field.label" [formControlName]="field.key" [type]="field.type" [id]="field.key"
                     [mark]="true"></NG-Input>
 
                 <!-- Role Single Select -->
-                <NG-Select *ngIf="field.key === 'roleNames'" id="roleNames" formControlName="roleNames"
-                    [options]="rolesList" optionLabel="displayName" optionValue="name" label="Role"
+                <NG-Select *ngIf="field.key === 'roleIds'" id="roleIds" formControlName="roleIds"
+                    [options]="rolesList" optionLabel="name" optionValue="id" label="Role"
                     containerClass="w-full shadow-none" selectClass="w-full" [mark]="true"></NG-Select>
 
                 <!-- Error Messages -->
