@@ -16,78 +16,84 @@
         [totalCount]="totalCount"
         [loading]="loading"
         [rows]="10"
-        [globalSearchFields]="['tenancyName', 'name']"
+        [globalSearchFields]="['slug', 'name']"
         [lazyLoadFn]="getAllTenants.bind(this)"
     >
         <!-- Custom Template for Status Column -->
-        <ng-template let-row pTemplate="isActive">
-            <p-tag [severity]="row.isActive ? 'success' : 'danger'" [value]="row.isActive ? 'Active' : 'Inactive'"></p-tag>
+        <ng-template let-row pTemplate="status">
+            <p-tag [severity]="row.status === 'active' ? 'success' : 'danger'" [value]="row.status | uppercase"></p-tag>
         </ng-template>
 
         <!-- Custom Template for Date Column -->
-        <ng-template let-row pTemplate="subscriptionEndDateUtc">
-            {{ formatDate(row.subscriptionEndDateUtc) }}
+        <ng-template let-row pTemplate="createdAt">
+            {{ row.createdAt | date:'short' }}
         </ng-template>
     </NG-Table>
 
     <p-dialog [(visible)]="showCreateEditDialog" [style]="{ minWidth: '50vw' }" [header]="editMode ? 'Update Tenant' : 'Create Tenant'" [modal]="true" (onHide)="hideDialog()">
         <form [formGroup]="form" class="p-2 flex flex-col space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-                <!-- Tenancy Name -->
+                <!-- Tenant Name -->
                 <div class="w-full">
-                    <NG-Input [label]="'Tenancy Name'" [formControlName]="'tenancyName'" [id]="'tenancyName'" [mark]="true" class="w-full"></NG-Input>
-                    <div *ngIf="isFieldInvalid('tenancyName')" class="mt-1 text-sm text-[var(--text-danger-color)]">
-                        <span *ngFor="let error of getFieldErrors('tenancyName')" class="block">{{ error }}</span>
+                    <NG-Input [label]="'Tenant Name'" [formControlName]="'tenantName'" [id]="'tenantName'" [mark]="true" class="w-full"></NG-Input>
+                    <div *ngIf="isFieldInvalid('tenantName')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                        <span *ngFor="let error of getFieldErrors('tenantName')" class="block">{{ error }}</span>
                     </div>
                 </div>
 
-                <!-- Name -->
+                <!-- Tenant Slug -->
                 <div class="w-full">
-                    <NG-Input [label]="'Name'" [formControlName]="'name'" [id]="'name'" [mark]="true" class="w-full"></NG-Input>
-                    <div *ngIf="isFieldInvalid('name')" class="mt-1 text-sm text-[var(--text-danger-color)]">
-                        <span *ngFor="let error of getFieldErrors('name')" class="block">{{ error }}</span>
+                    <NG-Input [label]="'Tenant Slug'" [formControlName]="'tenantSlug'" [id]="'tenantSlug'" [mark]="true" class="w-full"></NG-Input>
+                    <div *ngIf="isFieldInvalid('tenantSlug')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                        <span *ngFor="let error of getFieldErrors('tenantSlug')" class="block">{{ error }}</span>
                     </div>
                 </div>
 
-                <!-- Admin Email -->
+                <!-- Email -->
                 <div class="w-full">
-                    <NG-Input [label]="'Admin Email'" [type]="'text'" [formControlName]="'adminEmailAddress'" [id]="'adminEmailAddress'" [mark]="true" class="w-full"></NG-Input>
-                    <div *ngIf="isFieldInvalid('adminEmailAddress')" class="mt-1 text-sm text-[var(--text-danger-color)]">
-                        <span *ngFor="let error of getFieldErrors('adminEmailAddress')" class="block">{{ error }}</span>
+                    <NG-Input [label]="'Email'" [type]="'text'" [formControlName]="'email'" [id]="'email'" [mark]="true" class="w-full"></NG-Input>
+                    <div *ngIf="isFieldInvalid('email')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                        <span *ngFor="let error of getFieldErrors('email')" class="block">{{ error }}</span>
                     </div>
                 </div>
 
-                <!-- Edition dropdown -->
+                <!-- First Name -->
                 <div class="w-full">
-                    <NG-Select [label]="'Edition'" [formControlName]="'editionId'" [options]="editions" [id]="'editionId'" class="w-full"></NG-Select>
+                    <NG-Input [label]="'First Name'" [formControlName]="'firstName'" [id]="'firstName'" [mark]="true" class="w-full"></NG-Input>
+                    <div *ngIf="isFieldInvalid('firstName')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                        <span *ngFor="let error of getFieldErrors('firstName')" class="block">{{ error }}</span>
+                    </div>
+                </div>
+
+                <!-- Last Name -->
+                <div class="w-full">
+                    <NG-Input [label]="'Last Name'" [formControlName]="'lastName'" [id]="'lastName'" [mark]="true" class="w-full"></NG-Input>
+                    <div *ngIf="isFieldInvalid('lastName')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                        <span *ngFor="let error of getFieldErrors('lastName')" class="block">{{ error }}</span>
+                    </div>
+                </div>
+
+                <!-- Phone -->
+                <div class="w-full">
+                    <NG-Input [label]="'Phone'" [formControlName]="'phone'" [id]="'phone'" [mark]="true" class="w-full"></NG-Input>
+                    <div *ngIf="isFieldInvalid('phone')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                        <span *ngFor="let error of getFieldErrors('phone')" class="block">{{ error }}</span>
+                    </div>
                 </div>
 
                 @if (!editMode) {
                     <!-- Password (only for creation) -->
                     <div class="w-full">
-                        <NG-Input [label]="'Admin Password'" [type]="'password'" [formControlName]="'adminPassword'" [id]="'adminPassword'" [mark]="true" class="w-full"></NG-Input>
-                        <div *ngIf="isFieldInvalid('adminPassword')" class="mt-1 text-sm text-[var(--text-danger-color)]">
-                            <span *ngFor="let error of getFieldErrors('adminPassword')" class="block">{{ error }}</span>
+                        <NG-Input [label]="'Password'" [type]="'password'" [formControlName]="'password'" [id]="'password'" [mark]="true" class="w-full"></NG-Input>
+                        <div *ngIf="isFieldInvalid('password')" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                            <span *ngFor="let error of getFieldErrors('password')" class="block">{{ error }}</span>
                         </div>
                     </div>
                 }
 
-                <!-- Subscription End Date -->
-                <div class="w-full flex flex-col">
-                    <label class="mb-1 text-sm font-medium">Subscription End Date</label>
-                    <p-datepicker formControlName="subscriptionEndDateUtc" [showIcon]="true" appendTo="body" class="w-full"></p-datepicker>
-                </div>
-
-                <!-- Active Status -->
-                <div class="w-full flex items-center gap-4 pt-4">
-                    <div class="flex items-center gap-2">
-                        <p-checkbox formControlName="isActive" [binary]="true" inputId="isActive"></p-checkbox>
-                        <label for="isActive">Is Active</label>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <p-checkbox formControlName="isInTrialPeriod" [binary]="true" inputId="isInTrialPeriod"></p-checkbox>
-                        <label for="isInTrialPeriod">In Trial Period</label>
-                    </div>
+                <!-- Status -->
+                <div class="w-full">
+                    <NG-Select [label]="'Status'" [formControlName]="'status'" [options]="[{label: 'Active', value: 'active'}, {label: 'Inactive', value: 'inactive'}]" [id]="'status'" class="w-full"></NG-Select>
                 </div>
             </div>
 

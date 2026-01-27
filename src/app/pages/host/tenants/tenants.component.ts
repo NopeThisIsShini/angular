@@ -4,8 +4,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableLazyLoadEvent } from 'primeng/table';
 import { SharedModule } from '@app/shared/shared.imports';
 import { ColumnDef, TableAction } from '@app/shared/models';
-import { TenantModel, EditionModel } from '@app/pages/models';
-import { TenantService, EditionService } from '@app/pages/services/api';
+import { TenantModel } from '@app/pages/models';
+import { TenantService } from '@app/pages/services/api';
 import { validationConstants } from '@app/utils/constant';
 
 @Component({
@@ -16,7 +16,6 @@ import { validationConstants } from '@app/utils/constant';
 })
 export class TenantsComponent implements OnInit {
     tenantsData: TenantModel[] = [];
-    editions: { label: string; value: any }[] = [];
     totalCount: number = 0;
     loading: boolean = true;
     showCreateEditDialog: boolean = false;
@@ -25,11 +24,10 @@ export class TenantsComponent implements OnInit {
     selectedTenant: TenantModel | null = null;
 
     columns: ColumnDef[] = [
-        { field: 'tenancyName', header: 'Tenancy Name', sortable: true, filterable: true, filterType: 'text' },
-        { field: 'name', header: 'Name', sortable: true, filterable: true, filterType: 'text' },
-        { field: 'editionDisplayName', header: 'Edition', sortable: true },
-        { field: 'isActive', header: 'Active', template: undefined }, // Will use template in HTML
-        { field: 'subscriptionEndDateUtc', header: 'Sub. End Date', sortable: true }
+        { field: 'name', header: 'Tenant Name', sortable: true, filterable: true, filterType: 'text' },
+        { field: 'slug', header: 'Slug', sortable: true, filterable: true, filterType: 'text' },
+        { field: 'status', header: 'Status', template: undefined },
+        { field: 'createdAt', header: 'Created At', sortable: true }
     ];
 
     actions: TableAction[] = [
@@ -53,7 +51,6 @@ export class TenantsComponent implements OnInit {
 
     constructor(
         private tenantService: TenantService,
-        private editionService: EditionService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
         private fb: FormBuilder
@@ -61,34 +58,22 @@ export class TenantsComponent implements OnInit {
 
     ngOnInit(): void {
         this.initializeForm();
-        this.loadEditions();
     }
 
     private initializeForm(): void {
         this.form = this.fb.group({
             id: [0],
-            tenancyName: ['', [Validators.required, Validators.pattern(validationConstants.NAME_PATTERN)]],
-            name: ['', [Validators.required]],
-            adminEmailAddress: ['', [Validators.required, Validators.email]],
-            adminPassword: [''],
-            editionId: [null],
-            isActive: [true],
-            isInTrialPeriod: [false],
-            subscriptionEndDateUtc: [null],
-            connectionString: [null]
+            tenantName: ['', [Validators.required]],
+            tenantSlug: ['', [Validators.required, Validators.pattern(validationConstants.NAME_PATTERN)]],
+            email: ['', [Validators.required, Validators.email]],
+            firstName: ['', [Validators.required]],
+            lastName: ['', [Validators.required]],
+            phone: ['', [Validators.required]],
+            password: [''],
+            status: ['active']
         });
     }
 
-    private loadEditions(): void {
-        this.editionService.getAllEditions({ maxResultCount: 1000 }).subscribe({
-            next: (res) => {
-                this.editions = res.result.items.map((e: EditionModel) => ({
-                    label: e.displayName,
-                    value: e.id
-                }));
-            }
-        });
-    }
 
     getAllTenants(event: TableLazyLoadEvent): void {
         this.loading = true;
@@ -117,32 +102,29 @@ export class TenantsComponent implements OnInit {
 
     openCreateDialog(): void {
         this.editMode = false;
-        this.form.reset({ id: 0, isActive: true, isInTrialPeriod: false });
-        this.form.get('adminPassword')?.setValidators([Validators.required]);
+        this.form.reset({ id: 0, status: 'active' });
+        this.form.get('password')?.setValidators([Validators.required]);
         this.showCreateEditDialog = true;
     }
 
     openUpdateDialog(tenant: TenantModel): void {
         this.editMode = true;
         this.selectedTenant = tenant;
-        this.form.get('adminPassword')?.clearValidators();
+        this.form.get('password')?.clearValidators();
         this.form.patchValue({
             id: tenant.id,
-            tenancyName: tenant.tenancyName,
-            name: tenant.name,
-            adminEmailAddress: tenant.adminEmailAddress,
-            editionId: tenant.editionId,
-            isActive: tenant.isActive,
-            isInTrialPeriod: tenant.isInTrialPeriod,
-            subscriptionEndDateUtc: tenant.subscriptionEndDateUtc ? new Date(tenant.subscriptionEndDateUtc) : null,
-            connectionString: tenant.connectionString
+            tenantName: tenant.name,
+            tenantSlug: tenant.slug,
+            status: tenant.status
+            // Note: email, firstName, etc might not be available in listing, 
+            // you might need to fetch detailed info if needed
         });
         this.showCreateEditDialog = true;
     }
 
     hideDialog(): void {
         this.showCreateEditDialog = false;
-        this.form.reset({ id: 0, isActive: true, isInTrialPeriod: false });
+        this.form.reset({ id: 0, status: 'active' });
         this.selectedTenant = null;
     }
 
@@ -153,13 +135,20 @@ export class TenantsComponent implements OnInit {
         }
 
         this.loading = true;
-        this.tenantService.saveTenant(this.form.value, this.editMode).subscribe({
+        const payload = { ...this.form.value };
+        if (this.editMode) {
+            delete payload.password; // Don't send empty password on update if not changed
+        }
+
+        this.tenantService.saveTenant(payload, this.editMode).subscribe({
             next: () => {
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Success',
                     detail: this.editMode ? 'Tenant updated successfully' : 'Tenant created successfully'
                 });
+                this.getAllTenants({ first: 0, rows: 10 });
+                this.hideDialog();
             },
             error: () => {
                 this.loading = false;
@@ -168,10 +157,6 @@ export class TenantsComponent implements OnInit {
                     summary: 'Error',
                     detail: this.editMode ? 'Failed to update tenant' : 'Failed to create tenant'
                 });
-            },
-            complete: () => {
-                this.getAllTenants({ first: 0, rows: 10 });
-                this.hideDialog();
             }
         });
     }
@@ -238,8 +223,4 @@ export class TenantsComponent implements OnInit {
         return errors;
     }
 
-    formatDate(date: string | null): string {
-        if (!date) return 'Unlimited';
-        return new Date(date).toLocaleDateString();
-    }
 }

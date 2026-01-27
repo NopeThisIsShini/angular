@@ -46,6 +46,7 @@ export class LoginComponent {
                     this.router.navigate(['/']);
                 },
                 error: (err) => {
+                    this.isLoading = false
                     this.messageServ.add({ severity: 'error', summary: 'Error', detail: err.message || 'Login failed' });
                 },
                 complete: () => {

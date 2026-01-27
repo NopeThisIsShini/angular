@@ -2,16 +2,13 @@ import { CommonModel, inputParamModel } from '@app/shared/models';
 
 export interface TenantModel {
     id: number;
-    tenancyName: string;
     name: string;
-    adminEmailAddress: string;
-    connectionString: string | null;
-    isActive: boolean;
-    editionId: number | null;
-    editionDisplayName: string | null;
-    subscriptionEndDateUtc: string | null;
-    isInTrialPeriod: boolean;
-    creationTime: string;
+    slug: string;
+    organizationId: number;
+    description: string | null;
+    status: string;
+    createdAt: string;
+    updatedAt: string | null;
 }
 
 export interface GetAllTenantsResponse extends CommonModel {
@@ -26,30 +23,19 @@ export interface GetTenantByIdResponse extends CommonModel {
 }
 
 export interface TenantInputParamModel extends inputParamModel {
-    isActive?: boolean;
-    editionId?: number;
+    status?: string;
 }
 
 export interface CreateTenantInput {
-    tenancyName: string;
-    name: string;
-    adminEmailAddress: string;
-    adminPassword?: string;
-    connectionString?: string | null;
-    isActive?: boolean;
-    editionId?: number | null;
-    subscriptionEndDateUtc?: string | null;
-    isInTrialPeriod?: boolean;
+    email: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    password?: string;
+    tenantSlug: string;
+    tenantName: string;
 }
 
-export interface UpdateTenantInput {
+export interface UpdateTenantInput extends Partial<CreateTenantInput> {
     id: number;
-    tenancyName: string;
-    name: string;
-    adminEmailAddress: string;
-    connectionString?: string | null;
-    isActive?: boolean;
-    editionId?: number | null;
-    subscriptionEndDateUtc?: string | null;
-    isInTrialPeriod?: boolean;
 }

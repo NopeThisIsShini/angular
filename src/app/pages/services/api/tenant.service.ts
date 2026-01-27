@@ -14,47 +14,34 @@ import {
     providedIn: 'root'
 })
 export class TenantService {
-    private readonly baseUrl = 'api/services/app/Tenant';
+    private readonly baseUrl = 'admin/tenants';
 
     constructor(private http: HttpClient) {}
 
     getAllTenants(input: inputParamModel): Observable<GetAllTenantsResponse> {
-        // API Call - uncomment for production
-        // let params = new HttpParams();
-        // if (input.Keyword) {
-        //     params = params.set('Keyword', input.Keyword);
-        // }
-        // if (input.MaxResultCount) {
-        //     params = params.set('MaxResultCount', input.MaxResultCount);
-        // }
-        // if (input.SkipCount) {
-        //     params = params.set('SkipCount', input.SkipCount);
-        // }
-        // return this.http.get<GetAllTenantsResponse>(`${this.baseUrl}/GetAll`, {
-        //     params
-        // });
-
-        // Local DB for testing
-        return this.http.get<GetAllTenantsResponse>('assets/db/tenants.json');
+        let params = new HttpParams();
+        if (input.keyword) {
+            params = params.set('keyword', input.keyword);
+        }
+        if (input.maxResultCount) {
+            params = params.set('maxResultCount', input.maxResultCount.toString());
+        }
+        if (input.skipCount) {
+            params = params.set('skipCount', input.skipCount.toString());
+        }
+        return this.http.get<GetAllTenantsResponse>(this.baseUrl, { params });
     }
 
     getTenantById(id: number): Observable<GetTenantByIdResponse> {
-        // API Call - uncomment for production
-        // const params = new HttpParams().set('id', id);
-        // return this.http.get<GetTenantByIdResponse>(`${this.baseUrl}/Get`, {
-        //     params
-        // });
-
-        // Local DB for testing - returns mock data
-        return this.http.get<GetTenantByIdResponse>('assets/db/tenants.json');
+        return this.http.get<GetTenantByIdResponse>(`${this.baseUrl}/${id}`);
     }
 
     createTenant(tenantData: CreateTenantInput): Observable<CommonModel> {
-        return this.http.post<CommonModel>(`${this.baseUrl}/Create`, tenantData);
+        return this.http.post<CommonModel>(this.baseUrl, tenantData);
     }
 
     updateTenant(tenantData: UpdateTenantInput): Observable<CommonModel> {
-        return this.http.put<CommonModel>(`${this.baseUrl}/Update`, tenantData);
+        return this.http.put<CommonModel>(`${this.baseUrl}/${tenantData.id}`, tenantData);
     }
 
     saveTenant(tenantData: CreateTenantInput | UpdateTenantInput, isUpdate: boolean): Observable<CommonModel> {
@@ -64,9 +51,6 @@ export class TenantService {
     }
 
     deleteTenant(id: number): Observable<CommonModel> {
-        const params = new HttpParams().set('id', id);
-        return this.http.delete<CommonModel>(`${this.baseUrl}/Delete`, {
-            params
-        });
+        return this.http.delete<CommonModel>(`${this.baseUrl}/${id}`);
     }
 }
