@@ -47,6 +47,7 @@ export class AuthService {
     }
     logout(): void {
         this.localStorageService.clear();
+        this.configService.clearUserContext();
         this.router.navigate(['/auth']);
     }
 }

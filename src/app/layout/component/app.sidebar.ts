@@ -1,9 +1,10 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, inject } from '@angular/core';
 import { AppMenu } from './app.menu';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
 import { AuthService } from '@app/pages/services';
+import { ConfigService } from '@app/shared/services';
 import { SharedModule } from '@app/shared';
 import { LOCAL_ROUTES } from '@app/utils/routes';
 
@@ -38,10 +39,10 @@ import { LOCAL_ROUTES } from '@app/utils/routes';
         <app-menu></app-menu>
 
         <div class="sidebar-footer">
-            <div class="sidebar-user">
-                <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" size="large" />
+            <div class="sidebar-user" *ngIf="currentUser()">
+                <p-avatar [image]="currentUser()?.avatarUrl || 'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png'" shape="circle" size="large" />
                 <div class="sidebar-user-info">
-                    <span class="sidebar-user-name">Iona Rollins</span>
+                    <span class="sidebar-user-name">{{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</span>
                 </div>
                 <button class="sidebar-logout-button"  (click)="menu.toggle($event)">
                     <i class="pi pi-ellipsis-h"></i>
@@ -82,7 +83,10 @@ import { LOCAL_ROUTES } from '@app/utils/routes';
     `
 })
 export class AppSidebar implements OnInit {
+    private configService = inject(ConfigService);
     items: any[] = [];
+    currentUser = this.configService.currentUser;
+    
     constructor(
         public el: ElementRef,
         private authService: AuthService,

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Observable, of, switchMap, tap, map } from 'rxjs';
-import { AppInfoResponse, userPreferenceConfig, UserPreferences } from '../../models/api/common.model';
+import { AppInfoResponse, userPreferenceConfig, UserPreferences, UserResult } from '../../models/api/common.model';
 import { ApiPermissionResponse } from '../../models/permission.model';
 import { PermissionService } from '../permission.service';
 import { api_routes } from '@app/utils/routes';
@@ -11,7 +11,8 @@ import { LocalStorageService } from '../storage/local.storage.service';
     providedIn: 'root'
 })
 export class ConfigService {
-    currentUserId: number | null = null;
+    currentUser = signal<UserResult | null>(null);
+    currentUserId = signal<number | null>(null);
 
     constructor(
         private http: HttpClient,
@@ -46,11 +47,14 @@ export class ConfigService {
     loadUserAndPermissions(): Observable<void> {
         if(this.lSService.getItem('access_token')){
              return this.getCurrentUserInfo().pipe(
+            tap((appInfoResp: AppInfoResponse) => {
+                this.currentUser.set(appInfoResp.result);
+                const userId = appInfoResp.result?.id ?? null;
+                this.currentUserId.set(userId);
+            }),
             switchMap((appInfoResp: AppInfoResponse) => {
-                const userId = appInfoResp.result.user?.id ?? null;
-                this.currentUserId = userId;
-
-                // if (userId) {
+                const userId = appInfoResp.result?.id ?? null;
+                // if (user) {
                     // Chain: Load Permissions (extendable in future)
                     return this.loadUserPermissions(userId);
                 // }
@@ -62,6 +66,10 @@ export class ConfigService {
         }else{
             return of(void 0);
         }
-       
+    }
+
+    clearUserContext(): void {
+        this.currentUser.set(null);
+        this.currentUserId.set(null);
     }
 }
