@@ -6,7 +6,7 @@ export interface layoutConfig {
     primary: string;
     surface: string;
     darkTheme: boolean;
-    menuMode: string;
+    menuMode: 'static' | 'overlay' | 'horizontal';
 }
 
 interface LayoutState {
@@ -66,6 +66,7 @@ export class LayoutService {
     getSurface = computed(() => 'slate');
 
     isOverlay = computed(() => this.layoutConfig().menuMode === 'overlay');
+    isHorizontal = computed(() => this.layoutConfig().menuMode === 'horizontal');
     transitionComplete = signal<boolean>(false);
 
     private initialized = false;
@@ -158,6 +159,16 @@ export class LayoutService {
         } else {
             document.documentElement.classList.remove('app-dark');
         }
+    }
+
+    /**
+     * Toggle between static and horizontal menu mode
+     */
+    toggleMenuMode(): void {
+        this.layoutConfig.update((current) => ({
+            ...current,
+            menuMode: current.menuMode === 'horizontal' ? 'static' : 'horizontal'
+        }));
     }
 
     private handleDarkModeTransition(config: layoutConfig): void {

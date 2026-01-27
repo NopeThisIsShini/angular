@@ -20,6 +20,8 @@ import { DividerModule } from 'primeng/divider';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenubarModule } from 'primeng/menubar';
+import { MegaMenuModule } from 'primeng/megamenu';
 // Standalone components
 import { Dialog } from 'primeng/dialog';
 import { FloatLabel } from 'primeng/floatlabel';
@@ -58,6 +60,8 @@ export const PrimengImports = [
     InputIconModule,
     ProgressBarModule,
     BreadcrumbModule,
+    MenubarModule,
+    MegaMenuModule,
     // Standalone components
     Dialog,
     FloatLabel,

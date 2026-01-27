@@ -96,7 +96,8 @@ export class AppConfigurator implements OnChanges, OnInit {
 
     menuModeOptions = [
         { label: 'Static', value: 'static' },
-        { label: 'Overlay', value: 'overlay' }
+        { label: 'Overlay', value: 'overlay' },
+        { label: 'Horizontal', value: 'horizontal' }
     ];
 
     colorSchemeOptions = [
@@ -124,7 +125,7 @@ export class AppConfigurator implements OnChanges, OnInit {
             primary: 'custom-black',
             surface: 'gray',
             darkTheme: false,
-            menuMode: 'static'
+            menuMode: 'static' as const
         };
 
         // 1. Load configuration
@@ -207,7 +208,7 @@ export class AppConfigurator implements OnChanges, OnInit {
             primary: 'custom-black',
             surface: 'slate',
             darkTheme: this.layoutService.layoutConfig().darkTheme as boolean,
-            menuMode: this.layoutService.layoutConfig().menuMode as string
+            menuMode: this.layoutService.layoutConfig().menuMode as 'static' | 'overlay' | 'horizontal'
         };
 
         this.configService.saveUserPreferences(payload).subscribe({

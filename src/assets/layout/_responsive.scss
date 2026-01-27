@@ -65,6 +65,25 @@
             }
         }
 
+        &.layout-horizontal {
+            .layout-main-container {
+                margin-left: 0;
+                &::before {
+                    left: 0;
+                    width: 100%;
+                }
+            }
+
+            .layout-topbar {
+                left: 0;
+                width: 100%;
+            }
+
+            .layout-sidebar {
+                display: none;
+            }
+        }
+
         .layout-mask {
             display: none;
         }

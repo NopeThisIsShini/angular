@@ -48,6 +48,6 @@ export class AuthService {
     logout() {
         this.localStorageService.clear();
         this.configService.clearUserContext();
-        this.router.navigate([LOCAL_ROUTES.AUTH]);
+        this.router.navigateByUrl(LOCAL_ROUTES.AUTH);
     }
 }
