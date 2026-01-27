@@ -43,7 +43,7 @@ import { filter } from 'rxjs';
             <p-breadcrumb [model]="breadcrumbItems" [home]="homeItem" />
         </div>
 
-        <div *ngIf="layoutService.isHorizontal()" class="layout-horizontal-menu hidden lg:block">
+        <div *ngIf="layoutService.isHorizontal()" class="layout-horizontal-menu hidden lg:flex">
             <ul class="layout-menu">
                 <ng-container *ngFor="let item of menuItems; let i = index">
                     <li class="layout-root-menuitem">
@@ -55,7 +55,7 @@ import { filter } from 'rxjs';
                             <div class="layout-menuitem-action clickable" (click)="menuRef.toggle($event)">
                                 <i [ngClass]="item.icon"></i>
                                 <span>{{ item.label }}</span>
-                                <i class="pi pi-angle-down ml-2"></i>
+                                <i class="pi pi-angle-down"></i>
                             </div>
                             <p-tieredMenu #menuRef [model]="item.items" [popup]="true" appendTo="body" styleClass="layout-horizontal-menu-popup"></p-tieredMenu>
                         </ng-container>
@@ -68,8 +68,7 @@ import { filter } from 'rxjs';
             <!-- Desktop Layout Toggle (Sidebar/Horizontal) -->
             <div class="hidden lg:flex items-center">
                 <button type="button" class="layout-topbar-action" (click)="layoutService.toggleMenuMode()" title="Toggle Layout">
-                    <i [ngClass]="{ 'pi pi-ellipsis-h': layoutService.isHorizontal(), 'pi pi-list': !layoutService.isHorizontal() }"></i>
-                    <span>Layout</span>
+                    <i [ngClass]="{ 'icon-up': layoutService.isHorizontal(), 'icon-left': !layoutService.isHorizontal() }"></i>
                 </button>
             </div>
 

@@ -11,10 +11,19 @@
     background-color: color-mix(in srgb, var(--surface-ground), transparent 40%);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    transition: left var(--layout-section-transition-duration), width var(--layout-section-transition-duration);
+    transition: left var(--layout-section-transition-duration), width var(--layout-section-transition-duration), border var(--layout-section-transition-duration), box-shadow var(--layout-section-transition-duration);
     display: flex;
     align-items: center;
-    border-bottom: 0 none;
+    border-bottom: 1px solid transparent;
+
+    .layout-horizontal & {
+        left: 0;
+        width: 100%;
+        border-bottom: 1px solid var(--surface-border);
+        // box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        background-color: color-mix(in srgb, var(--surface-overlay), transparent 10%);
+        padding: 0 3rem;
+    }
 
     .layout-topbar-logo {
         display: inline-flex;
@@ -24,11 +33,16 @@
         font-weight: 700;
         gap: 0.75rem;
         text-decoration: none;
-        margin-right: 1.5rem;
+        margin-right: 2.5rem;
 
         svg {
-            width: 2.5rem;
-            height: 2.5rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        &:hover svg {
+            transform: scale(1.05);
         }
 
         span {
@@ -66,10 +80,6 @@
     .layout-topbar-action-highlight {
         background-color: var(--primary-color);
         color: var(--primary-contrast-color);
-    }
-
-    .layout-menu-button {
-        // margin-right: 0.5rem;
     }
 
     .layout-topbar-menu-button {
@@ -149,23 +159,26 @@
 
     .layout-horizontal-menu {
         flex: 1;
-        margin: 0 2rem;
-        overflow-x: auto;
-        scrollbar-width: none;
-        &::-webkit-scrollbar {
-            display: none;
-        }
+        margin: 0;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        height: 100%;
 
         .layout-menu {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.25rem;
             margin: 0;
             padding: 0;
             list-style: none;
+            height: 100%;
 
             .layout-root-menuitem {
                 position: relative;
+                display: flex;
+                align-items: center;
+                height: 100%;
                 
                 .clickable {
                     cursor: pointer;
@@ -174,26 +187,47 @@
                 .layout-menuitem-action {
                     display: flex;
                     align-items: center;
-                    padding: 0.5rem 1rem;
-                    border-radius: 12px;
-                    color: var(--text-color);
-                    transition: all 0.2s;
+                    padding: 0.625rem 1.25rem;
+                    border-radius: 10px;
+                    color: var(--text-color-secondary);
+                    font-weight: 500;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                     white-space: nowrap;
                     text-decoration: none;
+                    gap: 0.5rem;
 
                     i {
-                        margin-right: 0.5rem;
-                        font-size: 1.1rem;
+                        font-size: 1.15rem;
                         color: var(--text-color-secondary);
+                        transition: color 0.3s;
+                    }
+
+                    .pi-angle-down {
+                        font-size: 0.8rem;
+                        opacity: 0.5;
+                        margin-left: 0.25rem;
+                        transition: transform 0.3s;
                     }
 
                     &:hover {
                         background-color: var(--surface-hover);
+                        color: var(--text-color);
+                        
+                        i {
+                            color: var(--primary-color);
+                        }
+
+                        .pi-angle-down {
+                            transform: translateY(2px);
+                            opacity: 1;
+                        }
                     }
 
                     &.active-route {
                         color: var(--primary-color);
-                        background-color: color-mix(in srgb, var(--primary-color), transparent 92%);
+                        background-color: color-mix(in srgb, var(--primary-color), transparent 90%);
+                        font-weight: 600;
+                        
                         i {
                             color: var(--primary-color);
                         }
