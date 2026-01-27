@@ -12,7 +12,7 @@
 
     <NG-Table [value]="Rolesdata" [columns]="columns" [actions]="actions" [totalCount]="totalCount" [loading]="loading"
         [rows]="10"
-        [globalSearchFields]="['firstName', 'lastName', 'phone', 'address', 'gender', 'customerType', 'gstNumber', 'creationTime']"
+        [globalSearchFields]="['name', 'slug', 'description']"
         [lazyLoadFn]="getallRoles.bind(this)">
     </NG-Table>
 

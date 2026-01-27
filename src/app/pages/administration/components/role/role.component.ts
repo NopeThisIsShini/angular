@@ -170,6 +170,13 @@ export class RoleComponent implements OnInit {
         ];
     }
     createNewRole() {
+        this.editMode = false;
+        this.selectedRoleData = null;
+        this.activeTab = 'role';
+        this.form.reset({ id: 0, grantedPermissions: [] });
+        if (this.permissionComponent) {
+            this.permissionComponent.loadPermissionsFromApiResponse([]);
+        }
         this.showCreateEditRole = true;
     }
     onTabChange(tab: any) {
@@ -243,14 +250,20 @@ export class RoleComponent implements OnInit {
             // normalizedName: details.normalizedName,
             grantedPermissions: details.grantedPermissions
         });
-        this.permissionComponent.loadPermissionsFromApiResponse(details.grantedPermissions);
+        if (this.permissionComponent) {
+            this.permissionComponent.loadPermissionsFromApiResponse(details.grantedPermissions);
+        }
     }
 
     hideDialog() {
         this.editMode = false;
+        this.selectedRoleData = null;
         this.showCreateEditRole = false;
-        this.form.reset();
-        this.permissionComponent.loadPermissionsFromApiResponse([]);
+        this.activeTab = 'role';
+        this.form.reset({ id: 0, grantedPermissions: [] });
+        if (this.permissionComponent) {
+            this.permissionComponent.loadPermissionsFromApiResponse([]);
+        }
     }
     getPermissions(event: { data: string[] }) {
         this.form.patchValue({ grantedPermissions: event.data });
