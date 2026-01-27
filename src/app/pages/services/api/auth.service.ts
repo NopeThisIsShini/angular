@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { EMPTY, Observable, switchMap, take, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { ConfigService, LocalStorageService } from '@app/shared/services';
-import { api_routes } from '@app/utils/routes';
+import { api_routes, LOCAL_ROUTES } from '@app/utils/routes';
 import { loginRequest, loginResponse, signupRequest, signupResponse } from '@app/pages/models';
 
 @Injectable({
@@ -45,9 +45,9 @@ export class AuthService {
     isAuthenticated(): boolean {
         return !!this.localStorageService.getItem('access_token');
     }
-    logout(): void {
+    logout() {
         this.localStorageService.clear();
         this.configService.clearUserContext();
-        this.router.navigate(['/auth']);
+        this.router.navigate([LOCAL_ROUTES.AUTH]);
     }
 }
