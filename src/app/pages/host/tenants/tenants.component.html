@@ -9,16 +9,7 @@
         </ng-template>
     </p-toolbar>
 
-    <NG-Table
-        [value]="tenantsData"
-        [columns]="columns"
-        [actions]="actions"
-        [totalCount]="totalCount"
-        [loading]="loading"
-        [rows]="10"
-        [globalSearchFields]="['slug', 'name']"
-        [lazyLoadFn]="getAllTenants.bind(this)"
-    >
+    <NG-Table [value]="tenantsData" [columns]="columns" [actions]="actions" [totalCount]="totalCount" [loading]="loading" [rows]="10" [globalSearchFields]="['slug', 'name']" [lazyLoadFn]="getAllTenants.bind(this)">
         <!-- Custom Template for Status Column -->
         <ng-template let-row pTemplate="status">
             <p-tag [severity]="row.status === 'active' ? 'success' : 'danger'" [value]="row.status | uppercase"></p-tag>
@@ -26,7 +17,7 @@
 
         <!-- Custom Template for Date Column -->
         <ng-template let-row pTemplate="createdAt">
-            {{ row.createdAt | date:'short' }}
+            {{ row.createdAt | date: 'short' }}
         </ng-template>
     </NG-Table>
 
@@ -93,7 +84,16 @@
 
                 <!-- Status -->
                 <div class="w-full">
-                    <NG-Select [label]="'Status'" [formControlName]="'status'" [options]="[{label: 'Active', value: 'active'}, {label: 'Inactive', value: 'inactive'}]" [id]="'status'" class="w-full"></NG-Select>
+                    <NG-Select
+                        [label]="'Status'"
+                        [formControlName]="'status'"
+                        [options]="[
+                            { label: 'Active', value: 'active' },
+                            { label: 'Inactive', value: 'inactive' }
+                        ]"
+                        [id]="'status'"
+                        class="w-full"
+                    ></NG-Select>
                 </div>
             </div>
 

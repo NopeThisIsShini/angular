@@ -26,7 +26,6 @@ export interface GetAllPermissionsOutputModel extends CommonModel {
 }
 export interface GetAllRolesOutputModel extends CommonModel {
     result: {
-        
         totalCount: number;
         items: RolesModel[];
     };

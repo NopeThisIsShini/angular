@@ -74,7 +74,6 @@ export class TenantsComponent implements OnInit {
         });
     }
 
-
     getAllTenants(event: TableLazyLoadEvent): void {
         this.loading = true;
         this.tenantService
@@ -116,7 +115,7 @@ export class TenantsComponent implements OnInit {
             tenantName: tenant.name,
             tenantSlug: tenant.slug,
             status: tenant.status
-            // Note: email, firstName, etc might not be available in listing, 
+            // Note: email, firstName, etc might not be available in listing,
             // you might need to fetch detailed info if needed
         });
         this.showCreateEditDialog = true;
@@ -222,5 +221,4 @@ export class TenantsComponent implements OnInit {
 
         return errors;
     }
-
 }

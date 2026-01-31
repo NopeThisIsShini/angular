@@ -45,25 +45,25 @@ export class ConfigService {
     }
 
     loadUserAndPermissions(): Observable<void> {
-        if(this.lSService.getItem('access_token')){
-             return this.getCurrentUserInfo().pipe(
-            tap((appInfoResp: AppInfoResponse) => {
-                this.currentUser.set(appInfoResp.result);
-                const userId = appInfoResp.result?.id ?? null;
-                this.currentUserId.set(userId);
-            }),
-            switchMap((appInfoResp: AppInfoResponse) => {
-                const userId = appInfoResp.result?.id ?? null;
-                // if (user) {
+        if (this.lSService.getItem('access_token')) {
+            return this.getCurrentUserInfo().pipe(
+                tap((appInfoResp: AppInfoResponse) => {
+                    this.currentUser.set(appInfoResp.result);
+                    const userId = appInfoResp.result?.id ?? null;
+                    this.currentUserId.set(userId);
+                }),
+                switchMap((appInfoResp: AppInfoResponse) => {
+                    const userId = appInfoResp.result?.id ?? null;
+                    // if (user) {
                     // Chain: Load Permissions (extendable in future)
                     return this.loadUserPermissions(userId);
-                // }
+                    // }
 
-                // No user logged in → skip permission loading
-                // return of(void 0);
-            })
-        );
-        }else{
+                    // No user logged in → skip permission loading
+                    // return of(void 0);
+                })
+            );
+        } else {
             return of(void 0);
         }
     }

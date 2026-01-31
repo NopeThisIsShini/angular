@@ -18,5 +18,6 @@ export interface TableAction {
     severity?: ButtonSeverity;
     outlined?: boolean;
     visible?: (row: any) => boolean;
+    permission?: string;
     command: (row: any) => void;
 }

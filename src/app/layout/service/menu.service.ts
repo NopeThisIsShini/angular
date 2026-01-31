@@ -23,30 +23,30 @@ export class MenuService {
                                 routerLink: [`${LOCAL_ROUTES.ADMINISTRATION}/${LOCAL_ROUTES.ROLE}`]
                             },
                             {
-                                 label: 'Users',
-                                 icon: 'icon-users',
-                                 routerLink: [`${LOCAL_ROUTES.ADMINISTRATION}/${LOCAL_ROUTES.USER}`]
-                             }
-                         ]
-                     },
-                     {
-                         label: 'Host',
-                         icon: 'icon-host',
-                         items: [
-                             {
-                                 label: 'Tenants',
-                                 icon: 'icon-tenants',
-                                 routerLink: [`/${LOCAL_ROUTES.HOST}/${LOCAL_ROUTES.TENANTS}`]
-                             },
-                             {
-                                 label: 'Editions',
-                                 icon: 'pi pi-fw pi-star',
-                                 routerLink: [`/${LOCAL_ROUTES.HOST}/${LOCAL_ROUTES.EDITIONS}`]
-                             }
-                         ]
-                     }
-                 ]
-             }
+                                label: 'Users',
+                                icon: 'icon-users',
+                                routerLink: [`${LOCAL_ROUTES.ADMINISTRATION}/${LOCAL_ROUTES.USER}`]
+                            }
+                        ]
+                    },
+                    {
+                        label: 'Host',
+                        icon: 'icon-host',
+                        items: [
+                            {
+                                label: 'Tenants',
+                                icon: 'icon-tenants',
+                                routerLink: [`/${LOCAL_ROUTES.HOST}/${LOCAL_ROUTES.TENANTS}`]
+                            },
+                            {
+                                label: 'Editions',
+                                icon: 'pi pi-fw pi-star',
+                                routerLink: [`/${LOCAL_ROUTES.HOST}/${LOCAL_ROUTES.EDITIONS}`]
+                            }
+                        ]
+                    }
+                ]
+            }
         ];
 
         return this.filterMenu(model);

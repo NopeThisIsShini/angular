@@ -12,5 +12,5 @@ export const LOCAL_ROUTES = {
     ACCOUNT: 'account',
     TENANTS: 'tenants',
     EDITIONS: 'editions',
-    HOST: 'host',
+    HOST: 'host'
 };

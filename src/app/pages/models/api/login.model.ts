@@ -17,24 +17,23 @@ export interface loginResponse extends CommonModel {
     };
 }
 
-
 export interface User {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  status: 'active' | 'inactive' | 'blocked';
-  tenantId: number;
-  departmentId: number | null;
-  avatarUrl: string | null;
-  isVerified: boolean;
-  lastLoginAt: string;  
-  createdAt: string;    
-  updatedAt: string; 
+    id: number;
+    email: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    status: 'active' | 'inactive' | 'blocked';
+    tenantId: number;
+    departmentId: number | null;
+    avatarUrl: string | null;
+    isVerified: boolean;
+    lastLoginAt: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface Tokens {
-  access_token: string;
-  refreshToken: string;
+    access_token: string;
+    refreshToken: string;
 }

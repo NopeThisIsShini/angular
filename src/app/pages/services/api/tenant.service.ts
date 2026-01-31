@@ -2,13 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommonModel, inputParamModel } from '@app/shared/models';
-import {
-    TenantModel,
-    GetAllTenantsResponse,
-    GetTenantByIdResponse,
-    CreateTenantInput,
-    UpdateTenantInput
-} from '@app/pages/models';
+import { TenantModel, GetAllTenantsResponse, GetTenantByIdResponse, CreateTenantInput, UpdateTenantInput } from '@app/pages/models';
 
 @Injectable({
     providedIn: 'root'
@@ -45,9 +39,7 @@ export class TenantService {
     }
 
     saveTenant(tenantData: CreateTenantInput | UpdateTenantInput, isUpdate: boolean): Observable<CommonModel> {
-        return isUpdate
-            ? this.updateTenant(tenantData as UpdateTenantInput)
-            : this.createTenant(tenantData as CreateTenantInput);
+        return isUpdate ? this.updateTenant(tenantData as UpdateTenantInput) : this.createTenant(tenantData as CreateTenantInput);
     }
 
     deleteTenant(id: number): Observable<CommonModel> {

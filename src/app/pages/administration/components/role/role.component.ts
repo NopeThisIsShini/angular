@@ -75,6 +75,7 @@ export class RoleComponent implements OnInit {
         {
             label: 'Edit',
             icon: 'pi pi-pencil',
+            permission: 'Administration.Roles.Edit',
             command: (data: RolesModel) => {
                 this.openUpdateUi(data);
             }
@@ -84,6 +85,7 @@ export class RoleComponent implements OnInit {
             icon: 'pi pi-trash',
             outlined: true,
             severity: 'danger',
+            permission: 'Administration.Roles.Delete',
             command: (data: RolesModel) => {
                 this.deleteRoles(data);
                 // this.deleteRole(data);
@@ -241,7 +243,7 @@ export class RoleComponent implements OnInit {
 
     getRoleDetails(details: RolesModel) {
         console.log(details);
-        
+
         this.form.patchValue({
             id: details.id,
             name: details.name,

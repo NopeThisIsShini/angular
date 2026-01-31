@@ -40,18 +40,18 @@ export interface UserInfo {
 // }
 
 export interface UserResult {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  avatarUrl: string | null;
-  status: 'active' | 'inactive'; 
-  isVerified: boolean;
-  roleIds: number[];
-  lastLoginAt: string;   
-  createdAt: string;    
-  updatedAt: string;   
+    id: number;
+    email: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    avatarUrl: string | null;
+    status: 'active' | 'inactive';
+    isVerified: boolean;
+    roleIds: number[];
+    lastLoginAt: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface AppInfoResponse extends CommonModel {

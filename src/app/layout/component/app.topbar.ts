@@ -14,9 +14,10 @@ import { filter } from 'rxjs';
     selector: 'app-topbar',
     standalone: true,
     imports: [RouterModule, CommonModule, StyleClassModule, BreadcrumbModule, TieredMenuModule],
-    template: ` <div class="layout-topbar">
-        <a *ngIf="layoutService.isHorizontal() && !layoutService.isMobile()" class="layout-topbar-logo" routerLink="/">
-            <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    template: `
+        <div class="layout-topbar">
+            <a *ngIf="layoutService.isHorizontal() && !layoutService.isMobile()" class="layout-topbar-logo" routerLink="/">
+                <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         fill-rule="evenodd"
                         clip-rule="evenodd"
@@ -33,75 +34,83 @@ import { filter } from 'rxjs';
                         />
                     </g>
                 </svg>
-        </a>
+            </a>
 
-        <button *ngIf="!layoutService.isHorizontal() || layoutService.isMobile()" class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
-            <i class="icon-bars"></i>
-        </button>
-
-        <div *ngIf="!layoutService.isHorizontal()" class="layout-topbar-breadcrumb hidden lg:block">
-            <p-breadcrumb [model]="breadcrumbItems" [home]="homeItem" />
-        </div>
-
-        <div *ngIf="layoutService.isHorizontal()" class="layout-horizontal-menu hidden lg:flex">
-            <ul class="layout-menu">
-                <ng-container *ngFor="let item of menuItems; let i = index">
-                    <li class="layout-root-menuitem">
-                        <a *ngIf="item.routerLink && !item.items" [routerLink]="item.routerLink" class="layout-menuitem-action" routerLinkActive="active-route">
-                            <i [ngClass]="item.icon"></i>
-                            <span>{{ item.label }}</span>
-                        </a>
-                        <ng-container *ngIf="item.items">
-                            <div class="layout-menuitem-action clickable" (click)="menuRef.toggle($event)">
-                                <i [ngClass]="item.icon"></i>
-                                <span>{{ item.label }}</span>
-                                <i class="pi pi-angle-down"></i>
-                            </div>
-                            <p-tieredMenu #menuRef [model]="item.items" [popup]="true" appendTo="body" styleClass="layout-horizontal-menu-popup"></p-tieredMenu>
-                        </ng-container>
-                    </li>
-                </ng-container>
-            </ul>
-        </div>
-
-        <div class="layout-topbar-actions">
-            <!-- Desktop Layout Toggle (Sidebar/Horizontal) -->
-            <div class="hidden lg:flex items-center">
-                <button type="button" class="layout-topbar-action" (click)="layoutService.toggleMenuMode()" title="Toggle Layout">
-                    <i [ngClass]="{ 'icon-up': layoutService.isHorizontal(), 'icon-left': !layoutService.isHorizontal() }"></i>
-                </button>
-            </div>
-
-            <!-- Desktop Actions -->
-            <div class="layout-topbar-menu lg:flex hidden items-center">
-                <ng-container *ngTemplateOutlet="topbarActions"></ng-container>
-            </div>
-
-            <!-- Mobile Menu Toggle -->
-            <button class="layout-topbar-menu-button layout-topbar-action lg:hidden" pStyleClass="#topbar-mobile-menu" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
-                <i class="pi pi-ellipsis-v"></i>
+            <button *ngIf="!layoutService.isHorizontal() || layoutService.isMobile()" class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
+                <i class="icon-bars"></i>
             </button>
 
-            <!-- Mobile Menu Container -->
-            <div id="topbar-mobile-menu" class="layout-topbar-menu hidden lg:hidden">
-                <div class="layout-topbar-menu-content">
+            <div *ngIf="!layoutService.isHorizontal()" class="layout-topbar-breadcrumb hidden lg:block">
+                <p-breadcrumb [model]="breadcrumbItems" [home]="homeItem" />
+            </div>
+
+            <div *ngIf="layoutService.isHorizontal()" class="layout-horizontal-menu hidden lg:flex">
+                <ul class="layout-menu">
+                    <ng-container *ngFor="let item of menuItems; let i = index">
+                        <li class="layout-root-menuitem">
+                            <a *ngIf="item.routerLink && !item.items" [routerLink]="item.routerLink" class="layout-menuitem-action" routerLinkActive="active-route">
+                                <i [ngClass]="item.icon"></i>
+                                <span>{{ item.label }}</span>
+                            </a>
+                            <ng-container *ngIf="item.items">
+                                <div class="layout-menuitem-action clickable" (click)="menuRef.toggle($event)">
+                                    <i [ngClass]="item.icon"></i>
+                                    <span>{{ item.label }}</span>
+                                    <i class="pi pi-angle-down"></i>
+                                </div>
+                                <p-tieredMenu #menuRef [model]="item.items" [popup]="true" appendTo="body" styleClass="layout-horizontal-menu-popup"></p-tieredMenu>
+                            </ng-container>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
+
+            <div class="layout-topbar-actions">
+                <!-- Desktop Layout Toggle (Sidebar/Horizontal) -->
+                <div class="hidden lg:flex items-center">
+                    <button type="button" class="layout-topbar-action" (click)="layoutService.toggleMenuMode()" title="Toggle Layout">
+                        <i [ngClass]="{ 'icon-up': layoutService.isHorizontal(), 'icon-left': !layoutService.isHorizontal() }"></i>
+                    </button>
+                </div>
+
+                <!-- Desktop Actions -->
+                <div class="layout-topbar-menu lg:flex hidden items-center">
                     <ng-container *ngTemplateOutlet="topbarActions"></ng-container>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <button
+                    class="layout-topbar-menu-button layout-topbar-action lg:hidden"
+                    pStyleClass="#topbar-mobile-menu"
+                    enterFromClass="hidden"
+                    enterActiveClass="animate-scalein"
+                    leaveToClass="hidden"
+                    leaveActiveClass="animate-fadeout"
+                    [hideOnOutsideClick]="true"
+                >
+                    <i class="pi pi-ellipsis-v"></i>
+                </button>
+
+                <!-- Mobile Menu Container -->
+                <div id="topbar-mobile-menu" class="layout-topbar-menu hidden lg:hidden">
+                    <div class="layout-topbar-menu-content">
+                        <ng-container *ngTemplateOutlet="topbarActions"></ng-container>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Reusable Actions Template -->
-    <ng-template #topbarActions>
-        <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
-            <i [ngClass]="{ 'icon-moon': layoutService.isDarkTheme(), 'icon-sun': !layoutService.isDarkTheme() }"></i>
-            <span>Theme</span>
-        </button>
-        <button type="button" class="layout-topbar-action">
-            <i class="icon-alert"></i>
-            <span>Notifications</span>
-        </button>
-    </ng-template>
+        <!-- Reusable Actions Template -->
+        <ng-template #topbarActions>
+            <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
+                <i [ngClass]="{ 'icon-moon': layoutService.isDarkTheme(), 'icon-sun': !layoutService.isDarkTheme() }"></i>
+                <span>Theme</span>
+            </button>
+            <button type="button" class="layout-topbar-action">
+                <i class="icon-alert"></i>
+                <span>Notifications</span>
+            </button>
+        </ng-template>
     `
 })
 export class AppTopbar {
@@ -110,7 +119,6 @@ export class AppTopbar {
     menuItems: MenuItem[] = [];
 
     menuService = inject(MenuService);
-
 
     constructor(
         public layoutService: LayoutService,
@@ -130,7 +138,7 @@ export class AppTopbar {
      * Transform menu items to ensure PrimeNG components handle navigation correctly
      */
     transformMenuItems(items: MenuItem[]): MenuItem[] {
-        return items.map(item => {
+        return items.map((item) => {
             const newItem = { ...item };
             if (newItem.routerLink) {
                 const link = Array.isArray(newItem.routerLink) ? newItem.routerLink[0] : newItem.routerLink;

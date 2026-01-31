@@ -34,7 +34,7 @@ export class LoginComponent {
         if (this.loginForm.valid) {
             const payload = {
                 email: this.loginForm.controls['email'].value,
-                password: this.loginForm.controls['password'].value,
+                password: this.loginForm.controls['password'].value
                 // rememberClient: this.loginForm.controls['rememberMe'].value
             };
 
@@ -46,7 +46,7 @@ export class LoginComponent {
                     this.router.navigate(['/']);
                 },
                 error: (err) => {
-                    this.isLoading = false
+                    this.isLoading = false;
                     this.messageServ.add({ severity: 'error', summary: 'Error', detail: err.message || 'Login failed' });
                 },
                 complete: () => {

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table, TableLazyLoadEvent } from 'primeng/table';
 import { SharedModule } from '@app/shared/shared.imports';
-import { ColumnDef, FormField } from '@app/shared/models';
+import { ColumnDef, FormField, TableAction } from '@app/shared/models';
 import { validationConstants } from '@app/utils/constant';
 import { RolesModel, UsersModel } from '@app/pages/models';
 import { getFilterValues, getSeverity } from '@app/shared/functions';
@@ -71,7 +71,7 @@ export class UserComponent implements OnInit, AfterViewInit {
                 whitespace: 'Last Name cannot be empty.'
             }
         },
-        
+
         {
             key: 'phone',
             label: 'Phone Number',
@@ -125,12 +125,13 @@ export class UserComponent implements OnInit, AfterViewInit {
             header: 'Status'
         }
     ];
-    actions: any[] = [
+    actions: TableAction[] = [
         {
             label: 'Edit',
             icon: 'pi pi-pencil',
             tooltip: 'Edit User',
             severity: 'primary',
+            permission: 'Administration.Users.Edit',
             command: (user: UsersModel) => {
                 this.triggerEditUser(user, true);
             }
@@ -141,6 +142,7 @@ export class UserComponent implements OnInit, AfterViewInit {
             tooltip: 'Delete User',
             severity: 'danger',
             outlined: true,
+            permission: 'Administration.Users.Delete',
             command: (user: UsersModel) => {
                 // this.deleteCustomer(customer);
             }
@@ -185,7 +187,6 @@ export class UserComponent implements OnInit, AfterViewInit {
         this.userService.getRoles().subscribe((res) => {
             this.rolesList = res.result.items;
             console.log(this.rolesList);
-            
         });
     }
 

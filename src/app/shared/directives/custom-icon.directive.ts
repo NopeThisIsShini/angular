@@ -7,7 +7,7 @@ import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2, NgZone } fr
 export class CustomIconDirective implements OnInit, OnDestroy {
     /** Base directory for icons */
     @Input() iconBaseDir = 'assets/icons';
-    
+
     /** Default fallback icon */
     @Input() fallbackIcon = 'default-icon';
 
@@ -18,7 +18,7 @@ export class CustomIconDirective implements OnInit, OnDestroy {
     private processedElements = new Set<HTMLElement>();
 
     constructor(
-        private el: ElementRef, 
+        private el: ElementRef,
         private renderer: Renderer2,
         private ngZone: NgZone
     ) {}
@@ -44,7 +44,7 @@ export class CustomIconDirective implements OnInit, OnDestroy {
         this.observer = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
                 if (mutation.type === 'childList') {
-                    mutation.addedNodes.forEach(node => {
+                    mutation.addedNodes.forEach((node) => {
                         if (node instanceof HTMLElement) {
                             this.scanAndProcess(node);
                         }
@@ -74,8 +74,8 @@ export class CustomIconDirective implements OnInit, OnDestroy {
     private scanAndProcess(root: HTMLElement): void {
         // Find all elements with class containing 'icon-'
         const elements = root.querySelectorAll('[class*="icon-"]');
-        elements.forEach(el => this.processElement(el as HTMLElement));
-        
+        elements.forEach((el) => this.processElement(el as HTMLElement));
+
         // Also check the root itself
         this.processElement(root);
     }
@@ -106,14 +106,14 @@ export class CustomIconDirective implements OnInit, OnDestroy {
         this.renderer.setStyle(element, 'width', '1.25rem');
         this.renderer.setStyle(element, 'height', '1.25rem');
         this.renderer.setStyle(element, 'vertical-align', 'middle');
-        
+
         this.loadIcon(element, iconPath, iconName);
     }
 
     private loadIcon(element: HTMLElement, path: string, iconName: string, isFallback = false): void {
         const img = new Image();
         img.src = path;
-        
+
         img.onload = () => {
             // We use mask-image so icons can be colored with text-color/currentColor
             // and background-image as fallback for old browsers or specific cases
@@ -126,7 +126,7 @@ export class CustomIconDirective implements OnInit, OnDestroy {
             this.renderer.setStyle(element, '-webkit-mask-repeat', 'no-repeat');
             this.renderer.setStyle(element, 'mask-position', 'center');
             this.renderer.setStyle(element, '-webkit-mask-position', 'center');
-            
+
             element.dataset['customIconLoaded'] = iconName;
         };
 

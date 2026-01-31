@@ -1,19 +1,22 @@
-import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableSkeletonComponent } from '@app/shared/skeleton';
 import { ColumnDef, TableAction } from '@app/shared/models';
 import { PrimengImports } from '@app/shared/primeng.import';
+import { HasPermissionDirective } from '@app/shared/directives';
+import { PermissionService } from '@app/shared/services';
 
 @Component({
     selector: 'NG-Table',
     standalone: true,
-    imports: [TableModule, ...PrimengImports, CommonModule, FormsModule, TableSkeletonComponent],
+    imports: [TableModule, ...PrimengImports, CommonModule, FormsModule, TableSkeletonComponent, HasPermissionDirective],
     templateUrl: './table.component.html',
     styleUrl: './table.component.scss'
 })
 export class TableComponent implements OnChanges {
+    private permissionService = inject(PermissionService);
     @ViewChild('dt') table!: Table;
     @ViewChild('filter') filter!: ElementRef;
     @Input() value: any[] = [];
@@ -27,6 +30,16 @@ export class TableComponent implements OnChanges {
     @Input() globalSearchFields: string[] = [];
 
     @Input() lazyLoadFn!: (event: TableLazyLoadEvent) => void;
+
+    get canShowActions(): boolean {
+        if (!this.actions || this.actions.length === 0) return false;
+        return this.actions.some((action) => {
+            if (action.permission) {
+                return this.permissionService.hasPermission(action.permission);
+            }
+            return true;
+        });
+    }
 
     onLazyLoad(event: TableLazyLoadEvent) {
         this.lazyLoadFn?.(event);
