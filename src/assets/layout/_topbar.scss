@@ -16,15 +16,6 @@
     align-items: center;
     border-bottom: 1px solid transparent;
 
-    .layout-horizontal & {
-        left: 0;
-        width: 100%;
-        border-bottom: 1px solid var(--surface-border);
-        // box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-        background-color: color-mix(in srgb, var(--surface-overlay), transparent 10%);
-        padding: 0 3rem;
-    }
-
     .layout-topbar-logo {
         display: inline-flex;
         align-items: center;
@@ -113,7 +104,7 @@
             display: flex;
             flex-direction: column;
             user-select: none;
-            
+
             .layout-topbar-user-name {
                 font-weight: 600;
                 color: var(--text-color);
@@ -157,112 +148,6 @@
         gap: 1rem;
     }
 
-    .layout-horizontal-menu {
-        flex: 1;
-        margin: 0;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        height: 100%;
-
-        .layout-menu {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            height: 100%;
-
-            .layout-root-menuitem {
-                position: relative;
-                display: flex;
-                align-items: center;
-                height: 100%;
-                
-                .clickable {
-                    cursor: pointer;
-                }
-
-                .layout-menuitem-action {
-                    display: flex;
-                    align-items: center;
-                    padding: 0.625rem 1.25rem;
-                    border-radius: 10px;
-                    color: var(--text-color-secondary);
-                    font-weight: 500;
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                    white-space: nowrap;
-                    text-decoration: none;
-                    gap: 0.5rem;
-
-                    i {
-                        font-size: 1.15rem;
-                        color: var(--text-color-secondary);
-                        transition: color 0.3s;
-                    }
-
-                    .pi-angle-down {
-                        font-size: 0.8rem;
-                        opacity: 0.5;
-                        margin-left: 0.25rem;
-                        transition: transform 0.3s;
-                    }
-
-                    &:hover {
-                        background-color: var(--surface-hover);
-                        color: var(--text-color);
-                        
-                        i {
-                            color: var(--primary-color);
-                        }
-
-                        .pi-angle-down {
-                            transform: translateY(2px);
-                            opacity: 1;
-                        }
-                    }
-
-                    &.active-route {
-                        color: var(--primary-color);
-                        background-color: color-mix(in srgb, var(--primary-color), transparent 90%);
-                        font-weight: 600;
-                        
-                        i {
-                            color: var(--primary-color);
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-/* Global styles for PrimeNG TieredMenu in horizontal layout */
-.p-tieredmenu.layout-horizontal-menu-popup {
-    z-index: 3001 !important;
-    background: var(--surface-overlay);
-    border: 1px solid var(--surface-border);
-    border-radius: var(--content-border-radius);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    
-    .p-menuitem-link {
-        padding: 0.75rem 1rem;
-        border-radius: 8px;
-        
-        .p-menuitem-icon {
-            color: var(--text-color-secondary);
-            margin-right: 0.75rem;
-        }
-        
-        &:hover {
-            background: var(--surface-hover);
-        }
-        
-        .p-menuitem-text {
-            color: var(--text-color);
-        }
-    }
 }
 
 @media (max-width: 991px) {
@@ -337,11 +222,12 @@
                 border-radius: var(--content-border-radius);
                 background-color: transparent;
                 border: 0 none;
-                
+
                 .layout-topbar-user-info {
                     .layout-topbar-user-name {
                         font-size: 0.875rem;
                     }
+
                     .layout-topbar-user-email {
                         font-size: 0.75rem;
                     }

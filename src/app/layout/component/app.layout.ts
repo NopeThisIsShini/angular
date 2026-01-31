@@ -18,18 +18,15 @@ import { LayoutService } from '../service/layout.service';
             <div class="layout-main">
                 <router-outlet></router-outlet>
             </div>
-            <!-- <app-footer></app-footer> -->
         </div>
         <div class="layout-mask animate-fadein"></div>
     </div> `
 })
 export class AppLayout {
     overlayMenuOpenSubscription: Subscription;
-
     menuOutsideClickListener: any;
 
     @ViewChild(AppSidebar) appSidebar!: AppSidebar;
-
     @ViewChild(AppTopbar) appTopBar!: AppTopbar;
 
     constructor(
@@ -93,7 +90,6 @@ export class AppLayout {
         return {
             'layout-overlay': this.layoutService.layoutConfig().menuMode === 'overlay',
             'layout-static': this.layoutService.layoutConfig().menuMode === 'static',
-            'layout-horizontal': this.layoutService.isHorizontal(),
             'layout-static-inactive': this.layoutService.layoutState().staticMenuDesktopInactive && this.layoutService.layoutConfig().menuMode === 'static',
             'layout-overlay-active': this.layoutService.layoutState().overlayMenuActive,
             'layout-mobile-active': this.layoutService.layoutState().staticMenuMobileActive

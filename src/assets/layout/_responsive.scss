@@ -1,4 +1,5 @@
 @media screen and (min-width: 1960px) {
+
     .layout-main,
     .landing-wrapper {
         width: 1504px;
@@ -65,24 +66,7 @@
             }
         }
 
-        &.layout-horizontal {
-            .layout-main-container {
-                margin-left: 0;
-                &::before {
-                    left: 0;
-                    width: 100%;
-                }
-            }
 
-            .layout-topbar {
-                left: 0;
-                width: 100%;
-            }
-
-            .layout-sidebar {
-                display: none;
-            }
-        }
 
         .layout-mask {
             display: none;

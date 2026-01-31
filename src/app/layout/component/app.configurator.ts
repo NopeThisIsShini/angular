@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, computed, EventEmitter, inject, Input, OnChanges, OnInit, Output, PLATFORM_ID, signal, ViewChild } from '@angular/core';
+import { Component, computed, EventEmitter, inject, Input, OnInit, Output, PLATFORM_ID, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { $t } from '@primeng/themes';
@@ -12,8 +12,6 @@ import { LayoutService } from '../service/layout.service';
 import { ConfigService } from '@app/shared/services';
 import { ColorType } from '../models';
 
-
-
 @Component({
     selector: 'app-configurator',
     standalone: true,
@@ -21,32 +19,27 @@ import { ColorType } from '../models';
     template: `
         <p-drawer #drawerRef [(visible)]="openSetting" position="right" (onHide)="closeCallback()">
             <ng-template #headless>
-                <div class="flex flex-col h-full p-3">
-                    <div class="flex items-center justify-between pt-4 shrink-0">
-                        <span class="inline-flex items-center gap-2 bg-[var(--surface-ground)] p-2 rounded-md">
-                            <i class="pi pi-palette text-[var(--primary-color)]" style="font-size: 1.2rem"></i>
-                            <span class="text-2xl">Settings</span>
+                <div class="flex flex-col h-full p-4 gap-6">
+                    <div class="flex items-center justify-between shrink-0">
+                        <span class="inline-flex items-center gap-2 bg-surface-100 dark:bg-surface-800 p-2 rounded-md">
+                            <i class="pi pi-palette text-primary" style="font-size: 1.2rem"></i>
+                            <span class="text-xl font-medium">Settings</span>
                         </span>
-                        <span>
-                            <p-button type="button" (click)="closeCallback()" icon="pi pi-times" rounded="true" outlined="true" styleClass="h-8 w-8"></p-button>
-                        </span>
+                        <p-button type="button" (click)="closeCallback()" icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" styleClass="h-8 w-8"></p-button>
                     </div>
 
-                    <div class="flex flex-col p-2 gap-4 overflow-auto">
-                        <!-- Color Scheme Toggle (Dark/Light only) -->
+                    <div class="flex flex-col gap-4 overflow-auto">
                         <div class="flex flex-col gap-2">
                             <span class="text-sm text-muted-color font-semibold">Color Scheme</span>
                             <p-selectbutton [ngModel]="colorScheme()" (ngModelChange)="onColorSchemeChange($event)" [options]="colorSchemeOptions" [allowEmpty]="false" size="small" />
                         </div>
 
-                        <!-- Menu Mode (if needed) -->
                         <div *ngIf="showMenuModeButton()" class="flex flex-col gap-2">
                             <span class="text-sm text-muted-color font-semibold">Menu Mode</span>
                             <p-selectbutton [ngModel]="menuMode()" (ngModelChange)="onMenuModeChange($event)" [options]="menuModeOptions" [allowEmpty]="false" size="small" />
                         </div>
 
-                        <!-- Save Preset -->
-                        <div>
+                        <div class="pt-2">
                             <p-button type="button" (click)="savePreset()" icon="pi pi-save" label="Save Settings" styleClass="w-full"></p-button>
                         </div>
                     </div>
@@ -55,22 +48,26 @@ import { ColorType } from '../models';
         </p-drawer>
     `,
     host: {
-        class: 'hidden absolute top-[3.25rem] right-0 w-72 p-4 bg-[var(--surface-ground)] border border-surface rounded-lg origin-top shadow-sm'
+        class: 'hidden absolute top-[3.25rem] right-0 w-72 p-4 bg-surface-0 dark:bg-surface-900 border border-surface rounded-lg origin-top shadow-sm'
     }
 })
-export class AppConfigurator implements OnChanges, OnInit {
+export class AppConfigurator implements OnInit {
     router = inject(Router);
-    config: PrimeNG = inject(PrimeNG);
-    layoutService: LayoutService = inject(LayoutService);
+    layoutService = inject(LayoutService);
     platformId = inject(PLATFORM_ID);
-    primeng = inject(PrimeNG);
+    configService = inject(ConfigService);
+
+    @ViewChild('drawerRef') drawerRef!: Drawer;
+    @Input() openSetting: boolean = false;
+    @Output() onSettingChange = new EventEmitter<boolean>();
 
     showMenuModeButton = signal(!this.router.url.includes('auth'));
+    menuMode = computed(() => this.layoutService.layoutConfig().menuMode);
+    colorScheme = computed(() => (this.layoutService.layoutConfig().darkTheme ? 'dark' : 'light'));
 
     menuModeOptions = [
         { label: 'Static', value: 'static' },
-        { label: 'Overlay', value: 'overlay' },
-        { label: 'Horizontal', value: 'horizontal' }
+        { label: 'Overlay', value: 'overlay' }
     ];
 
     colorSchemeOptions = [
@@ -78,19 +75,6 @@ export class AppConfigurator implements OnChanges, OnInit {
         { label: 'Dark', value: 'dark' }
     ];
 
-    @ViewChild('drawerRef') drawerRef!: Drawer;
-    @Input() openSetting: boolean = false;
-    @Output() onSettingChange = new EventEmitter<boolean>();
-
-    constructor(private configService: ConfigService) { }
-
-    ngOnChanges() { }
-
-    ngOnInit(): void {
-        if (isPlatformBrowser(this.platformId)) {
-            this.loadStaticConfig();
-        }
-    }
     primaryPalette: ColorType = {
         name: 'custom',
         palette: {
@@ -126,20 +110,14 @@ export class AppConfigurator implements OnChanges, OnInit {
         }
     };
 
-    private loadStaticConfig() {
-        const config = {
-            preset: 'Aura',
-            primary: 'custom',
-            surface: 'gray',
-            darkTheme: false,
-            menuMode: 'static' as const
-        };
-
-        // 1. Load configuration
-        this.layoutService.loadInitialConfig(config);
-
-        // 2. Apply preset and colors
-        this.applyCustomTheme();
+    ngOnInit(): void {
+        if (isPlatformBrowser(this.platformId)) {
+            this.layoutService.loadInitialConfig({
+                darkTheme: false,
+                menuMode: 'static'
+            });
+            this.applyCustomTheme();
+        }
     }
 
     private applyCustomTheme() {
@@ -179,8 +157,16 @@ export class AppConfigurator implements OnChanges, OnInit {
             }
         };
 
-        // Apply theme
         $t().preset(Aura).preset(customPreset).surfacePalette(this.surfacePalette.palette).use({ useDefaultOptions: true });
+    }
+
+    onColorSchemeChange(event: string) {
+        this.layoutService.toggleDarkMode(event === 'dark');
+        this.applyCustomTheme();
+    }
+
+    onMenuModeChange(event: string) {
+        this.layoutService.layoutConfig.update((prev) => ({ ...prev, menuMode: event as any }));
     }
 
     closeCallback(): void {
@@ -188,40 +174,17 @@ export class AppConfigurator implements OnChanges, OnInit {
         this.onSettingChange.emit(false);
     }
 
-    menuMode = computed(() => this.layoutService.layoutConfig().menuMode);
-    colorScheme = computed(() => (this.layoutService.layoutConfig().darkTheme ? 'dark' : 'light'));
-
-    onColorSchemeChange(event: string) {
-        const isDark = event === 'dark';
-        this.layoutService.layoutConfig.update((state: any) => ({
-            ...state,
-            darkTheme: isDark
-        }));
-
-        // Reapply theme with new color scheme
-        this.applyCustomTheme();
-    }
-
-    onMenuModeChange(event: string) {
-        this.layoutService.layoutConfig.update((prev: any) => ({
-            ...prev,
-            menuMode: event
-        }));
-    }
-
     savePreset() {
-        const payload = {
+        const config = this.layoutService.layoutConfig();
+        this.configService.saveUserPreferences({
             preset: 'Aura',
             primary: 'custom',
             surface: 'slate',
-            darkTheme: this.layoutService.layoutConfig().darkTheme as boolean,
-            menuMode: this.layoutService.layoutConfig().menuMode as 'static' | 'overlay' | 'horizontal'
-        };
-
-        this.configService.saveUserPreferences(payload).subscribe({
-            next: (res) => console.log('Settings saved successfully'),
-            error: (err) => console.error('Error saving settings:', err),
-            complete: () => { }
+            darkTheme: config.darkTheme,
+            menuMode: config.menuMode
+        }).subscribe({
+            next: () => console.log('Settings saved'),
+            error: (err) => console.error('Save error', err)
         });
     }
 }
