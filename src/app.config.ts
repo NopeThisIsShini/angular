@@ -7,8 +7,8 @@ import { providePrimeNG } from 'primeng/config';
 import { appRoutes } from './app.routes';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
-import { authInterceptor, baseUrlInterceptor, errorInterceptor, loadingInterceptor } from '@app/utils/interceptor';
-import { ConfigService } from '@app/shared/services';
+import { authInterceptor, baseUrlInterceptor, errorInterceptor, loadingInterceptor } from '@/app/utils/interceptor';
+import { ConfigService } from '@/app/shared/services';
 
 export const appConfig: ApplicationConfig = {
     providers: [

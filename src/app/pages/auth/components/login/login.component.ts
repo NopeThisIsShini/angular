@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { SharedModule } from '@app/shared/shared.imports';
-import { LocalStorageService } from '@app/shared/services';
-import { AuthService } from '@app/pages/services';
+import { SharedModule } from '@/app/shared/shared.imports';
+import { LocalStorageService } from '@/app/shared/services';
+import { AuthService } from '@/app/pages/services';
 
 @Component({
     selector: 'app-login',

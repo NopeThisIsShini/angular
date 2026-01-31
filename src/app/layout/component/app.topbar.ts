@@ -9,11 +9,12 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ActivatedRoute, Event, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
+import { AppConfigurator } from '@/app/layout/component/app.configurator';
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, BreadcrumbModule, TieredMenuModule],
+    imports: [RouterModule, CommonModule, StyleClassModule, BreadcrumbModule, TieredMenuModule, AppConfigurator],
     template: `
         <div class="layout-topbar">
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
@@ -29,6 +30,22 @@ import { filter } from 'rxjs';
                 <div class="layout-topbar-menu lg:flex hidden items-center">
                     <ng-container *ngTemplateOutlet="topbarActions"></ng-container>
                 </div>
+                 <div class="layout-config-menu">
+                <div class="relative">
+                    <button
+                        class="layout-topbar-action layout-topbar-action-highlight"
+                        pStyleClass="@next"
+                        enterFromClass="hidden"
+                        enterActiveClass="animate-scalein"
+                        leaveToClass="hidden"
+                        leaveActiveClass="animate-fadeout"
+                        [hideOnOutsideClick]="true"
+                    >
+                        <i class="pi pi-palette"></i>
+                    </button>
+                    <app-configurator />
+                </div>
+            </div>
 
                 <!-- Mobile Menu Toggle -->
                 <button

@@ -2,11 +2,11 @@ import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild, inje
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TableSkeletonComponent } from '@app/shared/skeleton';
-import { ColumnDef, TableAction } from '@app/shared/models';
-import { PrimengImports } from '@app/shared/primeng.import';
-import { HasPermissionDirective } from '@app/shared/directives';
-import { PermissionService } from '@app/shared/services';
+import { TableSkeletonComponent } from '@/app/shared/skeleton';
+import { ColumnDef, TableAction } from '@/app/shared/models';
+import { PrimengImports } from '@/app/shared/primeng.import';
+import { HasPermissionDirective } from '@/app/shared/directives';
+import { PermissionService } from '@/app/shared/services';
 
 @Component({
     selector: 'NG-Table',
@@ -44,7 +44,7 @@ export class TableComponent implements OnChanges {
     onLazyLoad(event: TableLazyLoadEvent) {
         this.lazyLoadFn?.(event);
     }
-    ngOnChanges(changes: SimpleChanges): void {}
+    ngOnChanges(changes: SimpleChanges): void { }
 
     getFieldValue(row: any, field?: string): any {
         if (row == null || !field) {

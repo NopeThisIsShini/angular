@@ -1,4 +1,4 @@
-import { CommonModel, inputParamModel } from '@app/shared/models';
+import { CommonModel, inputParamModel } from '@/app/shared/models';
 
 export interface EditionModel {
     id: number;

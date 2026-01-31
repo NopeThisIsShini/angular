@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableLazyLoadEvent } from 'primeng/table';
-import { SharedModule } from '@app/shared/shared.imports';
-import { ColumnDef, TableAction } from '@app/shared/models';
-import { EditionModel } from '@app/pages/models';
-import { EditionService } from '@app/pages/services/api';
-import { validationConstants } from '@app/utils/constant';
+import { SharedModule } from '@/app/shared/shared.imports';
+import { ColumnDef, TableAction } from '@/app/shared/models';
+import { EditionModel } from '@/app/pages/models';
+import { EditionService } from '@/app/pages/services/api';
+import { validationConstants } from '@/app/utils/constant';
 
 @Component({
     selector: 'app-editions',
@@ -55,7 +55,7 @@ export class EditionsComponent implements OnInit {
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
         private fb: FormBuilder
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.initializeForm();

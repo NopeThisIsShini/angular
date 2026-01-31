@@ -1,5 +1,5 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { environment } from '@env/environment';
+import { environment } from '@/environments/environment';
 
 export const baseUrlInterceptor: HttpInterceptorFn = (req, next) => {
     const newBaseUrl = environment.apiBaseUrl;

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
-import { SharedModule } from '@app/shared/shared.imports';
-import { LOCAL_ROUTES } from '@app/utils/routes';
+import { SharedModule } from '@/app/shared/shared.imports';
+import { LOCAL_ROUTES } from '@/app/utils/routes';
 interface menuItem {
     route: string;
     label: string;
@@ -19,7 +19,7 @@ export class AccountComponent {
     constructor(
         private route: ActivatedRoute,
         private router: Router
-    ) {}
+    ) { }
     ngOnInit() {
         this.loadTabs();
         this.routeObserver();

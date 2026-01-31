@@ -5,10 +5,10 @@ import { Event, NavigationEnd, NavigationError, NavigationStart, Router, RouterM
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { environment } from '@env/environment';
-import { AppConfigurator } from '@app/layout/component/app.configurator';
-import { FaviconService, LoadingService } from '@app/shared/services';
-import { CustomIconDirective } from '@app/shared/directives';
+import { environment } from '@/environments/environment';
+import { AppConfigurator } from '@/app/layout/component/app.configurator';
+import { FaviconService, LoadingService } from '@/app/shared/services';
+import { CustomIconDirective } from '@/app/shared/directives';
 
 @Component({
     selector: 'app-root',

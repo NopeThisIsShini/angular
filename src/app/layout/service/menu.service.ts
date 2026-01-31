@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { PermissionService } from '@app/shared/services';
-import { LOCAL_ROUTES } from '@app/utils/routes';
+import { PermissionService } from '@/app/shared/services';
+import { LOCAL_ROUTES } from '@/app/utils/routes';
 
 @Injectable({
     providedIn: 'root'

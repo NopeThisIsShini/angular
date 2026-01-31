@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EMPTY, Observable, switchMap, take, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { ConfigService, LocalStorageService } from '@app/shared/services';
-import { api_routes, LOCAL_ROUTES } from '@app/utils/routes';
-import { loginRequest, loginResponse, signupRequest, signupResponse } from '@app/pages/models';
+import { ConfigService, LocalStorageService } from '@/app/shared/services';
+import { api_routes, LOCAL_ROUTES } from '@/app/utils/routes';
+import { loginRequest, loginResponse, signupRequest, signupResponse } from '@/app/pages/models';
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +15,7 @@ export class AuthService {
         private localStorageService: LocalStorageService,
         private router: Router,
         private configService: ConfigService
-    ) {}
+    ) { }
 
     login(payload: loginRequest): Observable<void> {
         return this.http.post<loginResponse>(api_routes.login, payload).pipe(

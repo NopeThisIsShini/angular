@@ -1,14 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CommonModel, inputParamModel } from '@app/shared/models';
-import { GetAllRolesOutputModel, roleResponse, RolesModel } from '@app/pages/models';
+import { CommonModel, inputParamModel } from '@/app/shared/models';
+import { GetAllRolesOutputModel, roleResponse, RolesModel } from '@/app/pages/models';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RoleService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     getallRoles(input: inputParamModel) {
         // API Call - uncomment for production

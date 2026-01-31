@@ -2,12 +2,12 @@ import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table, TableLazyLoadEvent } from 'primeng/table';
-import { SharedModule } from '@app/shared/shared.imports';
-import { ColumnDef, FormField, TableAction } from '@app/shared/models';
-import { validationConstants } from '@app/utils/constant';
-import { RolesModel, UsersModel } from '@app/pages/models';
-import { getFilterValues, getSeverity } from '@app/shared/functions';
-import { UsersService } from '@app/pages/services';
+import { SharedModule } from '@/app/shared/shared.imports';
+import { ColumnDef, FormField, TableAction } from '@/app/shared/models';
+import { validationConstants } from '@/app/utils/constant';
+import { RolesModel, UsersModel } from '@/app/pages/models';
+import { getFilterValues, getSeverity } from '@/app/shared/functions';
+import { UsersService } from '@/app/pages/services';
 
 @Component({
     selector: 'app-user',
@@ -106,7 +106,7 @@ export class UserComponent implements OnInit, AfterViewInit {
         private messageService: MessageService,
         private fb: FormBuilder,
         private userService: UsersService
-    ) {}
+    ) { }
     columns: ColumnDef[] = [
         {
             field: 'firstName',
@@ -176,7 +176,7 @@ export class UserComponent implements OnInit, AfterViewInit {
                     this.users = res.result.items;
                     this.totalCount = res.result.totalCount;
                 },
-                error: (err) => {},
+                error: (err) => { },
                 complete: () => {
                     this.loading = false;
                 }
@@ -202,7 +202,7 @@ export class UserComponent implements OnInit, AfterViewInit {
             id: isEdit ? formValue.id : 0
         };
         this.userService.saveUser(input, isEdit).subscribe({
-            next: (res) => {},
+            next: (res) => { },
             error: (err) => {
                 this.messageService.add({
                     severity: 'error',

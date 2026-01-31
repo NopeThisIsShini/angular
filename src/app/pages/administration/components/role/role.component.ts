@@ -7,7 +7,7 @@ import { Table, TableLazyLoadEvent } from 'primeng/table';
 import { PermissionComponent } from '../../../../shared/components';
 import { ColumnDef, FormField, TableAction } from '../../../../shared/models';
 import { validationConstants } from '../../../../utils/constant';
-import { SharedModule } from '@app/shared/shared.imports';
+import { SharedModule } from '@/app/shared/shared.imports';
 
 interface menuItem {
     route: string;
@@ -97,7 +97,7 @@ export class RoleComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private roleService: RoleService,
         private fb: FormBuilder
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.initializeForm();
@@ -211,7 +211,7 @@ export class RoleComponent implements OnInit {
     }
     deleteRoleById(id: number) {
         this.roleService.deleteRoleByid(id).subscribe({
-            next: (res) => {},
+            next: (res) => { },
             error: (err) => {
                 this.messageService.add({
                     severity: 'error',
@@ -273,7 +273,7 @@ export class RoleComponent implements OnInit {
     saveRole() {
         this.loading = true;
         this.roleService.saveRole(this.form.value, this.editMode).subscribe({
-            next: (res: roleResponse) => {},
+            next: (res: roleResponse) => { },
             error: (err) => {
                 this.loading = false;
             },

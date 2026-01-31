@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CommonModel, inputParamModel } from '@app/shared/models';
-import { TenantModel, GetAllTenantsResponse, GetTenantByIdResponse, CreateTenantInput, UpdateTenantInput } from '@app/pages/models';
+import { CommonModel, inputParamModel } from '@/app/shared/models';
+import { TenantModel, GetAllTenantsResponse, GetTenantByIdResponse, CreateTenantInput, UpdateTenantInput } from '@/app/pages/models';
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +10,7 @@ import { TenantModel, GetAllTenantsResponse, GetTenantByIdResponse, CreateTenant
 export class TenantService {
     private readonly baseUrl = 'admin/tenants';
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     getAllTenants(input: inputParamModel): Observable<GetAllTenantsResponse> {
         let params = new HttpParams();

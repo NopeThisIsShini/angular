@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
-import { validationConstants } from '@app/utils/constant';
-import { AuthService } from '@app/pages/services';
-import { signupRequest } from '@app/pages/models';
-import { SharedModule } from '@app/shared/shared.imports';
+import { validationConstants } from '@/app/utils/constant';
+import { AuthService } from '@/app/pages/services';
+import { signupRequest } from '@/app/pages/models';
+import { SharedModule } from '@/app/shared/shared.imports';
 
 interface signupField {
     key: string;

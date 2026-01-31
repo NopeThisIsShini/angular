@@ -1,4 +1,4 @@
-import { CommonModel } from '@app/shared/models';
+import { CommonModel } from '@/app/shared/models';
 
 export interface loginRequest {
     // userNameOrEmailAddress: string;

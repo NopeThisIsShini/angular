@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { Landing } from '@app/pages/landing/landing';
-import { AppLayout } from '@app/layout/component/app.layout';
-import { LOCAL_ROUTES } from '@app/utils/routes';
-import { authGuard } from '@app/utils/guard';
+import { Landing } from '@/app/pages/landing/landing';
+import { AppLayout } from '@/app/layout/component/app.layout';
+import { LOCAL_ROUTES } from '@/app/utils/routes';
+import { authGuard } from '@/app/utils/guard';
 
 export const appRoutes: Routes = [
     // {

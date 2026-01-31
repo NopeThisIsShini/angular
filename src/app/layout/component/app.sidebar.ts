@@ -3,10 +3,10 @@ import { AppMenu } from './app.menu';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
-import { AuthService } from '@app/pages/services';
-import { ConfigService } from '@app/shared/services';
-import { SharedModule } from '@app/shared';
-import { LOCAL_ROUTES } from '@app/utils/routes';
+import { AuthService } from '@/app/pages/services';
+import { ConfigService } from '@/app/shared/services';
+import { SharedModule } from '@/app/shared';
+import { LOCAL_ROUTES } from '@/app/utils/routes';
 
 @Component({
     selector: 'app-sidebar',
@@ -77,7 +77,7 @@ export class AppSidebar implements OnInit {
         public el: ElementRef,
         private authService: AuthService,
         private router: Router
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.items = [

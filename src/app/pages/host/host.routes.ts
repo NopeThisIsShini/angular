@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { LOCAL_ROUTES } from '@app/utils/routes';
+import { LOCAL_ROUTES } from '@/app/utils/routes';
 import { TenantsComponent } from './tenants/tenants.component';
 import { EditionsComponent } from './editions/editions.component';
 

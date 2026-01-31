@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CommonModel, inputParamModel } from '@app/shared/models';
-import { EditionModel, GetAllEditionsResponse, GetEditionByIdResponse, CreateOrUpdateEditionInput } from '@app/pages/models';
+import { CommonModel, inputParamModel } from '@/app/shared/models';
+import { EditionModel, GetAllEditionsResponse, GetEditionByIdResponse, CreateOrUpdateEditionInput } from '@/app/pages/models';
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +10,7 @@ import { EditionModel, GetAllEditionsResponse, GetEditionByIdResponse, CreateOrU
 export class EditionService {
     private readonly baseUrl = 'api/services/app/Edition';
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     getAllEditions(input: inputParamModel): Observable<GetAllEditionsResponse> {
         // API Call - uncomment for production

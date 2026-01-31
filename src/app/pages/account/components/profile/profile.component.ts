@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { SharedModule } from '@app/shared/shared.imports';
-import { ProfileData } from '@app/pages/models/api/profile.model';
-import { FormField } from '@app/shared/models';
-import { ProfileService } from '@app/pages/services';
-import { validationConstants } from '@app/utils/constant';
+import { SharedModule } from '@/app/shared/shared.imports';
+import { ProfileData } from '@/app/pages/models/api/profile.model';
+import { FormField } from '@/app/shared/models';
+import { ProfileService } from '@/app/pages/services';
+import { validationConstants } from '@/app/utils/constant';
 
 @Component({
     selector: 'app-profile',
@@ -74,7 +74,7 @@ export class ProfileComponent {
         private fb: FormBuilder,
         private profileService: ProfileService,
         private messageServ: MessageService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.initializeForm();

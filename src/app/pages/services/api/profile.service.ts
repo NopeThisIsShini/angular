@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { ProfileData, UserProfileResult } from '@app/pages/models';
-import { api_routes } from '@app/utils/routes';
+import { ProfileData, UserProfileResult } from '@/app/pages/models';
+import { api_routes } from '@/app/utils/routes';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class ProfileService {
         this.profileName.set(name);
     }
 
-    constructor(private httpclint: HttpClient) {}
+    constructor(private httpclint: HttpClient) { }
 
     getMyProfile(): Observable<UserProfileResult> {
         // API Call - uncomment for production

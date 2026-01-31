@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { SharedModule } from '@app/shared/shared.imports';
-import { validationConstants } from '@app/utils/constant';
-import { CheckboxField, FormField } from '@app/shared/models';
-import { EmailSettings, EmailSettingsResponse } from '@app/pages/models';
-import { SmtpService } from '@app/pages/services';
+import { SharedModule } from '@/app/shared/shared.imports';
+import { validationConstants } from '@/app/utils/constant';
+import { CheckboxField, FormField } from '@/app/shared/models';
+import { EmailSettings, EmailSettingsResponse } from '@/app/pages/models';
+import { SmtpService } from '@/app/pages/services';
 
 @Component({
     selector: 'app-smtp',
@@ -110,7 +110,7 @@ export class SmtpComponent {
         private fb: FormBuilder,
         private smtpService: SmtpService,
         private messageServ: MessageService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.initializeForm();

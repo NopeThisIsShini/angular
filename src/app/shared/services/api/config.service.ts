@@ -4,7 +4,7 @@ import { Observable, of, switchMap, tap, map } from 'rxjs';
 import { AppInfoResponse, userPreferenceConfig, UserPreferences, UserResult } from '../../models/api/common.model';
 import { ApiPermissionResponse } from '../../models/permission.model';
 import { PermissionService } from '../permission.service';
-import { api_routes } from '@app/utils/routes';
+import { api_routes } from '@/app/utils/routes';
 import { LocalStorageService } from '../storage/local.storage.service';
 
 @Injectable({
@@ -18,7 +18,7 @@ export class ConfigService {
         private http: HttpClient,
         private permissionService: PermissionService,
         private lSService: LocalStorageService
-    ) {}
+    ) { }
 
     getUserPreferences(): Observable<UserPreferences> {
         return this.http.get<UserPreferences>('assets/db/local.config.json');
