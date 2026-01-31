@@ -29,7 +29,7 @@ export class LayoutService {
     // Fixed configuration with your custom colors
     private _config: layoutConfig = {
         preset: 'Aura',
-        primary: 'custom-blue',
+        primary: 'custom',
         surface: 'slate',
         darkTheme: false,
         menuMode: 'static'
@@ -62,7 +62,7 @@ export class LayoutService {
     isDarkTheme = computed(() => this.layoutConfig().darkTheme);
 
     // These return fixed values since we're not allowing color changes
-    getPrimary = computed(() => 'custom-blue');
+    getPrimary = computed(() => 'custom');
     getSurface = computed(() => 'slate');
 
     isOverlay = computed(() => this.layoutConfig().menuMode === 'overlay');
@@ -98,7 +98,7 @@ export class LayoutService {
         // Only allow darkTheme and menuMode to be changed
         this._config = {
             preset: 'Aura',
-            primary: 'custom-blue',
+            primary: 'custom',
             surface: 'slate',
             darkTheme: config.darkTheme ?? false,
             menuMode: config.menuMode ?? 'static'
@@ -124,7 +124,7 @@ export class LayoutService {
             menuMode: partialConfig.menuMode ?? current.menuMode,
             // Keep these fixed
             preset: 'Aura',
-            primary: 'custom-blue',
+            primary: 'custom',
             surface: 'slate'
         }));
     }
@@ -135,7 +135,7 @@ export class LayoutService {
     resetToDefault(): void {
         const defaultConfig: layoutConfig = {
             preset: 'Aura',
-            primary: 'custom-blue',
+            primary: 'custom',
             surface: 'slate',
             darkTheme: false,
             menuMode: 'static'
@@ -189,7 +189,7 @@ export class LayoutService {
             .then(() => {
                 this.onTransitionEnd();
             })
-            .catch(() => {});
+            .catch(() => { });
     }
 
     private applyDarkMode(config: layoutConfig): void {

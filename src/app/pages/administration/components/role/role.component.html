@@ -5,47 +5,55 @@
         </ng-template>
 
         <ng-template #end>
-            <p-button *appHasPermission="'Administration.Roles.Create'" label="Create Role" icon="pi pi-plus" rounded class="mr-2 btn-gradient" (onClick)="createNewRole()" />
+            <p-button *appHasPermission="'Administration.Roles.Create'" label="Create Role" icon="pi pi-plus"
+                class="mr-2 btn-gradient" (onClick)="createNewRole()" />
         </ng-template>
     </p-toolbar>
 
-    <NG-Table [value]="Rolesdata" [columns]="columns" [actions]="actions" [totalCount]="totalCount" [loading]="loading" [rows]="10" [globalSearchFields]="['name', 'slug', 'description']" [lazyLoadFn]="getallRoles.bind(this)"> </NG-Table>
+    <NG-Table [value]="Rolesdata" [columns]="columns" [actions]="actions" [totalCount]="totalCount" [loading]="loading"
+        [rows]="10" [globalSearchFields]="['name', 'slug', 'description']" [lazyLoadFn]="getallRoles.bind(this)">
+    </NG-Table>
 
-    <p-dialog [(visible)]="showCreateEditRole" [style]="{ minWidth: '50vw' }" [header]="editMode ? 'Update Role' : 'Create Role'" [modal]="true" (onHide)="hideDialog()">
+    <p-dialog [(visible)]="showCreateEditRole" [style]="{ minWidth: '50vw' }"
+        [header]="editMode ? 'Update Role' : 'Create Role'" [modal]="true" (onHide)="hideDialog()">
         <div class="tab_card">
             <p-tabs [(value)]="activeTab" (valueChange)="onTabChange($event)" scrollable>
                 <p-tablist>
                     @for (tab of tabs; track tab.route) {
-                        <p-tab [value]="tab.route" class="flex items-center !gap-2 text-inherit">
-                            <i [class]="tab.icon"></i>
-                            <span>{{ tab.label }}</span>
-                        </p-tab>
+                    <p-tab [value]="tab.route" class="flex items-center !gap-2 text-inherit">
+                        <i [class]="tab.icon"></i>
+                        <span>{{ tab.label }}</span>
+                    </p-tab>
                     }
                 </p-tablist>
             </p-tabs>
 
             <div class="tab-content p-2">
                 @if (activeTab === 'role') {
-                    <form [formGroup]="form" class="p-2 flex flex-col space-y-4">
-                        <!-- Dynamic Text/Number Fields -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 lg:gap-6">
-                            <div *ngFor="let field of formFields" class="w-full">
-                                <NG-Input class="w-full" containerClass="w-full" inputClass="w-full" [label]="field.label" [formControlName]="field.key" [type]="field.type" [id]="field.key" [mark]="field.mark || false"> </NG-Input>
+                <form [formGroup]="form" class="p-2 flex flex-col space-y-4">
+                    <!-- Dynamic Text/Number Fields -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 lg:gap-6">
+                        <div *ngFor="let field of formFields" class="w-full">
+                            <NG-Input class="w-full" containerClass="w-full" inputClass="w-full" [label]="field.label"
+                                [formControlName]="field.key" [type]="field.type" [id]="field.key"
+                                [mark]="field.mark || false"> </NG-Input>
 
-                                <!-- Error Messages -->
-                                <div *ngIf="isFieldInvalid(field.key)" class="mt-1 text-sm text-[var(--text-danger-color)]">
-                                    <span *ngFor="let error of getFieldErrors(field.key)" class="block">
-                                        {{ error }}
-                                    </span>
-                                </div>
+                            <!-- Error Messages -->
+                            <div *ngIf="isFieldInvalid(field.key)" class="mt-1 text-sm text-[var(--text-danger-color)]">
+                                <span *ngFor="let error of getFieldErrors(field.key)" class="block">
+                                    {{ error }}
+                                </span>
                             </div>
                         </div>
-                    </form>
+                    </div>
+                </form>
                 } @else {
-                    <app-permission #permissionComponent (onSave)="getPermissions($event)" [isRoleEditing]="true"></app-permission>
+                <app-permission #permissionComponent (onSave)="getPermissions($event)"
+                    [isRoleEditing]="true"></app-permission>
                 }
             </div>
-            <p-button [label]="editMode ? 'Update' : 'Create'" (onClick)="saveRole()" [disabled]="!form.valid"></p-button>
+            <p-button [label]="editMode ? 'Update' : 'Create'" (onClick)="saveRole()"
+                [disabled]="!form.valid"></p-button>
         </div>
     </p-dialog>
 </div>

@@ -10,36 +10,9 @@ import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { LayoutService } from '../service/layout.service';
 import { ConfigService } from '@app/shared/services';
+import { ColorType } from '../models';
 
-// Updated custom color palette with on primary black
-const CUSTOM_PRIMARY_PALETTE = {
-    50: '#f5f5f5',
-    100: '#e0e0e0',
-    200: '#c2c2c2',
-    300: '#a3a3a3',
-    400: '#858585',
-    500: '#666666', // primary medium
-    600: '#4d4d4d',
-    700: '#333333', // primary dark
-    800: '#1a1a1a',
-    900: '#0d0d0d', // on primary black
-    950: '#000000' // true black
-};
 
-const FIXED_SURFACE_PALETTE = {
-    0: '#ffffff',
-    50: '#f8fafc',
-    100: '#f1f5f9',
-    200: '#e2e8f0',
-    300: '#cbd5e1',
-    400: '#94a3b8',
-    500: '#64748b',
-    600: '#475569',
-    700: '#334155',
-    800: '#1e293b',
-    900: '#0f172a',
-    950: '#020617'
-};
 
 @Component({
     selector: 'app-configurator',
@@ -109,20 +82,54 @@ export class AppConfigurator implements OnChanges, OnInit {
     @Input() openSetting: boolean = false;
     @Output() onSettingChange = new EventEmitter<boolean>();
 
-    constructor(private configService: ConfigService) {}
+    constructor(private configService: ConfigService) { }
 
-    ngOnChanges() {}
+    ngOnChanges() { }
 
     ngOnInit(): void {
         if (isPlatformBrowser(this.platformId)) {
             this.loadStaticConfig();
         }
     }
+    primaryPalette: ColorType = {
+        name: 'custom',
+        palette: {
+            50: "#D0FCFF",
+            100: "#7CF8FF",
+            200: "#17E2EA",
+            300: "#13C9D1",
+            400: "#0FAFB5",
+            500: "#0B959A",
+            600: "#077C81",
+            700: "#056468",
+            800: "#034F52",
+            900: "#01393B",
+            950: "#012E30"
+        }
+    };
+
+    surfacePalette: ColorType = {
+        name: 'zinc',
+        palette: {
+            0: '#ffffff',
+            50: '#f8fafc',
+            100: '#f1f5f9',
+            200: '#e2e8f0',
+            300: '#cbd5e1',
+            400: '#94a3b8',
+            500: '#71717a',
+            600: '#52525b',
+            700: '#3f3f46',
+            800: '#27272a',
+            900: '#18181b',
+            950: '#09090b'
+        }
+    };
 
     private loadStaticConfig() {
         const config = {
             preset: 'Aura',
-            primary: 'custom-black',
+            primary: 'custom',
             surface: 'gray',
             darkTheme: false,
             menuMode: 'static' as const
@@ -138,34 +145,34 @@ export class AppConfigurator implements OnChanges, OnInit {
     private applyCustomTheme() {
         const customPreset = {
             semantic: {
-                primary: CUSTOM_PRIMARY_PALETTE,
+                primary: this.primaryPalette.palette,
                 colorScheme: {
                     light: {
                         primary: {
-                            color: '#333333',
+                            color: '{primary.600}',
                             contrastColor: '#ffffff',
-                            hoverColor: '#1a1a1a',
-                            activeColor: '#0d0d0d'
+                            hoverColor: '{primary.700}',
+                            activeColor: '{primary.800}'
                         },
                         highlight: {
-                            background: '#f5f5f5',
-                            focusBackground: '#e0e0e0',
-                            color: '#333333',
-                            focusColor: '#1a1a1a'
+                            background: '{primary.600}',
+                            focusBackground: '{primary.700}',
+                            color: '#ffffff',
+                            focusColor: '#ffffff'
                         }
                     },
                     dark: {
                         primary: {
-                            color: '#e0e0e0',
-                            contrastColor: '#0d0d0d',
-                            hoverColor: '#ffffff',
-                            activeColor: '#ffffff'
+                            color: '{primary.500}',
+                            contrastColor: '{surface.900}',
+                            hoverColor: '{primary.400}',
+                            activeColor: '{primary.300}'
                         },
                         highlight: {
-                            background: 'color-mix(in srgb, #e0e0e0, transparent 84%)',
-                            focusBackground: 'color-mix(in srgb, #e0e0e0, transparent 76%)',
-                            color: 'rgba(255,255,255,.87)',
-                            focusColor: 'rgba(255,255,255,.87)'
+                            background: '{primary.500}',
+                            focusBackground: '{primary.400}',
+                            color: '{surface.900}',
+                            focusColor: '{surface.900}'
                         }
                     }
                 }
@@ -173,7 +180,7 @@ export class AppConfigurator implements OnChanges, OnInit {
         };
 
         // Apply theme
-        $t().preset(Aura).preset(customPreset).surfacePalette(FIXED_SURFACE_PALETTE).use({ useDefaultOptions: true });
+        $t().preset(Aura).preset(customPreset).surfacePalette(this.surfacePalette.palette).use({ useDefaultOptions: true });
     }
 
     closeCallback(): void {
@@ -205,7 +212,7 @@ export class AppConfigurator implements OnChanges, OnInit {
     savePreset() {
         const payload = {
             preset: 'Aura',
-            primary: 'custom-black',
+            primary: 'custom',
             surface: 'slate',
             darkTheme: this.layoutService.layoutConfig().darkTheme as boolean,
             menuMode: this.layoutService.layoutConfig().menuMode as 'static' | 'overlay' | 'horizontal'
@@ -214,7 +221,7 @@ export class AppConfigurator implements OnChanges, OnInit {
         this.configService.saveUserPreferences(payload).subscribe({
             next: (res) => console.log('Settings saved successfully'),
             error: (err) => console.error('Error saving settings:', err),
-            complete: () => {}
+            complete: () => { }
         });
     }
 }

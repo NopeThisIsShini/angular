@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    apiBaseUrl: 'http://127.0.0.1:8000/api/v1/',
+    apiBaseUrl: 'https://spokesman-mild-crowd-install.trycloudflare.com/api/v1/',
     enableDebugTools: false
 };
