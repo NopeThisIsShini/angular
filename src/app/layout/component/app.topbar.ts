@@ -32,8 +32,10 @@ import { AppConfigurator } from '@/app/layout/component/app.configurator';
                 </div>
                  <div class="layout-config-menu">
                 <div class="relative">
+
+
                     <button
-                        class="layout-topbar-action layout-topbar-action-highlight"
+                        class="config-button"
                         pStyleClass="@next"
                         enterFromClass="hidden"
                         enterActiveClass="animate-scalein"
@@ -41,7 +43,10 @@ import { AppConfigurator } from '@/app/layout/component/app.configurator';
                         leaveActiveClass="animate-fadeout"
                         [hideOnOutsideClick]="true"
                     >
-                        <i class="pi pi-palette"></i>
+                        <svg class="config-button-border" xmlns="http://www.w3.org/2000/svg">
+                            <rect rx="0.75rem" ry="0.75rem" pathLength="100"></rect>
+                        </svg>
+                        <i class="icon-palette"></i>
                     </button>
                     <app-configurator />
                 </div>
