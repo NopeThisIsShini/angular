@@ -108,7 +108,8 @@ export class AppConfigurator {
 
     menuModeOptions = [
         { label: 'Static', value: 'static' },
-        { label: 'Overlay', value: 'overlay' }
+        { label: 'Overlay', value: 'overlay' },
+        { label: 'Horizontal', value: 'horizontal' }
     ];
 
     ngOnInit() {
@@ -436,7 +437,7 @@ export class AppConfigurator {
         $t().preset(preset).preset(this.getPresetExt()).surfacePalette(surfacePalette).use({ useDefaultOptions: true });
     }
 
-    onMenuModeChange(event: string) {
+    onMenuModeChange(event: 'static' | 'overlay' | 'horizontal') {
         this.layoutService.layoutConfig.update((prev) => ({ ...prev, menuMode: event }));
     }
 }

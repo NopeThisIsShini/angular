@@ -16,6 +16,17 @@
     align-items: center;
     border-bottom: 1px solid transparent;
 
+    @media (min-width: 992px) {
+        .layout-horizontal & {
+            left: 0;
+            width: 100%;
+            border-bottom: 1px solid var(--surface-border);
+            background-color: color-mix(in srgb, var(--surface-overlay), transparent 10%);
+            padding: 0 3rem;
+            white-space: nowrap;
+        }
+    }
+
     .layout-topbar-logo {
         display: inline-flex;
         align-items: center;
@@ -25,6 +36,7 @@
         gap: 0.75rem;
         text-decoration: none;
         margin-right: 2.5rem;
+        flex-shrink: 0; // Prevent logo from shrinking
 
         svg {
             width: 3.5rem;
@@ -81,6 +93,8 @@
         margin-left: auto;
         display: flex;
         gap: 1rem;
+        flex-shrink: 0; // Prevent actions from shrinking
+        align-items: center;
     }
 
     .layout-topbar-menu-content {
@@ -147,6 +161,107 @@
     .layout-config-menu {
         display: flex;
         gap: 1rem;
+    }
+
+    .layout-horizontal-menu {
+        display: none; // Default hidden
+
+        @media (min-width: 992px) {
+            display: flex;
+            flex: 1;
+            margin: 0 1.5rem;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100%;
+            min-width: 0;
+
+            .layout-menu {
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+                height: 100%;
+                overflow-x: auto;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+                
+                .layout-root-menuitem {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    height: 100%;
+                    
+                    .clickable {
+                        cursor: pointer;
+                    }
+
+                    .layout-menuitem-action {
+                        display: flex;
+                        align-items: center;
+                        padding: 0.625rem 1.25rem;
+                        border-radius: 10px;
+                        color: var(--text-color-secondary);
+                        font-weight: 500;
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                        white-space: nowrap;
+                        text-decoration: none;
+                        gap: 0.5rem;
+
+                        i {
+                            font-size: 1.15rem;
+                            color: var(--text-color-secondary);
+                            transition: color 0.3s;
+                        }
+
+                        .pi-angle-down {
+                            font-size: 0.8rem;
+                            opacity: 0.5;
+                            margin-left: 0.25rem;
+                            transition: transform 0.3s;
+                        }
+
+                        &:hover {
+                            background-color: var(--surface-hover);
+                            color: var(--text-color);
+                            
+                            i {
+                                color: var(--primary-color);
+                            }
+
+                            .pi-angle-down {
+                                transform: translateY(2px);
+                                opacity: 1;
+                            }
+                        }
+
+                        &.active-route {
+                            color: var(--primary-color);
+                            background-color: color-mix(in srgb, var(--primary-color), transparent 90%);
+                            font-weight: 600;
+                            
+                            i {
+                                color: var(--primary-color);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .layout-toggle-container {
+        display: none; // Hidden on mobile
+
+        @media (min-width: 992px) {
+            display: flex;
+            align-items: center;
+        }
     }
 
 
@@ -292,3 +407,4 @@
         }
     }
 }
+

@@ -6,7 +6,7 @@ export interface layoutConfig {
     primary?: string;
     surface?: string | undefined | null;
     darkTheme?: boolean;
-    menuMode?: string;
+    menuMode?: 'static' | 'overlay' | 'horizontal';
 }
 
 interface LayoutState {
@@ -73,6 +73,8 @@ export class LayoutService {
     getSurface = computed(() => this.layoutConfig().surface);
 
     isOverlay = computed(() => this.layoutConfig().menuMode === 'overlay');
+
+    isHorizontal = computed(() => this.layoutConfig().menuMode === 'horizontal');
 
     transitionComplete = signal<boolean>(false);
 
@@ -153,6 +155,13 @@ export class LayoutService {
                 this.overlayOpen.next(null);
             }
         }
+    }
+
+    toggleMenuMode(): void {
+        this.layoutConfig.update((current) => ({
+            ...current,
+            menuMode: current.menuMode === 'horizontal' ? 'static' : 'horizontal'
+        }));
     }
 
     isDesktop() {
