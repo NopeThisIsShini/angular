@@ -91,6 +91,7 @@ export class AppLayout {
             'layout-overlay': this.layoutService.layoutConfig().menuMode === 'overlay',
             'layout-static': this.layoutService.layoutConfig().menuMode === 'static',
             'layout-horizontal': this.layoutService.isHorizontal(),
+            'layout-slim': this.layoutService.isSlim(),
             'layout-static-inactive': this.layoutService.layoutState().staticMenuDesktopInactive && this.layoutService.layoutConfig().menuMode === 'static',
             'layout-overlay-active': this.layoutService.layoutState().overlayMenuActive,
             'layout-mobile-active': this.layoutService.layoutState().staticMenuMobileActive

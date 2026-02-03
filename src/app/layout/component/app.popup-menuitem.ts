@@ -17,12 +17,13 @@ import { RippleModule } from 'primeng/ripple';
                class="layout-menuitem-action" 
                routerLinkActive="active-route" 
                [routerLinkActiveOptions]="item.routerLinkActiveOptions || { paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' }"
+               [attr.aria-label]="item.label"
                pRipple>
                 <i [ngClass]="item.icon"></i>
                 <span *ngIf="!iconOnly">{{ item.label }}</span>
             </a>
             <ng-container *ngIf="item.items">
-                <div class="layout-menuitem-action clickable" (click)="menuRef.toggle($event)" pRipple>
+                <div class="layout-menuitem-action clickable" (click)="menuRef.toggle($event)" [attr.aria-label]="item.label" pRipple>
                     <i [ngClass]="item.icon"></i>
                     <span *ngIf="!iconOnly">{{ item.label }}</span>
                     <i *ngIf="!iconOnly" class="pi pi-angle-down"></i>

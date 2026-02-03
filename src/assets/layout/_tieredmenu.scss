@@ -1,4 +1,6 @@
-.p-tieredmenu.layout-horizontal-menu-popup {
+
+.p-tieredmenu.layout-horizontal-menu-popup,
+.p-tieredmenu.layout-slim-menu-popup {
     z-index: 3001 !important;
     background: var(--surface-overlay);
     border: 1px solid var(--surface-border);

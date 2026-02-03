@@ -8,15 +8,18 @@ import { ConfigService } from '@/app/shared/services';
 import { SharedModule } from '@/app/shared';
 import { LOCAL_ROUTES } from '@/app/utils/routes';
 
+import { LayoutService } from '../service/layout.service';
+import { AppHorizontalMenu } from './app.horizontal-menu';
+
 @Component({
     selector: 'app-sidebar',
     standalone: true,
-    imports: [AppMenu, RouterModule, CommonModule, AvatarModule, SharedModule],
+    imports: [AppMenu, RouterModule, CommonModule, AvatarModule, SharedModule, AppHorizontalMenu],
     template: `
         <div class="layout-sidebar !rounded-r-3xl">
             <div class="sidebar-header">
                 <a class="layout-sidebar-logo" routerLink="/">
-                    <!-- SVG omitted for brevity in instruction, keeping it in replacement -->
+                    <!-- SVG omitted for brevity -->
                     <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             fill-rule="evenodd"
@@ -37,7 +40,8 @@ import { LOCAL_ROUTES } from '@/app/utils/routes';
                     <span>TEMPLATE</span>
                 </a>
             </div>
-            <app-menu></app-menu>
+            <app-menu *ngIf="!layoutService.isSlim() || layoutService.isMobile()"></app-menu>
+            <app-horizontal-menu *ngIf="layoutService.isSlim() && layoutService.isDesktop()" [iconOnly]="true"></app-horizontal-menu>
 
             <div class="sidebar-footer">
                 <div class="sidebar-user" *ngIf="currentUser()">
@@ -70,6 +74,7 @@ import { LOCAL_ROUTES } from '@/app/utils/routes';
 })
 export class AppSidebar implements OnInit {
     private configService = inject(ConfigService);
+    public layoutService = inject(LayoutService);
     items: any[] = [];
     currentUser = this.configService.currentUser;
 

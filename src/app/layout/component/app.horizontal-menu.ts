@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
@@ -11,9 +11,9 @@ import { AppPopupMenuitem } from './app.popup-menuitem';
     imports: [CommonModule, RouterModule, AppPopupMenuitem],
     template: `
         <ul class="layout-menu">
-            @for (item of menuItems; track i; let i = $index) {
+            @for (item of menuItems; track $index) {
                 @if (item.visible !== false) {
-                    <li app-popup-menuitem [item]="item" class="layout-root-menuitem"></li>
+                    <li app-popup-menuitem [item]="item" [iconOnly]="iconOnly" class="layout-root-menuitem"></li>
                 }
             }
         </ul>
@@ -23,6 +23,7 @@ import { AppPopupMenuitem } from './app.popup-menuitem';
     }
 })
 export class AppHorizontalMenu implements OnInit {
+    @Input() iconOnly: boolean = false;
     menuItems: MenuItem[] = [];
     menuService = inject(MenuService);
     router = inject(Router);

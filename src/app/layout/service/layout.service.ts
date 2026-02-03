@@ -6,7 +6,7 @@ export interface layoutConfig {
     primary?: string;
     surface?: string | undefined | null;
     darkTheme?: boolean;
-    menuMode?: 'static' | 'overlay' | 'horizontal';
+    menuMode?: 'static' | 'overlay' | 'horizontal' | 'slim';
 }
 
 interface LayoutState {
@@ -75,12 +75,22 @@ export class LayoutService {
     isOverlay = computed(() => this.layoutConfig().menuMode === 'overlay');
 
     isHorizontal = computed(() => this.layoutConfig().menuMode === 'horizontal');
+    
+    isSlim = computed(() => this.layoutConfig().menuMode === 'slim');
 
     transitionComplete = signal<boolean>(false);
 
+    private innerWidth = signal(window.innerWidth);
     private initialized = false;
 
     constructor() {
+        window.addEventListener('resize', () => {
+            this.innerWidth.set(window.innerWidth);
+            if (this.isDesktop() && this.layoutState().staticMenuMobileActive) {
+                this.layoutState.update((prev) => ({ ...prev, staticMenuMobileActive: false }));
+            }
+        });
+
         effect(() => {
             const config = this.layoutConfig();
             if (config) {
@@ -165,7 +175,7 @@ export class LayoutService {
     }
 
     isDesktop() {
-        return window.innerWidth > 991;
+        return this.innerWidth() > 991;
     }
 
     isMobile() {

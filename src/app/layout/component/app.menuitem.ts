@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input } from '@angular/core';
+import { Component, HostBinding, Input, ViewChild } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Subscription } from 'rxjs';
@@ -7,11 +7,13 @@ import { CommonModule } from '@angular/common';
 import { RippleModule } from 'primeng/ripple';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from '../service/layout.service';
+import { TieredMenu, TieredMenuModule } from 'primeng/tieredmenu';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: '[app-menuitem]',
-    imports: [CommonModule, RouterModule, RippleModule],
+    standalone: true,
+    imports: [CommonModule, RouterModule, RippleModule, TieredMenuModule],
     template: `
         <ng-container>
             <div *ngIf="root && item.visible !== false" class="layout-menuitem-root-text">{{ item.label }}</div>
@@ -48,6 +50,8 @@ import { LayoutService } from '../service/layout.service';
                     <li app-menuitem [item]="child" [index]="i" [parentKey]="key" [class]="child['badgeClass']"></li>
                 </ng-template>
             </ul>
+
+            <p-tieredMenu #menu [model]="item.items" [popup]="true" appendTo="body" styleClass="layout-slim-menu-popup"></p-tieredMenu>
         </ng-container>
     `,
     animations: [
@@ -66,8 +70,7 @@ import { LayoutService } from '../service/layout.service';
             ),
             transition('collapsed <=> expanded', animate('400ms cubic-bezier(0.86, 0, 0.07, 1)'))
         ])
-    ],
-    providers: [LayoutService]
+    ]
 })
 export class AppMenuitem {
     @Input() item!: MenuItem;
@@ -77,6 +80,8 @@ export class AppMenuitem {
     @Input() @HostBinding('class.layout-root-menuitem') root!: boolean;
 
     @Input() parentKey!: string;
+
+    @ViewChild('menu') menu!: TieredMenu;
 
     active = false;
 
@@ -143,7 +148,11 @@ export class AppMenuitem {
 
         // toggle active state
         if (this.item.items) {
-            this.active = !this.active;
+            if (this.layoutService.isSlim() && !this.root && !this.layoutService.isMobile()) {
+                this.menu.toggle(event);
+            } else {
+                this.active = !this.active;
+            }
         }
 
         this.layoutService.onMenuStateChange({ key: this.key });

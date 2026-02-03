@@ -12,9 +12,10 @@
 @use './_responsive';
 @use './_utils';
 @use './_typography';
-@use './tooltip';
+@use './_tooltip';
 @use './_breakpoint';
 @use './button';
 @use './_table';
 @use './_input';
 @use './_tieredmenu';
+@use './_slim';
