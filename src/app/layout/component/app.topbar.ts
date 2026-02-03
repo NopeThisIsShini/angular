@@ -11,11 +11,17 @@ import { ActivatedRoute, Event, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { AppConfigurator } from '@/app/layout/component/app.configurator';
 import { AppHorizontalMenu } from './app.horizontal-menu';
+import { AvatarModule } from 'primeng/avatar';
+import { MenuModule } from 'primeng/menu';
+import { RippleModule } from 'primeng/ripple';
+import { AuthService } from '@/app/pages/services';
+import { ConfigService } from '@/app/shared/services';
+import { LOCAL_ROUTES } from '@/app/utils/routes';
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, BreadcrumbModule, TieredMenuModule, AppConfigurator, AppHorizontalMenu],
+    imports: [RouterModule, CommonModule, StyleClassModule, BreadcrumbModule, TieredMenuModule, AppConfigurator, AppHorizontalMenu, AvatarModule, MenuModule, RippleModule],
     template: `
         <div class="layout-topbar">
             <a *ngIf="layoutService.isHorizontal() && !layoutService.isMobile()" class="layout-topbar-logo" routerLink="/">
@@ -38,7 +44,7 @@ import { AppHorizontalMenu } from './app.horizontal-menu';
                     </svg>
             </a>
 
-            <button *ngIf="!layoutService.isHorizontal() || layoutService.isMobile()" class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
+            <button *ngIf="(!layoutService.isHorizontal() && !layoutService.isSlim()) || layoutService.isMobile()" class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
                 <i class="icon-bars"></i>
             </button>
 
@@ -53,6 +59,36 @@ import { AppHorizontalMenu } from './app.horizontal-menu';
                 <div class="layout-topbar-menu lg:flex hidden items-center">
                     <ng-container *ngTemplateOutlet="topbarActions"></ng-container>
                 </div>
+
+                <div class="user-profile-menu px-4">
+                    <div class="flex items-center cursor-pointer" (click)="profileMenu.toggle($event)">
+                         <p-avatar [image]="currentUser()?.avatarUrl || 'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png'" shape="circle" size="large" />
+                    </div>
+                    <p-menu #profileMenu [popup]="true" appendTo="body" [model]="profileMenuItems" styleClass="w-full md:w-60">
+                        <ng-template #start>
+                            <div class="flex items-center p-4 border-b border-surface gap-3">
+                                 <p-avatar [image]="currentUser()?.avatarUrl || 'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png'" shape="circle" />
+                                 <div class="flex flex-col">
+                                     <span class="font-bold text-sm line-height-1">{{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</span>
+                                     <span class="text-xs text-muted-color mt-1">Administrator</span>
+                                 </div>
+                            </div>
+                        </ng-template>
+                        <ng-template #submenuheader let-item>
+                            <span class="text-primary font-bold">{{ item.label }}</span>
+                        </ng-template>
+                        <ng-template #item let-item>
+                            <a pRipple class="flex items-center p-menu-item-link" (click)="item.command ? item.command() : null">
+                                <span [class]="item.icon"></span>
+                                <span class="ml-2">{{ item.label }}</span>
+                                <span *ngIf="item.shortcut" class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1">
+                                    {{ item.shortcut }}
+                                </span>
+                            </a>
+                        </ng-template>
+                    </p-menu>
+                </div>
+
                  <div class="layout-config-menu">
                 <div class="relative">
 
@@ -113,6 +149,11 @@ import { AppHorizontalMenu } from './app.horizontal-menu';
 export class AppTopbar {
     breadcrumbItems: MenuItem[] = [];
     homeItem: MenuItem = { icon: 'icon-home', routerLink: '/' };
+    profileMenuItems: MenuItem[] = [];
+
+    private configService = inject(ConfigService);
+    private authService = inject(AuthService);
+    currentUser = this.configService.currentUser;
 
     constructor(
         public layoutService: LayoutService,
@@ -122,6 +163,48 @@ export class AppTopbar {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: Event) => {
             this.breadcrumbItems = this.createBreadcrumbs(this.activatedRoute.root);
         });
+
+        this.profileMenuItems = [
+            {
+                label: 'Documents',
+                items: [
+                    {
+                        label: 'New',
+                        icon: 'pi pi-plus',
+                        shortcut: '⌘+N'
+                    },
+                    {
+                        label: 'Search',
+                        icon: 'pi pi-search',
+                        shortcut: '⌘+S'
+                    }
+                ]
+            },
+            {
+                label: 'Profile',
+                items: [
+                    {
+                        label: 'Account',
+                        icon: 'pi pi-cog',
+                        shortcut: '⌘+O',
+                        command: () => this.goToSettings()
+                    },
+                    {
+                        label: 'Messages',
+                        icon: 'pi pi-inbox',
+                        badge: '2'
+                    },
+                    {
+                        label: 'Logout',
+                        icon: 'pi pi-sign-out',
+                        shortcut: '⌘+Q',
+                        command: () => {
+                            this.logout();
+                        }
+                    }
+                ]
+            }
+        ];
     }
 
     createBreadcrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: MenuItem[] = []): MenuItem[] {
@@ -150,5 +233,13 @@ export class AppTopbar {
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
+    }
+
+    logout() {
+        this.authService.logout();
+    }
+
+    goToSettings() {
+        this.router.navigate([`${LOCAL_ROUTES.ACCOUNT}`]);
     }
 }
