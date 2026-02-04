@@ -70,9 +70,7 @@ export class PermissionComponent implements OnInit {
             if (this.isRoleEditing) {
                 this.permissionService.saveRolePermissions(permissions);
                 const permissionKeys: string[] = Object.keys(permissions);
-                if (permissionKeys.length > 0) {
-                    this.onSave.emit({ data: permissionKeys as string[] });
-                }
+                this.onSave.emit({ data: permissionKeys });
             }
         } catch (error) {
             console.error('Error saving permissions:', error);

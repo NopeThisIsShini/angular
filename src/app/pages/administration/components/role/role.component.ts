@@ -184,9 +184,12 @@ export class RoleComponent implements OnInit {
     }
     onTabChange(tab: any) {
         this.activeTab = tab;
-        if (tab === 'permission' && this.selectedRoleData) {
+        if (tab === 'permission') {
             setTimeout(() => {
-                this.getRoleDetails(this.selectedRoleData as RolesModel);
+                const currentPermissions = this.form.get('grantedPermissions')?.value || [];
+                if (this.permissionComponent) {
+                    this.permissionComponent.loadPermissionsFromApiResponse(currentPermissions);
+                }
             }, 0);
         }
     }

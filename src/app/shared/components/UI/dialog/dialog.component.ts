@@ -1,10 +1,11 @@
-import { SharedModule } from '@/app/shared/shared.imports';
+import { CommonModule } from '@angular/common';
 import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import { PrimengImports } from '@/app/shared/primeng.import';
 
 @Component({
   selector: 'NG-Dialog',
   standalone: true,
-  imports: [SharedModule],
+  imports: [CommonModule, ...PrimengImports],
   templateUrl: './dialog.component.html',
   styleUrl: './dialog.component.scss',
 })
