@@ -20,9 +20,18 @@
 <ng-template #isActiveTemplate let-row>
     <p-tag [value]="row.status === 'active' ? 'Active' : 'Inactive'" [severity]="getSeverity(row.status)" />
 </ng-template>
-<p-dialog (onHide)="closeDialog()" header="{{ isEditMode ? 'Update User' : 'Create User' }}"
-    [(visible)]="showCreateEditUserDialog" [breakpoints]="{ '1300px': '60vw', '960px': '60vw' }"
-    [style]="{ width: '50vw' }" [modal]="true" [draggable]="false" (onHide)="closeDialog()" [resizable]="false">
+<NG-Dialog 
+    [(visible)]="showCreateEditUserDialog" 
+    [header]="isEditMode ? 'Update User' : 'Create User'"
+    width="50rem"
+    [breakpoints]="{ '1300px': '60vw', '960px': '75vw', '575px': '95vw' }"
+    [loading]="isSaving"
+    [footerConfirmLabel]="isEditMode ? 'Update' : 'Create'"
+    severity="primary"
+    (onConfirm)="createEditUser(isEditMode)"
+    (onCancel)="closeDialog()"
+    (onHide)="closeDialog()">
+    
     <form [formGroup]="form" (ngSubmit)="createEditUser(isEditMode)">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-2">
             <!-- Loop through form fields -->
@@ -44,12 +53,5 @@
                 </div>
             </div>
         </div>
-
-        <!-- Action Buttons -->
-        <div class="w-full h-px bg-gray-200 my-6"></div>
-        <div class="flex justify-end gap-3">
-            <p-button label="Cancel" severity="secondary" (click)="closeDialog()"></p-button>
-            <p-button [label]="isEditMode ? 'Update' : 'Create'" type="submit"></p-button>
-        </div>
     </form>
-</p-dialog>
+</NG-Dialog>

@@ -30,6 +30,7 @@ export class RoleComponent implements OnInit {
     items!: MenuItem[];
     loading: boolean = true;
     showCreateEditRole: boolean = false;
+    isSaving: boolean = false;
     form!: FormGroup;
     selectedRoleData: RolesModel | null = null;
     @ViewChild('permissionComponent') permissionComponent!: PermissionComponent;
@@ -271,16 +272,16 @@ export class RoleComponent implements OnInit {
         this.form.patchValue({ grantedPermissions: event.data });
     }
     saveRole() {
-        this.loading = true;
+        this.isSaving = true;
         this.roleService.saveRole(this.form.value, this.editMode).subscribe({
             next: (res: roleResponse) => { },
             error: (err) => {
-                this.loading = false;
+                this.isSaving = false;
             },
             complete: () => {
                 this.getallRoles({ first: 0, rows: 10 });
                 this.hideDialog();
-                this.loading = false;
+                this.isSaving = false;
             }
         });
     }

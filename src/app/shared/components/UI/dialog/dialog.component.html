@@ -1,0 +1,42 @@
+<p-dialog 
+    [(visible)]="visible" 
+    [modal]="modal" 
+    [header]="header"
+    [style]="dialogStyle" 
+    [breakpoints]="breakpoints"
+    [position]="position"
+    [styleClass]="'ng-dialog-wrapper ' + styleClass"
+    [closable]="closable"
+    [draggable]="draggable"
+    [resizable]="resizable"
+    [dismissableMask]="dismissableMask"
+    (onHide)="handleHide()">
+    
+    <ng-template #header *ngIf="headerTemplate">
+        <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+    </ng-template>
+
+    <div class="dialog-content">
+        <ng-content></ng-content>
+    </div>
+
+    <ng-template #footer>
+        <div *ngIf="showFooter && !footerTemplate" class="flex justify-end gap-2">
+            <p-button 
+                [label]="footerCancelLabel" 
+                [text]="true" 
+                severity="secondary" 
+                (click)="handleCancel()" />
+            <p-button 
+                [label]="footerConfirmLabel" 
+                [outlined]="true" 
+                [severity]="severity" 
+                [loading]="loading"
+                [disabled]="confirmDisabled"
+                (click)="handleConfirm()" />
+        </div>
+        <ng-container *ngIf="footerTemplate">
+            <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
+        </ng-container>
+    </ng-template>
+</p-dialog>

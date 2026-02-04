@@ -101,6 +101,7 @@ export class UserComponent implements OnInit, AfterViewInit {
     showCreateEditUserDialog: boolean = false;
     form!: FormGroup;
     isEditMode: boolean = false;
+    isSaving: boolean = false;
     constructor(
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
@@ -201,9 +202,11 @@ export class UserComponent implements OnInit, AfterViewInit {
             roleIds: [formValue.roleIds],
             id: isEdit ? formValue.id : 0
         };
+        this.isSaving = true;
         this.userService.saveUser(input, isEdit).subscribe({
             next: (res) => { },
             error: (err) => {
+                this.isSaving = false;
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
@@ -211,6 +214,7 @@ export class UserComponent implements OnInit, AfterViewInit {
                 });
             },
             complete: () => {
+                this.isSaving = false;
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Success',

@@ -19,6 +19,7 @@ export class TenantsComponent implements OnInit {
     totalCount: number = 0;
     loading: boolean = true;
     showCreateEditDialog: boolean = false;
+    isSaving: boolean = false;
     editMode: boolean = false;
     form!: FormGroup;
     selectedTenant: TenantModel | null = null;
@@ -133,7 +134,7 @@ export class TenantsComponent implements OnInit {
             return;
         }
 
-        this.loading = true;
+        this.isSaving = true;
         const payload = { ...this.form.value };
         if (this.editMode) {
             delete payload.password; // Don't send empty password on update if not changed
@@ -148,9 +149,10 @@ export class TenantsComponent implements OnInit {
                 });
                 this.getAllTenants({ first: 0, rows: 10 });
                 this.hideDialog();
+                this.isSaving = false;
             },
             error: () => {
-                this.loading = false;
+                this.isSaving = false;
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',

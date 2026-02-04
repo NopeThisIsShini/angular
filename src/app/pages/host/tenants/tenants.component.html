@@ -21,7 +21,19 @@
         </ng-template>
     </NG-Table>
 
-    <p-dialog [(visible)]="showCreateEditDialog" [style]="{ minWidth: '50vw' }" [header]="editMode ? 'Update Tenant' : 'Create Tenant'" [modal]="true" (onHide)="hideDialog()">
+    <NG-Dialog 
+        [(visible)]="showCreateEditDialog" 
+        [header]="editMode ? 'Update Tenant' : 'Create Tenant'"
+        width="50vw"
+        [breakpoints]="{ '1199px': '75vw', '575px': '95vw' }"
+        [loading]="isSaving"
+        [footerConfirmLabel]="editMode ? 'Update' : 'Create'"
+        [confirmDisabled]="!form.valid"
+        severity="primary"
+        (onConfirm)="saveTenant()"
+        (onCancel)="hideDialog()"
+        (onHide)="hideDialog()">
+        
         <form [formGroup]="form" class="p-2 flex flex-col space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
                 <!-- Tenant Name -->
@@ -96,11 +108,7 @@
                     ></NG-Select>
                 </div>
             </div>
-
-            <div class="flex justify-end gap-2 mt-4">
-                <p-button label="Cancel" severity="secondary" (onClick)="hideDialog()" />
-                <p-button [label]="editMode ? 'Update' : 'Create'" (onClick)="saveTenant()" [disabled]="!form.valid" />
-            </div>
         </form>
-    </p-dialog>
+    </NG-Dialog>
+
 </div>

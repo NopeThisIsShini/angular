@@ -1,0 +1,8 @@
+:host ::ng-deep {
+    .p-dialog {
+        // Any specific overrides for this wrapper component
+        .dialog-content {
+            padding: 0.5rem 0;
+        }
+    }
+}

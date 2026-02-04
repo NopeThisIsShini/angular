@@ -14,8 +14,19 @@
         [rows]="10" [globalSearchFields]="['name', 'slug', 'description']" [lazyLoadFn]="getallRoles.bind(this)">
     </NG-Table>
 
-    <p-dialog [(visible)]="showCreateEditRole" [style]="{ minWidth: '50vw' }"
-        [header]="editMode ? 'Update Role' : 'Create Role'" [modal]="true" (onHide)="hideDialog()">
+    <NG-Dialog 
+        [(visible)]="showCreateEditRole" 
+        [header]="editMode ? 'Update Role' : 'Create Role'"
+        width="60rem"
+        [breakpoints]="{ '1300px': '75vw', '960px': '85vw', '575px': '95vw' }"
+        [loading]="isSaving"
+        [footerConfirmLabel]="editMode ? 'Update' : 'Create'"
+        [confirmDisabled]="!form.valid"
+        severity="primary"
+        (onConfirm)="saveRole()"
+        (onCancel)="hideDialog()"
+        (onHide)="hideDialog()">
+        
         <div class="tab_card">
             <p-tabs [(value)]="activeTab" (valueChange)="onTabChange($event)" scrollable>
                 <p-tablist>
@@ -52,8 +63,7 @@
                     [isRoleEditing]="true"></app-permission>
                 }
             </div>
-            <p-button [label]="editMode ? 'Update' : 'Create'" (onClick)="saveRole()"
-                [disabled]="!form.valid"></p-button>
         </div>
-    </p-dialog>
+    </NG-Dialog>
+
 </div>
