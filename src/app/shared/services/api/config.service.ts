@@ -1,11 +1,13 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Observable, of, switchMap, tap, map } from 'rxjs';
 import { AppInfoResponse, userPreferenceConfig, UserPreferences, UserResult } from '../../models/api/common.model';
 import { ApiPermissionResponse } from '../../models/permission.model';
+import { layoutConfig } from '@/app/layout/service/layout.service';
 import { PermissionService } from '../permission.service';
 import { api_routes } from '@/app/utils/routes';
 import { LocalStorageService } from '../storage/local.storage.service';
+import { IS_LOCAL_API } from '@/app/utils/interceptor/base-url.interceptor';
 
 @Injectable({
     providedIn: 'root'
@@ -21,11 +23,15 @@ export class ConfigService {
     ) { }
 
     getUserPreferences(): Observable<UserPreferences> {
-        return this.http.get<UserPreferences>('assets/db/local.config.json');
+        return this.http.get<UserPreferences>(api_routes.userPreferences, {
+            context: new HttpContext().set(IS_LOCAL_API, true)
+        });
     }
 
     saveUserPreferences(prefs: userPreferenceConfig): Observable<UserPreferences> {
-        return this.http.put<UserPreferences>('assets/db/local.config.json', prefs);
+        return this.http.put<UserPreferences>(api_routes.userPreferences, prefs, {
+            context: new HttpContext().set(IS_LOCAL_API, true)
+        });
     }
 
     getCurrentUserInfo(): Observable<AppInfoResponse> {
@@ -44,28 +50,38 @@ export class ConfigService {
         );
     }
 
-    loadUserAndPermissions(): Observable<void> {
-        if (this.lSService.getItem('access_token')) {
-            return this.getCurrentUserInfo().pipe(
-                tap((appInfoResp: AppInfoResponse) => {
-                    this.currentUser.set(appInfoResp.result);
-                    const userId = appInfoResp.result?.id ?? null;
-                    this.currentUserId.set(userId);
-                }),
-                switchMap((appInfoResp: AppInfoResponse) => {
-                    const userId = appInfoResp.result?.id ?? null;
-                    // if (user) {
-                    // Chain: Load Permissions (extendable in future)
-                    return this.loadUserPermissions(userId);
-                    // }
+    getAppLayoutConfig(): Observable<any> {
+        return this.http.get<any>(api_routes.appUiConfig, {
+            context: new HttpContext().set(IS_LOCAL_API, true)
+        });
+    }
 
-                    // No user logged in → skip permission loading
-                    // return of(void 0);
-                })
-            );
-        } else {
-            return of(void 0);
-        }
+    loadUserAndPermissions(): Observable<void> {
+        // Load App Layout config first
+        return this.getAppLayoutConfig().pipe(
+            tap((config) => {
+                // We'll handle pushing this to LayoutService later or here
+                (window as any).appUiConfig = config;
+            }),
+            switchMap(() => {
+                if (this.lSService.getItem('access_token')) {
+                    return this.getCurrentUserInfo().pipe(
+                        tap((appInfoResp: AppInfoResponse) => {
+                            this.currentUser.set(appInfoResp.result);
+                            const userId = appInfoResp.result?.id ?? null;
+                            this.currentUserId.set(userId);
+                        }),
+                        switchMap((appInfoResp: AppInfoResponse) => {
+                            const userId = appInfoResp.result?.id ?? null;
+                            return this.loadUserPermissions(userId);
+                        })
+                    );
+                } else {
+                    return of(void 0);
+                }
+            }),
+            map(() => void 0)
+        );
     }
 
     clearUserContext(): void {

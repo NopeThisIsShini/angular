@@ -42,7 +42,7 @@ declare type SurfacesType = {
     imports: [CommonModule, FormsModule, SelectButtonModule],
     template: `
         <div class="flex flex-col gap-4">
-            <div>
+            <div *ngIf="layoutService.features().allowThemeChange">
                 <span class="text-sm text-muted-color font-semibold">Primary</span>
                 <div class="pt-2 flex gap-2 flex-wrap justify-start">
                     @for (primaryColor of primaryColors(); track primaryColor.name) {
@@ -62,7 +62,7 @@ declare type SurfacesType = {
                     }
                 </div>
             </div>
-            <div>
+            <div *ngIf="layoutService.features().allowThemeChange">
                 <span class="text-sm text-muted-color font-semibold">Surface</span>
                 <div class="pt-2 flex gap-2 flex-wrap justify-start">
                     @for (surface of surfaces; track surface.name) {
@@ -81,7 +81,7 @@ declare type SurfacesType = {
                     }
                 </div>
             </div>
-            <div *ngIf="showMenuModeButton()" class="flex flex-col gap-2">
+            <div *ngIf="showMenuModeButton() && layoutService.features().allowMenuModeChange" class="flex flex-col gap-2">
                 <span class="text-sm text-muted-color font-semibold">Menu Mode</span>
                 <p-selectbutton [ngModel]="menuMode()" (ngModelChange)="onMenuModeChange($event)" [options]="menuModeOptions" [allowEmpty]="false" size="small" />
             </div>

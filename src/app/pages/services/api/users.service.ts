@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { GetAllRolesOutputModel, getUserResponse, userInputParamModel, UsersModel } from '@/app/pages/models';
 import { Observable } from 'rxjs';
+import { api_routes } from '@/app/utils/routes';
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +12,7 @@ export class UsersService {
 
     getRoles(): Observable<GetAllRolesOutputModel> {
         // API Call - uncomment for production
-        return this.http.get<GetAllRolesOutputModel>(`role/roles`);
+        return this.http.get<GetAllRolesOutputModel>(api_routes.getallRoles);
         // Local DB for testing
         // return this.http.get<GetAllRolesOutputModel>('assets/db/roles.json');
     }
@@ -28,16 +29,16 @@ export class UsersService {
         if (input.skipCount) {
             params = params.set('skipCount', input.skipCount);
         }
-        return this.http.get<getUserResponse>(`user/users`, { params });
+        return this.http.get<getUserResponse>(api_routes.getallusers, { params });
         // Local DB for testing
         // return this.http.get<getUserResponse>('assets/db/users.json');
     }
 
     saveUser(input: UsersModel, isEdit: boolean) {
         if (isEdit) {
-            return this.http.patch<UsersModel>(`user/users`, input);
+            return this.http.patch<UsersModel>(api_routes.getallusers, input);
         } else {
-            return this.http.post<UsersModel>(`user/users`, input);
+            return this.http.post<UsersModel>(api_routes.getallusers, input);
         }
     }
 }

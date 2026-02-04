@@ -26,13 +26,19 @@ interface MenuChangeEvent {
     providedIn: 'root'
 })
 export class LayoutService {
-    _config: layoutConfig = {
+    _config: layoutConfig = (window as any).appUiConfig?.layoutConfig || {
         preset: 'Aura',
         primary: 'emerald',
         surface: null,
-        darkTheme: false,
+        darkTheme: true,
         menuMode: 'static'
     };
+    
+    features = signal<any>((window as any).appUiConfig?.features || {
+        showConfigOptions: false,
+        allowMenuModeChange: false,
+        allowThemeChange: false
+    });
 
     _state: LayoutState = {
         staticMenuDesktopInactive: false,

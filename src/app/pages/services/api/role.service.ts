@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommonModel, inputParamModel } from '@/app/shared/models';
 import { GetAllRolesOutputModel, roleResponse, RolesModel } from '@/app/pages/models';
+import { api_routes } from '@/app/utils/routes';
 
 @Injectable({
     providedIn: 'root'
@@ -22,14 +23,14 @@ export class RoleService {
         if (input.skipCount) {
             params = params.set('skipCount', input.skipCount);
         }
-        return this.http.get<GetAllRolesOutputModel>(`role/roles`, {
+        return this.http.get<GetAllRolesOutputModel>(api_routes.getallRoles, {
             params
         });
         // Local DB for testing
         // return this.http.get<GetAllRolesOutputModel>('assets/db/roles.json');
     }
     saveRole(roleData: RolesModel, isUpdate: boolean): Observable<roleResponse> {
-        const url = isUpdate ? 'role/roles' : 'role/roles';
+        const url = api_routes.getallRoles;
 
         return isUpdate ? this.http.put<roleResponse>(url, roleData) : this.http.post<roleResponse>(url, roleData);
     }

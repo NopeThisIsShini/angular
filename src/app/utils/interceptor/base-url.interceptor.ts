@@ -1,15 +1,23 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpContextToken, HttpInterceptorFn } from '@angular/common/http';
 import { environment } from '@/environments/environment';
 
+/**
+ * Flag to indicate if the request should be directed to the local server
+ * rather than the standard API base URL.
+ */
+export const IS_LOCAL_API = new HttpContextToken<boolean>(() => false);
+
 export const baseUrlInterceptor: HttpInterceptorFn = (req, next) => {
-    const newBaseUrl = environment.apiBaseUrl;
+    // If the URL is already absolute, we don't need to prepend anything
+    if (req.url.includes('://')) {
+        return next(req);
+    }
 
-    // Create the new URL by replacing the old base URL with the new one
-    const modifiedUrl = newBaseUrl + req.url;
+    // "Flag-based" structure: choose the base URL from environment
+    const isLocal = req.context.get(IS_LOCAL_API);
+    const baseUrl = isLocal ? environment.localUrl : environment.apiBaseUrl;
 
-    // Clone the request and replace the URL with the modified URL
-    const modifiedRequest = req.clone({
-        url: modifiedUrl
-    });
-    return next(modifiedRequest);
+    return next(req.clone({
+        url: baseUrl + req.url
+    }));
 };

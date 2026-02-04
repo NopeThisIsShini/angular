@@ -89,7 +89,7 @@ import { LOCAL_ROUTES } from '@/app/utils/routes';
                     </p-menu>
                 </div>
 
-                 <div class="layout-config-menu">
+                <div *ngIf="layoutService.features().showConfigOptions" class="layout-config-menu">
                 <div class="relative">
 
 
@@ -135,7 +135,7 @@ import { LOCAL_ROUTES } from '@/app/utils/routes';
 
         <!-- Reusable Actions Template -->
         <ng-template #topbarActions>
-            <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
+            <button *ngIf="layoutService.features().allowThemeChange" type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
                 <i [ngClass]="{ 'icon-moon': layoutService.isDarkTheme(), 'icon-sun': !layoutService.isDarkTheme() }"></i>
                 <span>Theme</span>
             </button>

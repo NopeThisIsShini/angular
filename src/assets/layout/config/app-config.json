@@ -1,0 +1,14 @@
+{
+    "layoutConfig": {
+        "preset": "Aura",
+        "primary": "emerald",
+        "surface": null,
+        "darkTheme": false,
+        "menuMode": "horizontal"
+    },
+    "features": {
+        "showConfigOptions": true,
+        "allowMenuModeChange": true,
+        "allowThemeChange": true
+    }
+}
