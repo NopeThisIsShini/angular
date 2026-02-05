@@ -6,3 +6,4 @@ export * from './api/config.service';
 export * from './api/common.service';
 export * from './favicon.service';
 export * from './loading.service';
+export * from './jwt.service';

@@ -4,7 +4,7 @@
         "primary": "emerald",
         "surface": null,
         "darkTheme": false,
-        "menuMode": "horizontal"
+        "menuMode": "static"
     },
     "features": {
         "showConfigOptions": true,
