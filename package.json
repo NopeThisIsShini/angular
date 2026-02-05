@@ -1,5 +1,5 @@
 {
-    "name": "angular_template",
+    "name": "angular_rbac",
     "version": "19.0.1",
     "scripts": {
         "ng": "ng",
@@ -9,8 +9,9 @@
         "format": "prettier --write \"**/*.{js,mjs,ts,mts,d.ts,html}\" --cache",
         "test": "ng test",
         "flare": "cloudflared tunnel --url http://localhost:4200",
-        "story": "ng run angular_template:storybook",
-        "build-storybook": "ng run angular_template:build-storybook"
+        "story": "ng run angular_rbac:storybook",
+        "build-story": "ng run angular_rbac:build-storybook",
+        "rename": "node scripts/ng-rename.js"
     },
     "private": true,
     "dependencies": {

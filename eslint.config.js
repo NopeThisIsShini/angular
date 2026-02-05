@@ -28,7 +28,7 @@ export default {
                 project: ['tsconfig.json', 'e2e/tsconfig.json'],
                 createDefaultProgram: true
             },
-            extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:@angular-eslint/recommended', 'plugin:@angular-eslint/angular_template/process-inline-templates', 'prettier'],
+            extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:@angular-eslint/recommended', 'plugin:@angular-eslint/angular_rbac/process-inline-templates', 'prettier'],
             rules: {
                 '@angular-eslint/component-selector': [
                     'error',
@@ -52,7 +52,7 @@ export default {
                         suffixes: ['']
                     }
                 ],
-                '@angular-eslint/angular_template/eqeqeq': [
+                '@angular-eslint/angular_rbac/eqeqeq': [
                     'error',
                     {
                         allowNullOrUndefined: true
@@ -77,7 +77,7 @@ export default {
         },
         {
             files: ['*.html'],
-            extends: ['plugin:@angular-eslint/angular_template/recommended', 'prettier'],
+            extends: ['plugin:@angular-eslint/angular_rbac/recommended', 'prettier'],
             rules: {}
         },
         {

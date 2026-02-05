@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular_template": {
+    "angular_rbac": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "angular_template:build:production"
+              "buildTarget": "angular_rbac:build:production"
             },
             "development": {
-              "buildTarget": "angular_template:build:development"
+              "buildTarget": "angular_rbac:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -108,7 +108,7 @@
           "builder": "@storybook/angular:start-storybook",
           "options": {
             "configDir": ".storybook",
-            "browserTarget": "angular_template:build",
+            "browserTarget": "angular_rbac:build",
             "compodoc": false,
             "port": 6006
           }
@@ -117,7 +117,7 @@
           "builder": "@storybook/angular:build-storybook",
           "options": {
             "configDir": ".storybook",
-            "browserTarget": "angular_template:build",
+            "browserTarget": "angular_rbac:build",
             "compodoc": false,
             "outputDir": "storybook-static"
           }
