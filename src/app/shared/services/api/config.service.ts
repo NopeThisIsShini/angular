@@ -1,26 +1,26 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, of, switchMap, tap, map } from 'rxjs';
 import { AppInfoResponse, userPreferenceConfig, UserPreferences, UserResult } from '../../models/api/common.model';
 import { ApiPermissionResponse } from '../../models/permission.model';
-import { layoutConfig } from '@/app/layout/service/layout.service';
 import { PermissionService } from '../permission.service';
 import { api_routes } from '@/app/utils/routes';
 import { LocalStorageService } from '../storage/local.storage.service';
 import { IS_LOCAL_API } from '@/app/utils/interceptor/base-url.interceptor';
+import { AppStore } from '@/app/store';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ConfigService {
-    currentUser = signal<UserResult | null>(null);
-    currentUserId = signal<number | null>(null);
+    private http = inject(HttpClient);
+    private permissionService = inject(PermissionService);
+    private lSService = inject(LocalStorageService);
+    private appStore = inject(AppStore);
 
-    constructor(
-        private http: HttpClient,
-        private permissionService: PermissionService,
-        private lSService: LocalStorageService
-    ) { }
+    // Publicly expose signals from the store for components that still use ConfigService
+    currentUser = this.appStore.user;
+    currentUserId = this.appStore.userId;
 
     getUserPreferences(): Observable<UserPreferences> {
         return this.http.get<UserPreferences>(api_routes.userPreferences, {
@@ -35,15 +35,13 @@ export class ConfigService {
     }
 
     getCurrentUserInfo(): Observable<AppInfoResponse> {
-        // API Call - uncomment for production
         return this.http.get<AppInfoResponse>(`${api_routes.userInfo}`);
-        // Local DB for testing
-        // return this.http.get<AppInfoResponse>('assets/db/current-user.json');
     }
 
     loadUserPermissions(userId: number): Observable<void> {
         return this.permissionService.getUserPermissions(userId).pipe(
             tap((apiResponse: ApiPermissionResponse) => {
+                // PermissionService now automatically syncs with AppStore
                 this.permissionService.loadPermissionsFromApi(apiResponse);
             }),
             map(() => void 0)
@@ -57,19 +55,17 @@ export class ConfigService {
     }
 
     loadUserAndPermissions(): Observable<void> {
-        // Load App Layout config first
+        this.appStore.setLoading();
+        
         return this.getAppLayoutConfig().pipe(
             tap((config) => {
-                // We'll handle pushing this to LayoutService later or here
                 (window as any).appUiConfig = config;
             }),
             switchMap(() => {
                 if (this.lSService.getItem('access_token')) {
                     return this.getCurrentUserInfo().pipe(
                         tap((appInfoResp: AppInfoResponse) => {
-                            this.currentUser.set(appInfoResp.result);
-                            const userId = appInfoResp.result?.id ?? null;
-                            this.currentUserId.set(userId);
+                            this.appStore.setUser(appInfoResp.result);
                         }),
                         switchMap((appInfoResp: AppInfoResponse) => {
                             const userId = appInfoResp.result?.id ?? null;
@@ -80,12 +76,15 @@ export class ConfigService {
                     return of(void 0);
                 }
             }),
-            map(() => void 0)
+            map(() => void 0),
+            tap({
+                error: (err) => this.appStore.setLoadError(err)
+            })
         );
     }
 
     clearUserContext(): void {
-        this.currentUser.set(null);
-        this.currentUserId.set(null);
+        this.appStore.clear();
     }
 }
+

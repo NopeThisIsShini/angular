@@ -232,7 +232,7 @@ export class AppTopbar {
     }
 
     toggleDarkMode() {
-        this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
+        this.layoutService.setDarkMode(!this.layoutService.isDarkTheme());
     }
 
     logout() {

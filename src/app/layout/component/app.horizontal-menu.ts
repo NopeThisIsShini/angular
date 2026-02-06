@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Input } from '@angular/core';
+import { Component, inject, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
@@ -11,9 +11,9 @@ import { AppPopupMenuitem } from './app.popup-menuitem';
     imports: [CommonModule, RouterModule, AppPopupMenuitem],
     template: `
         <ul class="layout-menu">
-            @for (item of menuItems; track $index) {
+            @for (item of menuItems(); track $index) {
                 @if (item.visible !== false) {
-                    <li app-popup-menuitem [item]="item" [iconOnly]="iconOnly" class="layout-root-menuitem"></li>
+                    <li app-popup-menuitem [item]="item" [iconOnly]="iconOnly()" class="layout-root-menuitem"></li>
                 }
             }
         </ul>
@@ -22,17 +22,19 @@ import { AppPopupMenuitem } from './app.popup-menuitem';
         class: 'layout-horizontal-menu'
     }
 })
-export class AppHorizontalMenu implements OnInit {
-    @Input() iconOnly: boolean = false;
-    menuItems: MenuItem[] = [];
-    menuService = inject(MenuService);
-    router = inject(Router);
+export class AppHorizontalMenu {
+    iconOnly = input<boolean>(false);
+    
+    private menuService = inject(MenuService);
+    private router = inject(Router);
 
-    ngOnInit() {
-        const fullMenu = this.menuService.getMenuModel();
+    menuItems = computed(() => {
+        const fullMenu = this.menuService.menuModel();
         const rawItems = fullMenu.length > 0 ? (fullMenu[0].items || []) : [];
-        this.menuItems = this.transformMenuItems(rawItems);
-    }
+        return this.transformMenuItems(rawItems);
+    });
+
+    constructor() {}
 
     private transformMenuItems(items: MenuItem[]): MenuItem[] {
         return items.map((item) => {

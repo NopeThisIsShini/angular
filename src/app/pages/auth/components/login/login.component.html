@@ -65,10 +65,10 @@
                     </div>
 
                     <!-- Sign In Button -->
-                    <p-button type="submit" [loading]="isLoading" [disabled]="!loginForm.valid" label="Sign In" styleClass="w-full" [style]="{ height: '3rem' }" (onClick)="onSignIn()" [loading]="isLoading"> </p-button>
+                    <p-button type="submit" [loading]="isLoading()" [disabled]="!loginForm.valid" label="Sign In" styleClass="w-full" [style]="{ height: '3rem' }" (onClick)="onSignIn()"> </p-button>
                 </form>
 
-                <p class="mt-6 text-sm text-center">Don&#x27;t have an account yet? <a href="#" class="focus:outline-none focus:underline hover:underline text-[var(--primary-color)] hover:text-[var(--surface-hover)]">Sign up</a>.</p>
+                <p class="mt-6 text-sm text-center">Don&#x27;t have an account yet? <a routerLink="/auth/signup" class="focus:outline-none focus:underline hover:underline text-[var(--primary-color)] hover:text-[var(--surface-hover)]">Sign up</a>.</p>
             </div>
         </div>
     </div>

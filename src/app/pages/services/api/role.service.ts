@@ -12,7 +12,6 @@ export class RoleService {
     constructor(private http: HttpClient) { }
 
     getallRoles(input: inputParamModel) {
-        // API Call - uncomment for production
         let params = new HttpParams();
         if (input.keyword) {
             params = params.set('keyword', input.keyword);
@@ -26,8 +25,6 @@ export class RoleService {
         return this.http.get<GetAllRolesOutputModel>(api_routes.getallRoles, {
             params
         });
-        // Local DB for testing
-        // return this.http.get<GetAllRolesOutputModel>('assets/db/roles.json');
     }
     saveRole(roleData: RolesModel, isUpdate: boolean): Observable<roleResponse> {
         const url = api_routes.getallRoles;

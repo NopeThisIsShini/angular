@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import { Component, computed, forwardRef, input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { TextareaModule } from 'primeng/textarea';
@@ -17,16 +17,14 @@ import { TextareaModule } from 'primeng/textarea';
     ]
 })
 export class TextareaComponent implements ControlValueAccessor {
-    @Input() id: string = '';
-    @Input() rows: string = '10';
-    @Input() cols: string = '30';
-    @Input() label: string = '';
-    @Input() customClass: string = '';
-    @Input() mark: boolean = false;
+    id = input<string>('');
+    rows = input<string>('10');
+    cols = input<string>('30');
+    label = input<string>('');
+    customClass = input<string>('');
+    mark = input<boolean>(false);
 
-    get isRequired(): boolean {
-        return this.mark;
-    }
+    isRequired = computed(() => this.mark());
 
     value: any = ''; // Bound to the form control's value
     private onChange: (_: any) => void = () => {};

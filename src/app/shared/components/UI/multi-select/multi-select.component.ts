@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, forwardRef, input, output, computed } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -19,37 +19,36 @@ import { MultiSelectModule } from 'primeng/multiselect';
     ]
 })
 export class MultiselectComponent implements ControlValueAccessor {
-    @Input() id: string = '';
-    @Input() placeholder: string = '';
-    @Input() label: string = '';
-    @Input() containerClass: string = '';
-    @Input() selectClass: string = '';
-    @Input() disabled: boolean = false;
-    @Input() mark: boolean = false;
-    @Input() options: any[] = [];
-    @Input() optionLabel: string = 'label';
-    @Input() optionValue: string = 'value';
+    id = input<string>('');
+    placeholder = input<string>('');
+    label = input<string>('');
+    containerClass = input<string>('');
+    selectClass = input<string>('');
+    disabled = input<boolean>(false);
+    mark = input<boolean>(false);
+    options = input<any[]>([]);
+    optionLabel = input<string>('label');
+    optionValue = input<string>('value');
 
     // Multi-select specific properties
-    @Input() filter: boolean = true;
-    @Input() maxSelectedLabels: number = 3;
-    @Input() selectedItemsLabel: string = '{0} items selected';
-    @Input() showToggleAll: boolean = true;
-    @Input() filterPlaceHolder: string = 'Search...';
-    @Input() showHeader: boolean = true;
-    @Input() showClear: boolean = false;
+    filter = input<boolean>(true);
+    maxSelectedLabels = input<number>(3);
+    selectedItemsLabel = input<string>('{0} items selected');
+    showToggleAll = input<boolean>(true);
+    filterPlaceHolder = input<string>('Search...');
+    showHeader = input<boolean>(true);
+    showClear = input<boolean>(false);
 
     // Output events
-    @Output() userSelectionChanged = new EventEmitter<any>();
-    @Output() onShowEvent = new EventEmitter<any>();
-    @Output() onHideEvent = new EventEmitter<any>();
-    @Output() onFilterEvent = new EventEmitter<any>();
+    userSelectionChanged = output<any>();
+    onShowEvent = output<any>();
+    onHideEvent = output<any>();
+    onFilterEvent = output<any>();
 
-    get isRequired(): boolean {
-        return this.mark;
-    }
+    isRequired = computed(() => this.mark());
 
     value: any[] = [];
+    isInternalDisabled = false;
 
     private onChange: (value: any) => void = () => {};
     private onTouched: () => void = () => {};
@@ -95,7 +94,7 @@ export class MultiselectComponent implements ControlValueAccessor {
     }
 
     setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
+        this.isInternalDisabled = isDisabled;
         this.cdr.detectChanges();
     }
 }

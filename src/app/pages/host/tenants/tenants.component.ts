@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, inject, signal, computed, effect, untracked } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableLazyLoadEvent } from 'primeng/table';
 import { SharedModule } from '@/app/shared/shared.imports';
-import { ColumnDef, TableAction } from '@/app/shared/models';
-import { TenantModel } from '@/app/pages/models';
-import { TenantService } from '@/app/pages/services/api';
+import { ColumnDef, FormField, TableAction } from '@/app/shared/models';
+import { TenantModel, CreateTenantInput, UpdateTenantInput } from '@/app/pages/models';
 import { validationConstants } from '@/app/utils/constant';
+import { TenantStore } from '@/app/store';
 
 @Component({
     selector: 'app-tenants',
@@ -14,20 +14,39 @@ import { validationConstants } from '@/app/utils/constant';
     templateUrl: './tenants.component.html',
     styleUrl: './tenants.component.scss'
 })
-export class TenantsComponent implements OnInit {
-    tenantsData: TenantModel[] = [];
-    totalCount: number = 0;
-    loading: boolean = true;
-    showCreateEditDialog: boolean = false;
-    isSaving: boolean = false;
-    editMode: boolean = false;
-    form!: FormGroup;
+export class TenantsComponent {
+    private store = inject(TenantStore);
+    private messageService = inject(MessageService);
+    private authConfirmationService = inject(ConfirmationService);
+    private fb = inject(FormBuilder);
+
+    // State from store
+    tenants = this.store.tenants;
+    totalCount = this.store.totalCount;
+    loading = this.store.isLoading;
+    operationStatus = this.store.operationStatus;
+    isSaving = computed(() => this.operationStatus().status === 'executing');
+
+    showCreateEditDialog = signal<boolean>(false);
+    editMode = signal<boolean>(false);
     selectedTenant: TenantModel | null = null;
 
+    form = this.fb.group({
+        id: [0],
+        tenantName: ['', [Validators.required]],
+        tenantSlug: ['', [Validators.required, Validators.pattern(validationConstants.NAME_PATTERN)]],
+        email: ['', [Validators.required, Validators.pattern(validationConstants.EMAIL_PATTERN)]],
+        firstName: ['', [Validators.required]],
+        lastName: ['', [Validators.required]],
+        phone: ['', [Validators.required]],
+        password: [''],
+        status: ['active']
+    });
+
     columns: ColumnDef[] = [
-        { field: 'name', header: 'Tenant Name', sortable: true, filterable: true, filterType: 'text' },
+        { field: 'name', header: 'Name', sortable: true, filterable: true, filterType: 'text' },
         { field: 'slug', header: 'Slug', sortable: true, filterable: true, filterType: 'text' },
-        { field: 'status', header: 'Status', template: undefined },
+        { field: 'status', header: 'Status', sortable: true },
         { field: 'createdAt', header: 'Created At', sortable: true }
     ];
 
@@ -35,173 +54,96 @@ export class TenantsComponent implements OnInit {
         {
             label: 'Edit',
             icon: 'pi pi-pencil',
-            command: (data: TenantModel) => {
-                this.openUpdateDialog(data);
-            }
+            command: (data: TenantModel) => this.openUpdateDialog(data)
         },
         {
             label: 'Delete',
             icon: 'pi pi-trash',
             outlined: true,
             severity: 'danger',
-            command: (data: TenantModel) => {
-                this.confirmDelete(data);
-            }
+            command: (data: TenantModel) => this.confirmDelete(data)
         }
     ];
 
-    constructor(
-        private tenantService: TenantService,
-        private messageService: MessageService,
-        private confirmationService: ConfirmationService,
-        private fb: FormBuilder
-    ) { }
+    constructor() {
+        // Reactively handle operation results
+        effect(() => {
+            const op = this.operationStatus();
+            if (op.status === 'success') {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: op.message
+                });
 
-    ngOnInit(): void {
-        this.initializeForm();
-    }
+                if (op.action === 'create' || op.action === 'edit') {
+                    this.hideDialog();
+                }
 
-    private initializeForm(): void {
-        this.form = this.fb.group({
-            id: [0],
-            tenantName: ['', [Validators.required]],
-            tenantSlug: ['', [Validators.required, Validators.pattern(validationConstants.NAME_PATTERN)]],
-            email: ['', [Validators.required, Validators.email]],
-            firstName: ['', [Validators.required]],
-            lastName: ['', [Validators.required]],
-            phone: ['', [Validators.required]],
-            password: [''],
-            status: ['active']
+                untracked(() => this.store.resetOperationStatus());
+            } else if (op.status === 'error') {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: op.message
+                });
+                untracked(() => this.store.resetOperationStatus());
+            }
         });
     }
 
     getAllTenants(event: TableLazyLoadEvent): void {
-        this.loading = true;
-        this.tenantService
-            .getAllTenants({
-                keyword: typeof event.globalFilter === 'string' ? event.globalFilter : undefined,
-                skipCount: event.first ?? 0,
-                maxResultCount: event.rows ?? 10
-            })
-            .subscribe({
-                next: (res) => {
-                    this.tenantsData = res.result.items;
-                    this.totalCount = res.result.totalCount;
-                    this.loading = false;
-                },
-                error: () => {
-                    this.loading = false;
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'Failed to load tenants'
-                    });
-                }
-            });
+        this.store.loadTenants({
+            keyword: typeof event.globalFilter === 'string' ? event.globalFilter : undefined,
+            skipCount: event.first ?? 0,
+            maxResultCount: event.rows ?? 10
+        });
     }
 
     openCreateDialog(): void {
-        this.editMode = false;
+        this.editMode.set(false);
         this.form.reset({ id: 0, status: 'active' });
-        this.form.get('password')?.setValidators([Validators.required]);
-        this.showCreateEditDialog = true;
+        this.form.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
+        this.showCreateEditDialog.set(true);
     }
 
     openUpdateDialog(tenant: TenantModel): void {
-        this.editMode = true;
+        this.editMode.set(true);
         this.selectedTenant = tenant;
-        this.form.get('password')?.clearValidators();
         this.form.patchValue({
             id: tenant.id,
             tenantName: tenant.name,
             tenantSlug: tenant.slug,
             status: tenant.status
-            // Note: email, firstName, etc might not be available in listing,
-            // you might need to fetch detailed info if needed
         });
-        this.showCreateEditDialog = true;
+        this.form.get('password')?.clearValidators();
+        this.form.get('password')?.updateValueAndValidity();
+        this.showCreateEditDialog.set(true);
     }
 
     hideDialog(): void {
-        this.showCreateEditDialog = false;
+        this.showCreateEditDialog.set(false);
         this.form.reset({ id: 0, status: 'active' });
         this.selectedTenant = null;
     }
 
     saveTenant(): void {
+        this.form.markAllAsTouched();
         if (this.form.invalid) {
-            this.form.markAllAsTouched();
             return;
         }
 
-        this.isSaving = true;
-        const payload = { ...this.form.value };
-        if (this.editMode) {
-            delete payload.password; // Don't send empty password on update if not changed
-        }
-
-        this.tenantService.saveTenant(payload, this.editMode).subscribe({
-            next: () => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Success',
-                    detail: this.editMode ? 'Tenant updated successfully' : 'Tenant created successfully'
-                });
-                this.getAllTenants({ first: 0, rows: 10 });
-                this.hideDialog();
-                this.isSaving = false;
-            },
-            error: () => {
-                this.isSaving = false;
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: this.editMode ? 'Failed to update tenant' : 'Failed to create tenant'
-                });
-            }
-        });
+        const data = this.form.getRawValue();
+        this.store.saveTenant(data as any, this.editMode());
     }
 
     confirmDelete(tenant: TenantModel): void {
-        this.confirmationService.confirm({
+        this.authConfirmationService.confirm({
             message: `Are you sure you want to delete "${tenant.name}"?`,
             header: 'Confirm Delete',
             icon: 'pi pi-exclamation-triangle',
-            rejectButtonProps: {
-                label: 'No',
-                severity: 'secondary',
-                variant: 'text'
-            },
-            acceptButtonProps: {
-                severity: 'danger',
-                label: 'Yes, Delete'
-            },
             accept: () => {
-                this.deleteTenant(tenant.id);
-            }
-        });
-    }
-
-    deleteTenant(id: number): void {
-        this.loading = true;
-        this.tenantService.deleteTenant(id).subscribe({
-            next: () => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Success',
-                    detail: 'Tenant deleted successfully'
-                });
-            },
-            error: () => {
-                this.loading = false;
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Failed to delete tenant'
-                });
-            },
-            complete: () => {
-                this.getAllTenants({ first: 0, rows: 10 });
+                this.store.deleteTenant(tenant.id, tenant.name);
             }
         });
     }
@@ -214,13 +156,11 @@ export class TenantsComponent implements OnInit {
     getFieldErrors(fieldKey: string): string[] {
         const field = this.form.get(fieldKey);
         const errors: string[] = [];
-
         if (field?.errors && this.isFieldInvalid(fieldKey)) {
             if (field.errors['required']) errors.push('This field is required.');
-            if (field.errors['email']) errors.push('Invalid email address.');
             if (field.errors['pattern']) errors.push('Invalid format.');
+            if (field.errors['minlength']) errors.push('Minimum 6 characters required.');
         }
-
         return errors;
     }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, input, model, output, OnInit, effect, computed, untracked } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { TreeModule } from 'primeng/tree';
 import { FormsModule } from '@angular/forms';
@@ -16,32 +16,38 @@ export interface TreeSelectionEvent {
     templateUrl: './tree.component.html',
     styleUrl: './tree.component.scss'
 })
-export class TreeComponent {
-    @Input() treeData: TreeNode[] = [];
-    @Input() initialSelection: TreeNode[] = [];
-    @Input() selectionMode: 'single' | 'multiple' | 'checkbox' = 'checkbox';
-    @Input() treeStyleClass: string = 'w-full';
-    @Input() enableParentChildSelection: boolean = true;
+export class TreeComponent implements OnInit {
+    treeData = input<TreeNode[]>([]);
+    selection = model<TreeNode[]>([]);
+    selectionMode = input<'single' | 'multiple' | 'checkbox'>('checkbox');
+    treeStyleClass = input<string>('w-full');
+    enableParentChildSelection = input<boolean>(true);
 
-    @Output() selectionChange = new EventEmitter<TreeNode[]>();
-    @Output() nodeSelectionChange = new EventEmitter<TreeSelectionEvent>();
+    nodeSelectionChange = output<TreeSelectionEvent>();
 
-    selectedNodes: TreeNode[] = [];
+    private isUpdatingStates = false;
 
-    ngOnInit() {
-        this.selectedNodes = [...this.initialSelection];
-        if (this.enableParentChildSelection && this.selectionMode === 'checkbox') {
-            this.updateParentStates();
-        }
+    constructor() {
+        // Sync parent/child states whenever data or selection changes from outside
+        effect(() => {
+            const data = this.treeData();
+            const sel = this.selection();
+            
+            if (this.isUpdatingStates) return;
+
+            untracked(() => {
+                if (this.enableParentChildSelection() && this.selectionMode() === 'checkbox' && data.length > 0) {
+                    this.updateParentStates();
+                }
+            });
+        });
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes['initialSelection'] && !changes['initialSelection'].firstChange) {
-            this.selectedNodes = [...this.initialSelection];
-            if (this.enableParentChildSelection && this.selectionMode === 'checkbox') {
-                this.updateParentStates();
-            }
-        }
+    ngOnInit() {}
+
+    onSelectionUpdate(event: any) {
+        let nodes = Array.isArray(event) ? [...event] : (event ? [event] : []);
+        this.selection.set(nodes);
     }
 
     onNodeSelect(event: any) {
@@ -58,88 +64,120 @@ export class TreeComponent {
             selected
         };
 
-        if (this.enableParentChildSelection && this.selectionMode === 'checkbox') {
-            if (event.node.children?.length) {
-                this.selectChildren(event.node, selected);
+        if (this.enableParentChildSelection() && this.selectionMode() === 'checkbox') {
+            this.isUpdatingStates = true;
+            try {
+                const currentSelection = [...this.selection()];
+                if (event.node.children?.length) {
+                    this.selectChildrenRecursive(event.node, selected, currentSelection);
+                }
+                this.selection.set(currentSelection);
+                this.updateParentStatesInternal(currentSelection);
+            } finally {
+                this.isUpdatingStates = false;
             }
-            this.updateParentStates();
         }
 
         this.nodeSelectionChange.emit(selectionEvent);
-        this.selectionChange.emit([...this.selectedNodes]);
     }
 
-    private selectChildren(node: TreeNode, selected: boolean) {
+    private selectChildrenRecursive(node: TreeNode, selected: boolean, currentSelection: TreeNode[]) {
         node.children?.forEach((child) => {
-            const index = this.selectedNodes.indexOf(child);
+            const index = currentSelection.findIndex(n => n.key === child.key);
             if (selected && index === -1) {
-                this.selectedNodes.push(child);
+                currentSelection.push(child);
             } else if (!selected && index > -1) {
-                this.selectedNodes.splice(index, 1);
+                currentSelection.splice(index, 1);
             }
             if (child.children) {
-                this.selectChildren(child, selected);
+                this.selectChildrenRecursive(child, selected, currentSelection);
             }
         });
     }
 
-    private updateParentStates(): boolean {
-        return this.updateNodes(this.treeData);
+    private updateParentStates() {
+        if (this.isUpdatingStates) return;
+        this.isUpdatingStates = true;
+        
+        try {
+            const currentSelection = [...this.selection()];
+            this.updateParentStatesInternal(currentSelection);
+        } finally {
+            this.isUpdatingStates = false;
+        }
     }
 
-    private updateNodes(nodes: TreeNode[]): boolean {
-        let hasSelection = false;
+    private updateParentStatesInternal(currentSelection: TreeNode[]) {
+        const modified = this.updateNodesRecursive(this.treeData(), currentSelection);
+        if (modified) {
+            this.selection.set(currentSelection);
+        }
+    }
+
+    private updateNodesRecursive(nodes: TreeNode[], currentSelection: TreeNode[]): boolean {
+        let changed = false;
 
         nodes.forEach((node) => {
             if (node.children?.length) {
-                const childrenHaveSelection = this.updateNodes(node.children);
-                const selectedChildren = node.children.filter((c) => this.selectedNodes.includes(c) && !c.partialSelected).length;
+                const childChanged = this.updateNodesRecursive(node.children, currentSelection);
+                if (childChanged) changed = true;
+                
+                const selectedChildren = node.children.filter((c) => 
+                    currentSelection.some(n => n.key === c.key) && !c.partialSelected
+                ).length;
                 const partialChildren = node.children.filter((c) => c.partialSelected).length;
 
+                const nodeIndex = currentSelection.findIndex(n => n.key === node.key);
+                const wasPartial = node.partialSelected;
                 node.partialSelected = false;
-                const nodeIndex = this.selectedNodes.indexOf(node);
 
-                if (selectedChildren === node.children.length) {
-                    if (nodeIndex === -1) this.selectedNodes.push(node);
-                    hasSelection = true;
+                if (selectedChildren === node.children.length && node.children.length > 0) {
+                    if (nodeIndex === -1) {
+                        currentSelection.push(node);
+                        changed = true;
+                    }
+                    if (wasPartial) changed = true;
                 } else if (selectedChildren + partialChildren > 0) {
                     node.partialSelected = true;
-                    if (nodeIndex > -1) this.selectedNodes.splice(nodeIndex, 1);
-                    hasSelection = true;
+                    if (nodeIndex > -1) {
+                        currentSelection.splice(nodeIndex, 1);
+                        changed = true;
+                    }
+                    if (!wasPartial) changed = true;
                 } else {
-                    if (nodeIndex > -1) this.selectedNodes.splice(nodeIndex, 1);
+                    if (nodeIndex > -1) {
+                        currentSelection.splice(nodeIndex, 1);
+                        changed = true;
+                    }
+                    if (wasPartial) changed = true;
                 }
-            } else {
-                hasSelection = hasSelection || this.selectedNodes.includes(node);
             }
         });
 
-        return hasSelection;
+        return changed;
     }
 
-    // Public methods for external control
     clearSelection() {
-        this.selectedNodes = [];
-        this.clearStates(this.treeData);
-        this.selectionChange.emit([...this.selectedNodes]);
+        this.selection.set([]);
+        this.clearStates(this.treeData());
     }
 
     selectAll() {
-        this.selectedNodes = [];
-        this.selectAllNodes(this.treeData);
-        if (this.enableParentChildSelection && this.selectionMode === 'checkbox') {
+        const allNodes: TreeNode[] = [];
+        this.collectAllNodes(this.treeData(), allNodes);
+        this.selection.set(allNodes);
+        if (this.enableParentChildSelection() && this.selectionMode() === 'checkbox') {
             this.updateParentStates();
         }
-        this.selectionChange.emit([...this.selectedNodes]);
     }
 
-    private selectAllNodes(nodes: TreeNode[]) {
+    private collectAllNodes(nodes: TreeNode[], result: TreeNode[]) {
         nodes.forEach((node) => {
             if (!node.children?.length) {
-                this.selectedNodes.push(node);
+                result.push(node);
             }
             if (node.children) {
-                this.selectAllNodes(node.children);
+                this.collectAllNodes(node.children, result);
             }
         });
     }

@@ -1,8 +1,8 @@
 <p-floatLabel variant="on">
-    <textarea [id]="id" [rows]="rows" [cols]="cols" pInputTextarea [class]="customClass" [value]="value" (input)="onInputChange($event)"></textarea>
-    <label [for]="id"
-        >{{ label }}
-        @if (isRequired) {
+    <textarea [id]="id()" [rows]="rows()" [cols]="cols()" pInputTextarea [class]="customClass()" [value]="value" (input)="onInputChange($event)"></textarea>
+    <label [for]="id()"
+        >{{ label() }}
+        @if (isRequired()) {
             <span class="red">*</span>
         }
     </label>

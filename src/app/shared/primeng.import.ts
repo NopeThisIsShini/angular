@@ -34,6 +34,7 @@ import { SplitButton } from 'primeng/splitbutton';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { Skeleton } from 'primeng/skeleton';
 
 export const PrimengImports = [
     // Module-based imports
@@ -72,5 +73,6 @@ export const PrimengImports = [
     Toolbar,
     SplitButton,
     IconField,
-    InputIcon
+    InputIcon,
+    Skeleton
 ];

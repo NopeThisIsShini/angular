@@ -1,28 +1,44 @@
-// permission.service.ts
-import { Injectable } from '@angular/core';
+import { Injectable, computed, inject, Signal } from '@angular/core';
 
 import { TreeNode } from 'primeng/api';
 import { TreeService, TreeStructureItem } from './tree.service';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiPermission, ApiPermissionResponse, grantedPermissions, PermissionData } from '../models/permission.model';
 import { api_routes } from '../../utils/routes/api.route';
+import { SignalStore } from '@/app/store/signal-store';
+import { AppStore } from '@/app/store/app.store';
+
+interface PermissionState {
+    storedPermissions: PermissionData;
+    permissionStructure: TreeStructureItem[];
+    roleEditingPermissions: PermissionData;
+}
 
 @Injectable({
     providedIn: 'root'
 })
-export class PermissionService {
-    private roleEditingPermissions: PermissionData = {};
-    private permissionStructure: TreeStructureItem[] = [];
-    private storedPermissions: PermissionData = {};
+export class PermissionService extends SignalStore<PermissionState> {
+    private treeService = inject(TreeService);
+    private http = inject(HttpClient);
+    private appStore = inject(AppStore);
 
-    constructor(
-        private treeService: TreeService,
-        private http: HttpClient
-    ) {}
+    // Reactive Selectors
+    readonly userPermissions = this.appStore.permissions; // Source of truth is Global State
+    readonly permissionTree = computed(() => this.treeService.buildTreeNodes(this.$.permissionStructure()));
+
+    constructor() {
+        super({
+            storedPermissions: {},
+            permissionStructure: [],
+            roleEditingPermissions: {}
+        });
+    }
 
     private convertApiPermissionsToTreeStructure(apiResponse: ApiPermissionResponse): TreeStructureItem[] {
-        const permissions = apiResponse.result.permissions;
+        const permissions = apiResponse.result?.permissions || [];
+        if (permissions.length === 0) return [];
+        
         // Group permissions by parent
         const permissionMap = new Map<string, ApiPermission[]>();
         const rootPermissions: ApiPermission[] = [];
@@ -60,125 +76,70 @@ export class PermissionService {
 
         return buildTreeStructure(rootPermissions);
     }
-    getUserPermissions(id: number): Observable<ApiPermissionResponse> {
-        // API Call - uncomment for production
-        // const params = new HttpParams().set('id', id.toString());
-        return this.http.get<ApiPermissionResponse>(`${api_routes.getUserPermissions}`);
-        // Local DB for testing
-        // return this.http.get<ApiPermissionResponse>('assets/db/permissions.json');
-    }
-    loadPermissionsFromApi(apiResponse: ApiPermissionResponse): void {
-        // Convert API structure to tree structure
-        this.permissionStructure = this.convertApiPermissionsToTreeStructure(apiResponse);
 
-        // Set granted permissions
+    getUserPermissions(id: number): Observable<ApiPermissionResponse> {
+        return this.http.get<ApiPermissionResponse>(`${api_routes.getUserPermissions}`);
+    }
+
+    loadPermissionsFromApi(apiResponse: ApiPermissionResponse): void {
+        const structure = this.convertApiPermissionsToTreeStructure(apiResponse);
+        const grantedNames = apiResponse.result.granted_permission_names || [];
+
+        // 1. Update Global App State (The source of truth for reactivity)
+        this.appStore.setPermissions(grantedNames);
+
+        // 2. Update local state for legacy/tree support
         const grantedPermissions: PermissionData = {};
-        apiResponse.result.granted_permission_names.forEach((permName) => {
+        grantedNames.forEach((permName) => {
             grantedPermissions[permName] = true;
         });
 
-        this.storedPermissions = grantedPermissions;
-    }
-
-    loadRolePermissions(grantAllPermissions: grantedPermissions): void {
-        // Convert API structure to tree structure (reuse existing method)
-        // Set granted permissions for role editing
-        const grantedPermissions: PermissionData = {};
-        if (grantAllPermissions) {
-            grantAllPermissions.forEach((permName: string) => {
-                grantedPermissions[permName] = true;
-            });
-        }
-
-        this.roleEditingPermissions = grantedPermissions;
+        this.patchState({
+            permissionStructure: structure,
+            storedPermissions: grantedPermissions
+        });
     }
 
     /**
-     * Get role editing permissions (separate from user permissions)
+     * Check if user has specific permission (Reactive)
      */
-    getRolePermissions(): PermissionData {
-        return { ...this.roleEditingPermissions };
+    hasPermission(permission: string): Signal<boolean> {
+        return computed(() => {
+            const perms = this.userPermissions();
+            const lowerPerm = permission.toLowerCase();
+            return perms.some(p => p.toLowerCase() === lowerPerm);
+        });
     }
 
     /**
-     * Save role editing permissions (separate from user permissions)
+     * Check if user has any permission from a list (Reactive)
      */
-    saveRolePermissions(permissions: PermissionData): PermissionData {
-        this.roleEditingPermissions = { ...permissions };
-        return { ...this.roleEditingPermissions };
+    hasAnyPermission(permissions: string[]): Signal<boolean> {
+        return computed(() => {
+            const currentPermissions = this.userPermissions();
+            const lowerPermissions = currentPermissions.map(p => p.toLowerCase());
+            return permissions.some(p => lowerPermissions.includes(p.toLowerCase()));
+        });
     }
 
     /**
-     * Get selected nodes for role editing
+     * Check if user has all permissions from a list (Reactive)
      */
-    getSelectedRolePermissionNodes(treeNodes: TreeNode[]): TreeNode[] {
-        return this.treeService.getSelectedNodes(this.roleEditingPermissions, treeNodes);
+    hasAllPermissions(permissions: string[]): Signal<boolean> {
+        return computed(() => {
+            const currentPermissions = this.userPermissions();
+            const lowerPermissions = currentPermissions.map(p => p.toLowerCase());
+            return permissions.every(p => lowerPermissions.includes(p.toLowerCase()));
+        });
     }
 
     /**
-     * Clear role editing permissions
+     * Legacy non-signal check (for non-reactive logic)
      */
-    clearRolePermissions(): void {
-        this.roleEditingPermissions = {};
-    }
-
-    /**
-     * Get permission tree structure
-     */
-    getPermissionTree(): TreeNode[] {
-        return this.treeService.buildTreeNodes(this.permissionStructure);
-    }
-
-    /**
-     * Get currently stored permissions
-     */
-    getPermissions(): PermissionData {
-        return { ...this.storedPermissions };
-    }
-
-    /**
-     * Save permissions
-     */
-    savePermissions(permissions: PermissionData): PermissionData {
-        this.storedPermissions = { ...permissions };
-        return { ...this.storedPermissions };
-    }
-
-    /**
-     * Get selected nodes based on current permissions
-     */
-    getSelectedPermissionNodes(treeNodes: TreeNode[]): TreeNode[] {
-        return this.treeService.getSelectedNodes(this.storedPermissions, treeNodes);
-    }
-
-    /**
-     * Convert selected nodes back to permission data
-     */
-    getPermissionsFromNodes(selectedNodes: TreeNode[]): PermissionData {
-        return this.treeService.getDataMapFromNodes(selectedNodes) as PermissionData;
-    }
-
-    /**
-     * Check if user has specific permission
-     */
-    hasPermission(permission: string): boolean {
-        if (this.storedPermissions[permission]) return true;
+    checkPermissionSync(permission: string): boolean {
+        const perms = this.userPermissions();
         const lowerPerm = permission.toLowerCase();
-        return Object.keys(this.storedPermissions).some((key) => key.toLowerCase() === lowerPerm);
-    }
-
-    /**
-     * Check if user has any permission from a list
-     */
-    hasAnyPermission(permissions: string[]): boolean {
-        return permissions.some((permission) => this.hasPermission(permission));
-    }
-
-    /**
-     * Check if user has all permissions from a list
-     */
-    hasAllPermissions(permissions: string[]): boolean {
-        return permissions.every((permission) => this.hasPermission(permission));
+        return perms.some(p => p.toLowerCase() === lowerPerm);
     }
 
     /**
@@ -186,19 +147,14 @@ export class PermissionService {
      */
     getPermissionsByModule(moduleKey: string): PermissionData {
         const modulePermissions: PermissionData = {};
-        Object.keys(this.storedPermissions).forEach((key) => {
-            if (key.startsWith(moduleKey + '.') && this.storedPermissions[key]) {
+        const storedPermissions = this.state().storedPermissions;
+        
+        Object.keys(storedPermissions).forEach((key) => {
+            if (key.startsWith(moduleKey + '.') && storedPermissions[key]) {
                 modulePermissions[key] = true;
             }
         });
         return modulePermissions;
-    }
-
-    /**
-     * Clear all permissions
-     */
-    clearAllPermissions(): void {
-        this.storedPermissions = {};
     }
 
     /**
@@ -215,8 +171,9 @@ export class PermissionService {
             }
         });
 
-        this.storedPermissions = allPermissions;
-        return { ...this.storedPermissions };
+        this.patchState({ storedPermissions: allPermissions });
+        this.appStore.setPermissions(Object.keys(allPermissions));
+        return { ...allPermissions };
     }
 
     /**
@@ -227,7 +184,7 @@ export class PermissionService {
         if (!validation.valid) {
             throw new Error(`Invalid permission structure: ${validation.errors.join(', ')}`);
         }
-        this.permissionStructure = newStructure;
+        this.patchState({ permissionStructure: newStructure });
     }
 
     /**
@@ -237,5 +194,57 @@ export class PermissionService {
         const treeNodes = this.getPermissionTree();
         const leafNodes = this.treeService.getAllLeafNodes(treeNodes);
         return leafNodes.map((node) => node.key).filter((key) => key) as string[];
+    }
+    loadRolePermissions(grantAllPermissions: grantedPermissions): void {
+        const grantedPermissions: PermissionData = {};
+        if (grantAllPermissions) {
+            grantAllPermissions.forEach((permName: string) => {
+                grantedPermissions[permName] = true;
+            });
+        }
+        this.patchState({ roleEditingPermissions: grantedPermissions });
+    }
+
+    getRolePermissions(): PermissionData {
+        return { ...this.state().roleEditingPermissions };
+    }
+
+    saveRolePermissions(permissions: PermissionData): PermissionData {
+        this.patchState({ roleEditingPermissions: { ...permissions } });
+        return this.getRolePermissions();
+    }
+
+    getSelectedRolePermissionNodes(treeNodes: TreeNode[]): TreeNode[] {
+        return this.treeService.getSelectedNodes(this.state().roleEditingPermissions, treeNodes);
+    }
+
+    clearRolePermissions(): void {
+        this.patchState({ roleEditingPermissions: {} });
+    }
+
+    getPermissionTree(): TreeNode[] {
+        return this.permissionTree();
+    }
+
+    getPermissions(): PermissionData {
+        return { ...this.state().storedPermissions };
+    }
+
+    savePermissions(permissions: PermissionData): PermissionData {
+        this.patchState({ storedPermissions: { ...permissions } });
+        return this.getPermissions();
+    }
+
+    getSelectedPermissionNodes(treeNodes: TreeNode[]): TreeNode[] {
+        return this.treeService.getSelectedNodes(this.state().storedPermissions, treeNodes);
+    }
+
+    getPermissionsFromNodes(selectedNodes: TreeNode[]): PermissionData {
+        return this.treeService.getDataMapFromNodes(selectedNodes) as PermissionData;
+    }
+
+    clearAllPermissions(): void {
+        this.patchState({ storedPermissions: {} });
+        this.appStore.setPermissions([]);
     }
 }

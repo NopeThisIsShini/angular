@@ -1,5 +1,5 @@
-import { Injectable, effect, signal, computed } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Injectable, effect, Signal, computed, signal } from '@angular/core';
+import { SignalStore } from '@/app/store/signal-store';
 
 export interface layoutConfig {
     preset?: string;
@@ -10,11 +10,14 @@ export interface layoutConfig {
 }
 
 interface LayoutState {
-    staticMenuDesktopInactive?: boolean;
-    overlayMenuActive?: boolean;
-    configSidebarVisible?: boolean;
-    staticMenuMobileActive?: boolean;
-    menuHoverActive?: boolean;
+    staticMenuDesktopInactive: boolean;
+    overlayMenuActive: boolean;
+    configSidebarVisible: boolean;
+    staticMenuMobileActive: boolean;
+    menuHoverActive: boolean;
+    layoutConfig: layoutConfig;
+    features: any;
+    activeMenuKey: string | null;
 }
 
 interface MenuChangeEvent {
@@ -25,82 +28,53 @@ interface MenuChangeEvent {
 @Injectable({
     providedIn: 'root'
 })
-export class LayoutService {
-    _config: layoutConfig = (window as any).appUiConfig?.layoutConfig || {
-        preset: 'Aura',
-        primary: 'emerald',
-        surface: null,
-        darkTheme: true,
-        menuMode: 'static'
-    };
+export class LayoutService extends SignalStore<LayoutState> {
+    // Selectors
+    readonly layoutConfig = this.select((s) => s.layoutConfig);
+    readonly features = this.select((s) => s.features);
+    readonly activeMenuKey = this.select((s) => s.activeMenuKey);
     
-    features = signal<any>((window as any).appUiConfig?.features || {
-        showConfigOptions: false,
-        allowMenuModeChange: false,
-        allowThemeChange: false
-    });
-
-    _state: LayoutState = {
-        staticMenuDesktopInactive: false,
-        overlayMenuActive: false,
-        configSidebarVisible: false,
-        staticMenuMobileActive: false,
-        menuHoverActive: false
-    };
-
-    layoutConfig = signal<layoutConfig>(this._config);
-
-    layoutState = signal<LayoutState>(this._state);
-
-    private configUpdate = new Subject<layoutConfig>();
-
-    private overlayOpen = new Subject<any>();
-
-    private menuSource = new Subject<MenuChangeEvent>();
-
-    private resetSource = new Subject();
-
-    menuSource$ = this.menuSource.asObservable();
-
-    resetSource$ = this.resetSource.asObservable();
-
-    configUpdate$ = this.configUpdate.asObservable();
-
-    overlayOpen$ = this.overlayOpen.asObservable();
-
-    theme = computed(() => (this.layoutConfig()?.darkTheme ? 'light' : 'dark'));
-
-    isSidebarActive = computed(() => this.layoutState().overlayMenuActive || this.layoutState().staticMenuMobileActive);
-
-    isDarkTheme = computed(() => this.layoutConfig().darkTheme);
-
-    getPrimary = computed(() => this.layoutConfig().primary);
-
-    getSurface = computed(() => this.layoutConfig().surface);
-
-    isOverlay = computed(() => this.layoutConfig().menuMode === 'overlay');
-
-    isHorizontal = computed(() => this.layoutConfig().menuMode === 'horizontal');
-    
-    isSlim = computed(() => this.layoutConfig().menuMode === 'slim');
+    readonly theme = computed(() => (this.layoutConfig()?.darkTheme ? 'light' : 'dark'));
+    readonly isSidebarActive = this.select((s) => s.overlayMenuActive || s.staticMenuMobileActive);
+    readonly isDarkTheme = this.select((s) => s.layoutConfig.darkTheme);
+    readonly getPrimary = this.select((s) => s.layoutConfig.primary);
+    readonly getSurface = this.select((s) => s.layoutConfig.surface);
+    readonly isOverlay = this.select((s) => s.layoutConfig.menuMode === 'overlay');
+    readonly isHorizontal = this.select((s) => s.layoutConfig.menuMode === 'horizontal');
+    readonly isSlim = this.select((s) => s.layoutConfig.menuMode === 'slim');
 
     transitionComplete = signal<boolean>(false);
+    overlayOpened = signal<number>(0); // Timestamp/counter to trigger overlay effects
 
     private innerWidth = signal(window.innerWidth);
     private initialized = false;
 
     constructor() {
-        window.addEventListener('resize', () => {
-            this.innerWidth.set(window.innerWidth);
-            if (this.isDesktop() && this.layoutState().staticMenuMobileActive) {
-                this.layoutState.update((prev) => ({ ...prev, staticMenuMobileActive: false }));
+        super({
+            staticMenuDesktopInactive: false,
+            overlayMenuActive: false,
+            configSidebarVisible: false,
+            staticMenuMobileActive: false,
+            menuHoverActive: false,
+            activeMenuKey: null,
+            layoutConfig: (window as any).appUiConfig?.layoutConfig || {
+                preset: 'Aura',
+                primary: 'emerald',
+                surface: null,
+                darkTheme: true,
+                menuMode: 'static'
+            },
+            features: (window as any).appUiConfig?.features || {
+                showConfigOptions: false,
+                allowMenuModeChange: false,
+                allowThemeChange: false
             }
         });
 
-        effect(() => {
-            const config = this.layoutConfig();
-            if (config) {
-                this.onConfigUpdate();
+        window.addEventListener('resize', () => {
+            this.innerWidth.set(window.innerWidth);
+            if (this.isDesktop() && this.state().staticMenuMobileActive) {
+                this.patchState({ staticMenuMobileActive: false });
             }
         });
 
@@ -154,29 +128,50 @@ export class LayoutService {
     }
 
     onMenuToggle() {
+        const state = this.state();
         if (this.isOverlay()) {
-            this.layoutState.update((prev) => ({ ...prev, overlayMenuActive: !this.layoutState().overlayMenuActive }));
+            this.patchState({ overlayMenuActive: !state.overlayMenuActive });
 
-            if (this.layoutState().overlayMenuActive) {
-                this.overlayOpen.next(null);
+            if (this.state().overlayMenuActive) {
+                this.overlayOpened.set(Date.now());
             }
         }
 
         if (this.isDesktop()) {
-            this.layoutState.update((prev) => ({ ...prev, staticMenuDesktopInactive: !this.layoutState().staticMenuDesktopInactive }));
+            this.patchState({ staticMenuDesktopInactive: !state.staticMenuDesktopInactive });
         } else {
-            this.layoutState.update((prev) => ({ ...prev, staticMenuMobileActive: !this.layoutState().staticMenuMobileActive }));
+            this.patchState({ staticMenuMobileActive: !state.staticMenuMobileActive });
 
-            if (this.layoutState().staticMenuMobileActive) {
-                this.overlayOpen.next(null);
+            if (this.state().staticMenuMobileActive) {
+                this.overlayOpened.set(Date.now());
             }
         }
     }
 
     toggleMenuMode(): void {
-        this.layoutConfig.update((current) => ({
-            ...current,
-            menuMode: current.menuMode === 'horizontal' ? 'static' : 'horizontal'
+        this.patchState((s) => ({
+            layoutConfig: {
+                ...s.layoutConfig,
+                menuMode: s.layoutConfig.menuMode === 'horizontal' ? 'static' : 'horizontal'
+            }
+        }));
+    }
+
+    setDarkMode(darkTheme: boolean): void {
+        this.patchState((s) => ({
+            layoutConfig: {
+                ...s.layoutConfig,
+                darkTheme
+            }
+        }));
+    }
+
+    updateLayoutConfig(config: Partial<layoutConfig>): void {
+        this.patchState((s) => ({
+            layoutConfig: {
+                ...s.layoutConfig,
+                ...config
+            }
         }));
     }
 
@@ -188,16 +183,19 @@ export class LayoutService {
         return !this.isDesktop();
     }
 
-    onConfigUpdate() {
-        this._config = { ...this.layoutConfig() };
-        this.configUpdate.next(this.layoutConfig());
-    }
-
     onMenuStateChange(event: MenuChangeEvent) {
-        this.menuSource.next(event);
+        this.patchState({ activeMenuKey: event.key });
     }
 
-    reset() {
-        this.resetSource.next(true);
+    hideMenu(): void {
+        this.patchState({
+            overlayMenuActive: false,
+            staticMenuMobileActive: false,
+            menuHoverActive: false
+        });
+    }
+
+    override reset() {
+        this.patchState({ activeMenuKey: null });
     }
 }

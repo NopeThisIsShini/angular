@@ -1,5 +1,5 @@
 <div class="card tab_card">
-    <p-tabs [value]="activeTab" scrollable>
+    <p-tabs [value]="activeTab()" scrollable>
         <p-tablist>
             @for (tab of tabs; track tab.route) {
                 <p-tab [value]="tab.route" [routerLink]="tab.route" class="flex items-center !gap-2 text-inherit">

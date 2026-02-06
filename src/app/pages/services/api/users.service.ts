@@ -41,4 +41,8 @@ export class UsersService {
             return this.http.post<UsersModel>(api_routes.getallusers, input);
         }
     }
+
+    deleteUser(id: number): Observable<any> {
+        return this.http.delete<any>(`${api_routes.getallusers}/${id}`);
+    }
 }

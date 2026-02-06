@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2, NgZone } from '@angular/core';
+import { Directive, ElementRef, input, OnDestroy, OnInit, Renderer2, NgZone, effect, inject } from '@angular/core';
 
 @Directive({
     selector: '[class*="icon-"],[customIconGlobal]',
@@ -6,30 +6,35 @@ import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2, NgZone } fr
 })
 export class CustomIconDirective implements OnInit, OnDestroy {
     /** Base directory for icons */
-    @Input() iconBaseDir = 'assets/icons';
+    iconBaseDir = input<string>('assets/icons');
 
     /** Default fallback icon */
-    @Input() fallbackIcon = 'default-icon';
+    fallbackIcon = input<string>('default-icon');
 
     /** If true, observes the entire element's subtree for icon classes */
-    @Input() customIconGlobal = false;
+    customIconGlobal = input<boolean>(false);
 
     private observer: MutationObserver | null = null;
     private processedElements = new Set<HTMLElement>();
 
-    constructor(
-        private el: ElementRef,
-        private renderer: Renderer2,
-        private ngZone: NgZone
-    ) {}
+    private el = inject(ElementRef);
+    private renderer = inject(Renderer2);
+    private ngZone = inject(NgZone);
+
+    constructor() {
+        // Setup observer reactively if customIconGlobal changes
+        effect(() => {
+            const isGlobal = this.customIconGlobal();
+            this.ngZone.runOutsideAngular(() => {
+                this.setupObserver(isGlobal);
+            });
+        });
+    }
 
     ngOnInit(): void {
         this.ngZone.runOutsideAngular(() => {
             // Check the element itself
             this.processElement(this.el.nativeElement);
-
-            // Setup observer
-            this.setupObserver();
         });
     }
 
@@ -40,7 +45,11 @@ export class CustomIconDirective implements OnInit, OnDestroy {
         this.processedElements.clear();
     }
 
-    private setupObserver(): void {
+    private setupObserver(isGlobal: boolean): void {
+        if (this.observer) {
+            this.observer.disconnect();
+        }
+
         this.observer = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
                 if (mutation.type === 'childList') {
@@ -56,17 +65,17 @@ export class CustomIconDirective implements OnInit, OnDestroy {
         });
 
         // If global, observe entire subtree, otherwise just the element itself
-        const config = {
+        const config: MutationObserverInit = {
             attributes: true,
             attributeFilter: ['class'],
-            childList: this.customIconGlobal,
-            subtree: this.customIconGlobal
+            childList: isGlobal,
+            subtree: isGlobal
         };
 
         this.observer.observe(this.el.nativeElement, config);
 
         // Initial scan if global
-        if (this.customIconGlobal) {
+        if (isGlobal) {
             this.scanAndProcess(this.el.nativeElement);
         }
     }
@@ -96,7 +105,7 @@ export class CustomIconDirective implements OnInit, OnDestroy {
         }
 
         const iconName = iconClass.replace('icon-', '');
-        const iconPath = `/${this.iconBaseDir}/${iconName}.svg`;
+        const iconPath = `/${this.iconBaseDir()}/${iconName}.svg`;
 
         // Check if already loaded for this icon to avoid flickering
         if (element.dataset['customIconLoaded'] === iconName) return;
@@ -131,9 +140,10 @@ export class CustomIconDirective implements OnInit, OnDestroy {
         };
 
         img.onerror = () => {
-            if (!isFallback && this.fallbackIcon && this.fallbackIcon !== iconName) {
-                const fallbackPath = `/${this.iconBaseDir}/${this.fallbackIcon}.svg`;
-                this.loadIcon(element, fallbackPath, this.fallbackIcon, true);
+            const fallback = this.fallbackIcon();
+            if (!isFallback && fallback && fallback !== iconName) {
+                const fallbackPath = `/${this.iconBaseDir()}/${fallback}.svg`;
+                this.loadIcon(element, fallbackPath, fallback, true);
             }
         };
     }

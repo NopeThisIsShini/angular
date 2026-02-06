@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, computed } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { PermissionService } from '@/app/shared/services';
 import { LOCAL_ROUTES } from '@/app/utils/routes';
@@ -9,7 +9,11 @@ import { LOCAL_ROUTES } from '@/app/utils/routes';
 export class MenuService {
     private permissionService = inject(PermissionService);
 
-    getMenuModel(): MenuItem[] {
+    /**
+     * Reactive Menu Model
+     * Automatically updates whenever permissions data in the store changes.
+     */
+    readonly menuModel = computed(() => {
         const model = [
             {
                 items: [
@@ -37,11 +41,6 @@ export class MenuService {
                                 label: 'Tenants',
                                 icon: 'icon-tenants',
                                 routerLink: [`/${LOCAL_ROUTES.HOST}/${LOCAL_ROUTES.TENANTS}`]
-                            },
-                            {
-                                label: 'Editions',
-                                icon: 'pi pi-fw pi-star',
-                                routerLink: [`/${LOCAL_ROUTES.HOST}/${LOCAL_ROUTES.EDITIONS}`]
                             }
                         ]
                     }
@@ -50,6 +49,13 @@ export class MenuService {
         ];
 
         return this.filterMenu(model);
+    });
+
+    /**
+     * Legacy getter for non-reactive items
+     */
+    getMenuModel(): MenuItem[] {
+        return this.menuModel();
     }
 
     private filterMenu(items: any[]): any[] {
@@ -63,7 +69,9 @@ export class MenuService {
 
                 if (cloned.routerLink) {
                     const key = this.mapRouterToPermission(cloned.routerLink[0]);
-                    if (!this.permissionService.hasPermission(key)) {
+                    // Using checkPermissionSync here is safe because it's called 
+                    // inside the menuModel computed signal, ensuring reactivity.
+                    if (!this.permissionService.checkPermissionSync(key)) {
                         return null;
                     }
                 }

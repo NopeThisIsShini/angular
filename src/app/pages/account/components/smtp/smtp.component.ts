@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, inject, effect, computed, untracked } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { SharedModule } from '@/app/shared/shared.imports';
 import { validationConstants } from '@/app/utils/constant';
 import { CheckboxField, FormField } from '@/app/shared/models';
-import { EmailSettings, EmailSettingsResponse } from '@/app/pages/models';
-import { SmtpService } from '@/app/pages/services';
+import { SmtpStore } from '@/app/store';
 
 @Component({
     selector: 'app-smtp',
@@ -14,231 +13,135 @@ import { SmtpService } from '@/app/pages/services';
     styleUrl: './smtp.component.scss'
 })
 export class SmtpComponent {
-    emailSettingsForm!: FormGroup;
-    myEmail!: EmailSettings;
+    private store = inject(SmtpStore);
+    private messageService = inject(MessageService);
+    private fb = inject(FormBuilder);
+
+    // State from store
+    emailSettings = this.store.emailSettings;
+    loading = this.store.isLoading;
+    operationStatus = this.store.operationStatus;
+    isSaving = computed(() => this.operationStatus().status === 'executing');
 
     formFields: FormField[] = [
-        {
-            key: 'emailAddress',
-            label: 'Email Address',
-            type: 'text',
-            validators: [Validators.required, Validators.pattern(validationConstants.EMAIL_PATTERN)],
-            errorMessages: {
-                required: 'Email Address is required.',
-                pattern: 'Please enter a valid email address.'
-            }
+        { 
+            key: 'emailAddress', label: 'Email Address', type: 'text', validators: [], 
+            errorMessages: { required: 'Email Address is required.', pattern: 'Please enter a valid email address.' } 
         },
-        {
-            key: 'name',
-            label: 'Name',
-            type: 'text',
-            // validators: [Validators.required, Validators.pattern(validationConstants.NAME_PATTERN)],
-            validators: [Validators.required],
-
-            errorMessages: {
-                required: 'Name is required.',
-                pattern: 'Only alphabet values are allowed.'
-            }
+        { key: 'name', label: 'Name', type: 'text', validators: [], errorMessages: { required: 'Name is required.' } },
+        { key: 'smtpHost', label: 'SMTP Host', type: 'text', validators: [], errorMessages: { required: 'SMTP Host is required.' } },
+        { 
+            key: 'smtpPort', label: 'SMTP Port', type: 'number', validators: [], 
+            errorMessages: { required: 'SMTP Port is required.', min: 'Port must be greater than 0.', max: 'Port must be less than 65536.' } 
         },
-        {
-            key: 'smtpHost',
-            label: 'SMTP Host',
-            type: 'text',
-            validators: [Validators.required],
-
-            errorMessages: {
-                required: 'SMTP Host is required.'
-            }
+        { key: 'username', label: 'Username', type: 'text', validators: [], errorMessages: { required: 'Username is required.' } },
+        { 
+            key: 'password', label: 'Password', type: 'password', validators: [], 
+            errorMessages: { required: 'Password is required.', minlength: 'Password must be at least 6 characters long.' } 
         },
-        {
-            key: 'smtpPort',
-            label: 'SMTP Port',
-            type: 'number',
-            validators: [Validators.required, Validators.min(1), Validators.max(65535)],
-
-            errorMessages: {
-                required: 'SMTP Port is required.',
-                min: 'Port must be greater than 0.',
-                max: 'Port must be less than 65536.'
-            }
-        },
-        {
-            key: 'username',
-            label: 'Username',
-            type: 'text',
-            validators: [Validators.required],
-
-            errorMessages: {
-                required: 'Username is required.'
-            }
-        },
-        {
-            key: 'password',
-            label: 'Password',
-            type: 'password',
-            validators: [Validators.required, Validators.minLength(6)],
-
-            errorMessages: {
-                required: 'Password is required.',
-                minlength: 'Password must be at least 6 characters long.'
-            }
-        },
-        {
-            key: 'domainName',
-            label: 'Domain Name',
-            type: 'text',
-            validators: [Validators.required],
-
-            errorMessages: {
-                required: 'Domain Name is required.'
-            }
-        }
+        { key: 'domainName', label: 'Domain Name', type: 'text', validators: [], errorMessages: { required: 'Domain Name is required.' } }
     ];
 
     checkboxFields: CheckboxField[] = [
-        {
-            key: 'useSsl',
-            label: 'Use SSL'
-        },
-        {
-            key: 'useDefaultCredentials',
-            label: 'Use Default Credentials'
-        }
+        { key: 'useSsl', label: 'Use SSL' },
+        { key: 'useDefaultCredentials', label: 'Use Default Credentials' }
     ];
 
-    constructor(
-        private fb: FormBuilder,
-        private smtpService: SmtpService,
-        private messageServ: MessageService
-    ) { }
+    form = this.fb.group({
+        emailAddress: ['', [Validators.required, Validators.pattern(validationConstants.EMAIL_PATTERN)]],
+        name: ['', [Validators.required]],
+        smtpHost: ['', [Validators.required]],
+        smtpPort: [null as number | null, [Validators.required, Validators.min(1), Validators.max(65535)]],
+        username: ['', [Validators.required]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        domainName: ['', [Validators.required]],
+        useSsl: [false],
+        useDefaultCredentials: [false]
+    });
 
-    ngOnInit(): void {
-        this.initializeForm();
-        this.getEmail();
+    constructor() {
+        this.store.loadEmailSettings();
+
+        // Reactive form patching
+        effect(() => {
+            const s = this.emailSettings();
+            if (s) {
+                this.form.patchValue({
+                    emailAddress: s.defaultFromAddress,
+                    name: s.defaultFromDisplayName,
+                    smtpHost: s.smtpHost,
+                    smtpPort: s.smtpPort,
+                    username: s.smtpUserName,
+                    password: s.smtpPassword,
+                    domainName: s.smtpDomain,
+                    useSsl: s.smtpEnableSsl,
+                    useDefaultCredentials: s.smtpUseDefaultCredentials
+                }, { emitEvent: false });
+            }
+        });
+
+        // Reactively handle operation results
+        effect(() => {
+            const op = this.operationStatus();
+            if (op.status === 'success') {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: op.message
+                });
+                untracked(() => this.store.resetOperationStatus());
+            } else if (op.status === 'error') {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: op.message
+                });
+                untracked(() => this.store.resetOperationStatus());
+            }
+        });
     }
 
-    private initializeForm(): void {
-        const formControls: any = {};
+    onSubmit(): void {
+        if (this.form.invalid) {
+            this.form.markAllAsTouched();
+            return;
+        }
 
-        // Add text/password/number fields
-        this.formFields.forEach((field) => {
-            formControls[field.key] = ['', field.validators];
-        });
+        const val = this.form.getRawValue();
+        const payload: any = {
+            email: {
+                defaultFromAddress: val.emailAddress,
+                defaultFromDisplayName: val.name,
+                smtpHost: val.smtpHost,
+                smtpPort: val.smtpPort,
+                smtpUserName: val.username,
+                smtpPassword: val.password,
+                smtpEnableSsl: val.useSsl,
+                smtpUseDefaultCredentials: val.useDefaultCredentials,
+                smtpDomain: val.domainName
+            }
+        };
 
-        // Add checkbox fields
-        this.checkboxFields.forEach((field) => {
-            formControls[field.key] = [false];
-        });
-
-        this.emailSettingsForm = this.fb.group(formControls);
-    }
-
-    private markAllFieldsAsTouched(): void {
-        Object.keys(this.emailSettingsForm.controls).forEach((key) => {
-            this.emailSettingsForm.get(key)?.markAsTouched();
-        });
+        this.store.updateSettings(payload);
     }
 
     isFieldInvalid(fieldKey: string): boolean {
-        const field = this.emailSettingsForm.get(fieldKey);
+        const field = this.form.get(fieldKey);
         return !!(field?.invalid && (field?.dirty || field?.touched));
     }
 
     getFieldErrors(fieldKey: string): string[] {
-        const field = this.emailSettingsForm.get(fieldKey);
+        const field = this.form.get(fieldKey);
         const errors: string[] = [];
-
         if (field?.errors && this.isFieldInvalid(fieldKey)) {
             const fieldConfig = this.formFields.find((f) => f.key === fieldKey);
             if (fieldConfig) {
                 Object.keys(field.errors).forEach((errorKey) => {
-                    if (fieldConfig.errorMessages[errorKey]) {
-                        errors.push(fieldConfig.errorMessages[errorKey]);
-                    }
+                    const msg = fieldConfig.errorMessages[errorKey];
+                    if (msg) errors.push(msg);
                 });
             }
         }
-
         return errors;
-    }
-
-    getEmail() {
-        this.smtpService.getMyEmailSettings().subscribe(
-            (res) => {
-                if (res.success) {
-                    this.myEmail = res.result;
-
-                    // Patch emailSettingsForm values
-                    this.emailSettingsForm.patchValue({
-                        emailAddress: this.myEmail.defaultFromAddress,
-                        name: this.myEmail.defaultFromDisplayName,
-                        smtpHost: this.myEmail.smtpHost,
-                        smtpPort: this.myEmail.smtpPort,
-                        username: this.myEmail.smtpUserName,
-                        password: this.myEmail.smtpPassword,
-                        domainName: this.myEmail.smtpDomain,
-                        useSsl: this.myEmail.smtpEnableSsl,
-                        useDefaultCredentials: this.myEmail.smtpUseDefaultCredentials
-                    });
-                } else {
-                    this.messageServ.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'Something went wrong!'
-                    });
-                }
-            },
-            (err) => {
-                this.messageServ.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Failed to load email settings!'
-                });
-                console.error('API error:', err);
-            }
-        );
-    }
-
-    onSubmit(): void {
-        if (this.emailSettingsForm.valid) {
-            const formValue = this.emailSettingsForm.value;
-
-            // Map formValue into backend payload shape
-            const payload: EmailSettingsResponse = {
-                email: {
-                    defaultFromAddress: formValue.emailAddress,
-                    defaultFromDisplayName: formValue.name,
-                    smtpHost: formValue.smtpHost,
-                    smtpPort: formValue.smtpPort,
-                    smtpUserName: formValue.username,
-                    smtpPassword: formValue.password,
-                    smtpEnableSsl: formValue.useSsl,
-                    smtpUseDefaultCredentials: formValue.useDefaultCredentials,
-                    smtpDomain: formValue.domainName
-                }
-            };
-
-            this.smtpService.updateAllSettings(payload).subscribe({
-                next: (res) => {
-                    if (res && res.success) {
-                        this.messageServ.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: 'Email settings updated successfully!'
-                        });
-                        this.getEmail(); // refresh latest settings
-                    }
-                },
-                error: (err) => {
-                    this.messageServ.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'Failed to update email settings!'
-                    });
-                }
-            });
-        } else {
-            this.markAllFieldsAsTouched();
-        }
     }
 }

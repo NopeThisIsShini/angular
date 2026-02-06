@@ -1,50 +1,47 @@
-import { CommonModule } from '@angular/common';
-import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
-import { PrimengImports } from '@/app/shared/primeng.import';
+import { CommonModule, NgTemplateOutlet } from '@angular/common';
+import { Component, ContentChild, TemplateRef, input, model, output, computed } from '@angular/core';
+import { ButtonModule } from 'primeng/button';
+import { Dialog } from 'primeng/dialog';
 
 @Component({
   selector: 'NG-Dialog',
   standalone: true,
-  imports: [CommonModule, ...PrimengImports],
+  imports: [CommonModule, ButtonModule, Dialog, NgTemplateOutlet],
   templateUrl: './dialog.component.html',
   styleUrl: './dialog.component.scss',
 })
 export class DialogComponent {
-  @Input() visible: boolean = false;
-  @Input() header: string = '';
-  @Input() modal: boolean = true;
-  @Input() width: string = '25rem';
-  @Input() style: any = {};
-  @Input() position: 'left' | 'right' | 'top' | 'bottom' | 'center' | 'topleft' | 'topright' | 'bottomleft' | 'bottomright' = 'center';
-  @Input() breakpoints: { [key: string]: string } = { '1199px': '75vw', '575px': '90vw' };
-  @Input() styleClass: string = '';
-  @Input() closable: boolean = true;
-  @Input() draggable: boolean = false;
-  @Input() resizable: boolean = false;
-  @Input() dismissableMask: boolean = true;
+  visible = model<boolean>(false);
+  header = input<string>('');
+  modal = input<boolean>(true);
+  width = input<string>('25rem');
+  style = input<any>({});
+  position = input<'left' | 'right' | 'top' | 'bottom' | 'center' | 'topleft' | 'topright' | 'bottomleft' | 'bottomright'>('center');
+  breakpoints = input<{ [key: string]: string }>({ '1199px': '75vw', '575px': '90vw' });
+  styleClass = input<string>('');
+  closable = input<boolean>(true);
+  draggable = input<boolean>(false);
+  resizable = input<boolean>(false);
+  dismissableMask = input<boolean>(true);
   
-  @Input() showFooter: boolean = true;
-  @Input() footerConfirmLabel: string = 'Save';
-  @Input() footerCancelLabel: string = 'Cancel';
-  @Input() loading: boolean = false;
-  @Input() confirmDisabled: boolean = false;
-  @Input() severity: 'success' | 'info' | 'warn' | 'danger' | 'help' | 'primary' | 'secondary' | 'contrast' | null = 'secondary';
+  showFooter = input<boolean>(true);
+  footerConfirmLabel = input<string>('Save');
+  footerCancelLabel = input<string>('Cancel');
+  loading = input<boolean>(false);
+  confirmDisabled = input<boolean>(false);
+  severity = input<'success' | 'info' | 'warn' | 'danger' | 'help' | 'primary' | 'secondary' | 'contrast' | null>('secondary');
 
-  @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() onConfirm = new EventEmitter<void>();
-  @Output() onCancel = new EventEmitter<void>();
-  @Output() onHide = new EventEmitter<void>();
+  onConfirm = output<void>();
+  onCancel = output<void>();
+  onHide = output<void>();
 
   @ContentChild('headerTemplate') headerTemplate?: TemplateRef<any>;
   @ContentChild('footerTemplate') footerTemplate?: TemplateRef<any>;
 
-  get dialogStyle() {
-    return { ...this.style, width: this.width };
-  }
+  dialogStyle = computed(() => ({ ...this.style(), width: this.width() }));
 
   handleHide() {
-    this.visible = false;
-    this.visibleChange.emit(this.visible);
+    this.visible.set(false);
     this.onHide.emit();
   }
 
@@ -53,8 +50,7 @@ export class DialogComponent {
   }
 
   handleCancel() {
-    this.visible = false;
-    this.visibleChange.emit(this.visible);
+    this.visible.set(false);
     this.onCancel.emit();
   }
 }

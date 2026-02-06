@@ -1,85 +1,80 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject, viewChild, Signal, computed, signal, effect, untracked } from '@angular/core';
 import { roleResponse, RolesModel } from '../../../models';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
-import { RoleService } from '../../../services/api/role.service';
-import { Table, TableLazyLoadEvent } from 'primeng/table';
+import { TableLazyLoadEvent } from 'primeng/table';
 import { PermissionComponent } from '../../../../shared/components';
 import { ColumnDef, FormField, TableAction } from '../../../../shared/models';
 import { validationConstants } from '../../../../utils/constant';
 import { SharedModule } from '@/app/shared/shared.imports';
+import { RoleStore } from '@/app/store';
+import { PermissionService } from '@/app/shared/services';
 
 interface menuItem {
     route: string;
     label: string;
     icon: string;
 }
+
 @Component({
     selector: 'app-role',
     imports: [SharedModule, PermissionComponent],
     templateUrl: './role.component.html',
     styleUrl: './role.component.scss'
 })
-export class RoleComponent implements OnInit {
-    @ViewChild('dt') dt!: Table;
-    tabs!: menuItem[];
-    activeTab: string = 'role';
-    totalCount: number = 0;
-    editMode: boolean = false;
-    Rolesdata: any[] = [];
-    items!: MenuItem[];
-    loading: boolean = true;
-    showCreateEditRole: boolean = false;
-    isSaving: boolean = false;
-    form!: FormGroup;
-    selectedRoleData: RolesModel | null = null;
-    @ViewChild('permissionComponent') permissionComponent!: PermissionComponent;
+export class RoleComponent {
+    private store = inject(RoleStore);
+    private messageService = inject(MessageService);
+    private authConfirmationService = inject(ConfirmationService);
+    private fb = inject(FormBuilder);
+    private permissionService = inject(PermissionService);
+
+    permissionComponent = viewChild(PermissionComponent);
+
+    // State from store
+    roles = this.store.roles;
+    totalCount = this.store.totalCount;
+    loading = this.store.isLoading;
+    operationStatus = this.store.operationStatus;
+    isSaving = computed(() => this.operationStatus().status === 'executing');
+
+    tabs: menuItem[] = [
+        { route: 'role', label: 'Role Details', icon: 'pi pi-info-circle' },
+        { route: 'permission', label: 'Permissions', icon: 'pi pi-sitemap' }
+    ];
+    
+    activeTab = signal<string>('role');
+    editMode = signal<boolean>(false);
+    showCreateEditRole = signal<boolean>(false);
+
+    rolePermissions = signal<string[]>([]);
+
+    form = this.fb.group({
+        id: [0],
+        name: ['', [Validators.required, Validators.pattern(validationConstants.NAME_PATTERN)]],
+        slug: ['', [Validators.required, Validators.pattern(validationConstants.NAME_PATTERN)]],
+        description: [''],
+        grantedPermissions: [[] as string[]]
+    });
 
     formFields: FormField[] = [
-        {
-            key: 'name',
-            label: 'Name',
-            type: 'text',
-            mark: true,
-            validators: [Validators.required, Validators.pattern(validationConstants.NAME_PATTERN)],
-            errorMessages: {
-                required: 'Name is required.',
-                pattern: 'Only alphabet values are allowed.'
-            }
-        },
-        {
-            key: 'slug',
-            label: 'Slug',
-            type: 'text',
-            mark: true,
-            validators: [Validators.required, Validators.pattern(validationConstants.NAME_PATTERN)],
-            errorMessages: {
-                required: 'Slug is required.',
-                pattern: 'Only alphabet values are allowed.'
-            }
-        },
-        {
-            key: 'description',
-            label: 'Description',
-            type: 'text',
-            validators: [],
-            errorMessages: {}
-        }
+        { key: 'name', label: 'Name', type: 'text', validators: [], errorMessages: { required: 'Name is required.', pattern: 'Only letters and spaces allowed.' }, mark: true },
+        { key: 'slug', label: 'Slug', type: 'text', validators: [], errorMessages: { required: 'Slug is required.', pattern: 'Only letters and spaces allowed.' }, mark: true },
+        { key: 'description', label: 'Description', type: 'text', validators: [], errorMessages: {} }
     ];
+
     columns: ColumnDef[] = [
         { field: 'name', header: 'Name' },
         { field: 'slug', header: 'Slug' },
-        // { field: 'normalizedName', header: 'Normalized Name' },
         { field: 'description', header: 'Description' }
     ];
+
     actions: TableAction[] = [
         {
             label: 'Edit',
             icon: 'pi pi-pencil',
             permission: 'Administration.Roles.Edit',
-            command: (data: RolesModel) => {
-                this.openUpdateUi(data);
-            }
+            command: (data: RolesModel) => this.openUpdateUi(data)
         },
         {
             label: 'Delete',
@@ -87,40 +82,110 @@ export class RoleComponent implements OnInit {
             outlined: true,
             severity: 'danger',
             permission: 'Administration.Roles.Delete',
-            command: (data: RolesModel) => {
-                this.deleteRoles(data);
-                // this.deleteRole(data);
-            }
+            command: (data: RolesModel) => this.deleteRoles(data)
         }
     ];
-    constructor(
-        private messageService: MessageService,
-        private confirmationService: ConfirmationService,
-        private roleService: RoleService,
-        private fb: FormBuilder
-    ) { }
 
-    ngOnInit() {
-        this.initializeForm();
-        this.loadTabs();
-    }
+    constructor() {
+        effect(() => {
+            const op = this.operationStatus();
+            if (op.status === 'success') {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: op.message
+                });
 
-    private initializeForm(): void {
-        const formControls: any = {};
+                if (op.action === 'create' || op.action === 'edit') {
+                    this.hideDialog();
+                }
 
-        this.formFields.forEach((field) => {
-            formControls[field.key] = ['', field.validators || []];
+                untracked(() => this.store.resetOperationStatus());
+            } else if (op.status === 'error') {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: op.message
+                });
+                untracked(() => this.store.resetOperationStatus());
+            }
         });
-        // formControls['normalizedName'] = ['', [Validators.required]];
-        formControls['grantedPermissions'] = ['', [Validators.required]];
-        formControls['id'] = [0, [Validators.required]];
-        this.form = this.fb.group(formControls);
-
-        // this.form.get('name')?.valueChanges.subscribe((nameValue: string) => {
-        //     const normalized = nameValue ? nameValue.toUpperCase() : '';
-        //     this.form.get('normalizedName')?.setValue(normalized, { emitEvent: false });
-        // });
     }
+
+    getallRoles(event: TableLazyLoadEvent) {
+        this.store.loadRoles({
+            keyword: typeof event.globalFilter === 'string' ? event.globalFilter : undefined,
+            skipCount: event.first ?? 0,
+            maxResultCount: event.rows ?? 10
+        });
+    }
+
+    createNewRole() {
+        this.editMode.set(false);
+        this.activeTab.set('role');
+        this.permissionService.clearRolePermissions();
+        this.rolePermissions.set([]);
+        this.form.reset({ id: 0, grantedPermissions: [] });
+        this.showCreateEditRole.set(true);
+    }
+
+    onTabChange(tab: any) {
+        this.activeTab.set(tab);
+        if (tab === 'permission') {
+            // Logic handled by input binding in template
+        }
+    }
+
+    deleteRoles(role: RolesModel): void {
+        this.authConfirmationService.confirm({
+            message: `Are you sure you want to delete role "${role.name}"?`,
+            header: 'Delete Confirmation',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => {
+                this.store.deleteRole(role.id, role.name);
+            }
+        });
+    }
+
+    openUpdateUi(role: RolesModel) {
+        this.editMode.set(true);
+        this.showCreateEditRole.set(true);
+        this.permissionService.loadRolePermissions(role.grantedPermissions);
+        this.rolePermissions.set(role.grantedPermissions || []);
+        this.form.patchValue({
+            id: role.id,
+            name: role.name,
+            slug: role.slug,
+            description: role.description,
+            grantedPermissions: role.grantedPermissions
+        });
+    }
+
+    hideDialog() {
+        this.showCreateEditRole.set(false);
+        this.form.reset();
+        this.activeTab.set('role');
+        this.rolePermissions.set([]);
+        this.permissionService.clearRolePermissions();
+    }
+
+    onPermissionsChanged(event: { data: string[] }) {
+        this.rolePermissions.set(event.data);
+        this.form.patchValue({ grantedPermissions: event.data });
+    }
+
+    saveRole() {
+        this.form.markAllAsTouched();
+        if (this.form.invalid) return;
+        
+        const { id, ...data } = this.form.getRawValue();
+        const payload = {
+            ...data,
+            ...(this.editMode() && { id })
+        };
+        this.store.saveRole(payload as RolesModel, this.editMode());
+    }
+
     isFieldInvalid(fieldKey: string): boolean {
         const field = this.form.get(fieldKey);
         return !!(field?.invalid && (field?.dirty || field?.touched));
@@ -129,163 +194,19 @@ export class RoleComponent implements OnInit {
     getFieldErrors(fieldKey: string): string[] {
         const field = this.form.get(fieldKey);
         const errors: string[] = [];
-
         if (field?.errors && this.isFieldInvalid(fieldKey)) {
-            // Check in formFields first
             const fieldConfig = this.formFields.find((f) => f.key === fieldKey);
-            if (fieldConfig) {
-                Object.keys(field.errors).forEach((errorKey) => {
-                    if (fieldConfig.errorMessages[errorKey]) {
-                        errors.push(fieldConfig.errorMessages[errorKey]);
-                    }
-                });
-            }
-        }
-
-        return errors;
-    }
-    getallRoles(event: TableLazyLoadEvent) {
-        this.roleService
-            .getallRoles({
-                keyword: typeof event.globalFilter === 'string' ? event.globalFilter : undefined,
-                skipCount: event.first ?? 0,
-                maxResultCount: event.rows ?? undefined
-            })
-            .subscribe({
-                next: (res) => {
-                    this.Rolesdata = res.result.items;
-                    this.totalCount = res.result.totalCount;
-                    this.loading = false;
-                },
-                error: (err) => {
-                    this.loading = false;
+            Object.keys(field.errors).forEach((errorKey) => {
+                let msg = fieldConfig?.errorMessages[errorKey];
+                if (!msg) {
+                    // Fallback messages
+                    if (errorKey === 'required') msg = 'This field is required.';
+                    if (errorKey === 'email') msg = 'Invalid email address.';
+                    if (errorKey === 'pattern') msg = 'Invalid format.';
                 }
+                if (msg) errors.push(msg);
             });
-    }
-    loadTabs() {
-        this.tabs = [
-            { route: 'role', label: 'role', icon: 'pi pi-link' },
-            {
-                route: 'permission',
-                label: 'permission',
-                icon: 'pi pi-sitemap'
-            }
-        ];
-    }
-    createNewRole() {
-        this.editMode = false;
-        this.selectedRoleData = null;
-        this.activeTab = 'role';
-        this.form.reset({ id: 0, grantedPermissions: [] });
-        if (this.permissionComponent) {
-            this.permissionComponent.loadPermissionsFromApiResponse([]);
         }
-        this.showCreateEditRole = true;
-    }
-    onTabChange(tab: any) {
-        this.activeTab = tab;
-        if (tab === 'permission') {
-            setTimeout(() => {
-                const currentPermissions = this.form.get('grantedPermissions')?.value || [];
-                if (this.permissionComponent) {
-                    this.permissionComponent.loadPermissionsFromApiResponse(currentPermissions);
-                }
-            }, 0);
-        }
-    }
-
-    deleteRoles(role: RolesModel): void {
-        this.confirmationService.confirm({
-            message: `Are you sure you want to delete "${role.name}"?`,
-            header: 'Confirm',
-            icon: 'pi pi-exclamation-triangle',
-            rejectButtonProps: {
-                label: 'No',
-                severity: 'secondary',
-                variant: 'text'
-            },
-            acceptButtonProps: {
-                severity: 'danger',
-                label: 'Yes'
-            },
-            accept: () => {
-                this.deleteRoleById(role.id);
-            }
-        });
-    }
-    deleteRoleById(id: number) {
-        this.roleService.deleteRoleByid(id).subscribe({
-            next: (res) => { },
-            error: (err) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Role not deleted'
-                });
-            },
-            complete: () => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Success',
-                    detail: 'Role deleted successfully'
-                });
-                this.getallRoles({ first: 0, rows: 5, globalFilter: '' });
-            }
-        });
-    }
-
-    openUpdateUi(RoleData: RolesModel) {
-        this.editMode = true;
-        if (this.editMode) {
-            this.showCreateEditRole = true;
-        }
-        setTimeout(() => {
-            this.selectedRoleData = RoleData;
-            this.getRoleDetails(this.selectedRoleData as RolesModel);
-        }, 0);
-    }
-
-    getRoleDetails(details: RolesModel) {
-        console.log(details);
-
-        this.form.patchValue({
-            id: details.id,
-            name: details.name,
-            slug: details.slug,
-            description: details.description,
-            // normalizedName: details.normalizedName,
-            grantedPermissions: details.grantedPermissions
-        });
-        if (this.permissionComponent) {
-            this.permissionComponent.loadPermissionsFromApiResponse(details.grantedPermissions);
-        }
-    }
-
-    hideDialog() {
-        this.editMode = false;
-        this.selectedRoleData = null;
-        this.showCreateEditRole = false;
-        this.activeTab = 'role';
-        this.form.reset({ id: 0, grantedPermissions: [] });
-        if (this.permissionComponent) {
-            this.permissionComponent.loadPermissionsFromApiResponse([]);
-        }
-    }
-    getPermissions(event: { data: string[] }) {
-        this.form.patchValue({ grantedPermissions: event.data });
-    }
-    saveRole() {
-        this.isSaving = true;
-        this.roleService.saveRole(this.form.value, this.editMode).subscribe({
-            next: (res: roleResponse) => { },
-            error: (err) => {
-                this.isSaving = false;
-            },
-            complete: () => {
-                this.getallRoles({ first: 0, rows: 10 });
-                this.hideDialog();
-                this.isSaving = false;
-            }
-        });
+        return errors;
     }
 }

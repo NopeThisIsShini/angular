@@ -1,16 +1,12 @@
 import { CommonModel, inputParamModel } from '@/app/shared/models';
 
 export interface UsersModel {
-    // userName: string;
     firstName: string;
     lastName: string;
-    // fullName: string;
     email: string;
     status: boolean;
     roleIds: number[];
-    // lastLoginTime?: string;
-    // password: string;
-    id: number;
+    id?: number;
     phone: string;
 }
 

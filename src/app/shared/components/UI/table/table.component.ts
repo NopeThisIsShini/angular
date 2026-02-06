@@ -1,8 +1,7 @@
-import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, input, viewChild, inject, computed, OnChanges, SimpleChanges } from '@angular/core';
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TableSkeletonComponent } from '@/app/shared/skeleton';
 import { ColumnDef, TableAction } from '@/app/shared/models';
 import { PrimengImports } from '@/app/shared/primeng.import';
 import { HasPermissionDirective } from '@/app/shared/directives';
@@ -11,55 +10,63 @@ import { PermissionService } from '@/app/shared/services';
 @Component({
     selector: 'NG-Table',
     standalone: true,
-    imports: [TableModule, ...PrimengImports, CommonModule, FormsModule, TableSkeletonComponent, HasPermissionDirective],
+    imports: [TableModule, ...PrimengImports, CommonModule, FormsModule, HasPermissionDirective],
     templateUrl: './table.component.html',
     styleUrl: './table.component.scss'
 })
-export class TableComponent implements OnChanges {
+export class TableComponent {
     private permissionService = inject(PermissionService);
-    @ViewChild('dt') table!: Table;
-    @ViewChild('filter') filter!: ElementRef;
-    @Input() value: any[] = [];
-    @Input() totalCount: number = 0;
-    @Input() lazy: boolean = true;
-    @Input() loading: boolean = false;
-    @Input() columns: ColumnDef[] = [];
-    @Input() actions: TableAction[] = [];
-    @Input() rows: number = 10;
-    @Input() showGlobalSearch: boolean = true;
-    @Input() globalSearchFields: string[] = [];
+    
+    table = viewChild<Table>('dt');
+    filter = viewChild<ElementRef>('filter');
 
-    @Input() lazyLoadFn!: (event: TableLazyLoadEvent) => void;
+    value = input<any[]>([]);
+    totalCount = input<number>(0);
+    lazy = input<boolean>(true);
+    loading = input<boolean>(false);
+    columns = input<ColumnDef[]>([]);
+    actions = input<TableAction[]>([]);
+    rows = input<number>(10);
+    showGlobalSearch = input<boolean>(true);
+    globalSearchFields = input<string[]>([]);
+    lazyLoadFn = input<(event: TableLazyLoadEvent) => void>();
 
-    get canShowActions(): boolean {
-        if (!this.actions || this.actions.length === 0) return false;
-        return this.actions.some((action) => {
+    displayValue = computed(() => {
+        if (this.loading()) {
+            return new Array(4).fill({ isSkeleton: true });
+        }
+        return this.value();
+    });
+
+    canShowActions = computed(() => {
+        const actions = this.actions();
+        if (!actions || actions.length === 0) return false;
+        
+        const currentPermissions = this.permissionService.userPermissions();
+        const lowerPermissions = currentPermissions.map(p => p.toLowerCase());
+
+        return actions.some((action) => {
             if (action.permission) {
-                return this.permissionService.hasPermission(action.permission);
+                return lowerPermissions.includes(action.permission.toLowerCase());
             }
             return true;
         });
-    }
+    });
 
     onLazyLoad(event: TableLazyLoadEvent) {
-        this.lazyLoadFn?.(event);
+        this.lazyLoadFn()?.(event);
     }
-    ngOnChanges(changes: SimpleChanges): void { }
 
     getFieldValue(row: any, field?: string): any {
         if (row == null || !field) {
             return row;
         }
 
-        // support dot-paths and array indexes: "a.b.0.c"
         const parts = field.split('.');
         let value: any = row;
 
         for (const part of parts) {
-            if (value == null) {
-                return null;
-            }
-            // if part is numeric, treat as index
+            if (value == null) return null;
             const idx = Number(part);
             value = Number.isNaN(idx) ? value[part] : value[idx];
         }
@@ -70,6 +77,7 @@ export class TableComponent implements OnChanges {
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
+
     clear(table: Table) {
         table.clear();
     }

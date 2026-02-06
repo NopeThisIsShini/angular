@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="mt-6">
-                            <p-button type="submit" [disabled]="!Signupform.valid" label="Create Account" styleClass="w-full" [style]="{ height: '2.75rem' }" (onClick)="onSignup()"> </p-button>
+                            <p-button type="submit" [loading]="isLoading()" [disabled]="!Signupform.valid" label="Create Account" styleClass="w-full" [style]="{ height: '2.75rem' }" (onClick)="onSignup()"> </p-button>
                         </div>
                     </form>
 

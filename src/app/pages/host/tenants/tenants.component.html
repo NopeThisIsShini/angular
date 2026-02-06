@@ -9,7 +9,7 @@
         </ng-template>
     </p-toolbar>
 
-    <NG-Table [value]="tenantsData" [columns]="columns" [actions]="actions" [totalCount]="totalCount" [loading]="loading" [rows]="10" [globalSearchFields]="['slug', 'name']" [lazyLoadFn]="getAllTenants.bind(this)">
+    <NG-Table [value]="tenants()" [columns]="columns" [actions]="actions" [totalCount]="totalCount()" [loading]="loading()" [rows]="10" [globalSearchFields]="['slug', 'name']" [lazyLoadFn]="getAllTenants.bind(this)">
         <!-- Custom Template for Status Column -->
         <ng-template let-row pTemplate="status">
             <p-tag [severity]="row.status === 'active' ? 'success' : 'danger'" [value]="row.status | uppercase"></p-tag>
@@ -23,11 +23,11 @@
 
     <NG-Dialog 
         [(visible)]="showCreateEditDialog" 
-        [header]="editMode ? 'Update Tenant' : 'Create Tenant'"
+        [header]="editMode() ? 'Update Tenant' : 'Create Tenant'"
         width="50vw"
         [breakpoints]="{ '1199px': '75vw', '575px': '95vw' }"
-        [loading]="isSaving"
-        [footerConfirmLabel]="editMode ? 'Update' : 'Create'"
+        [loading]="isSaving()"
+        [footerConfirmLabel]="editMode() ? 'Update' : 'Create'"
         [confirmDisabled]="!form.valid"
         severity="primary"
         (onConfirm)="saveTenant()"
@@ -84,7 +84,7 @@
                     </div>
                 </div>
 
-                @if (!editMode) {
+                @if (!editMode()) {
                     <!-- Password (only for creation) -->
                     <div class="w-full">
                         <NG-Input [label]="'Password'" [type]="'password'" [formControlName]="'password'" [id]="'password'" [mark]="true" class="w-full"></NG-Input>

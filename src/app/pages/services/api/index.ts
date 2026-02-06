@@ -4,5 +4,4 @@ export * from './role.service';
 export * from './setting.service';
 export * from './smtp.service';
 export * from './users.service';
-export * from './edition.service';
 export * from './tenant.service';

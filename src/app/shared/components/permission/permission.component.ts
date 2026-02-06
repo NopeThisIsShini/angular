@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, computed, signal, inject, input, effect, output, untracked } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -18,81 +18,98 @@ import { PermissionService } from '../../services/permission.service';
     templateUrl: './permission.component.html',
     styleUrl: './permission.component.scss'
 })
-export class PermissionComponent implements OnInit {
-    @ViewChild('permissionTree') permissionTree!: TreeComponent;
-    permissionTreeData: TreeNode[] = [];
-    selectedNodes: TreeNode[] = [];
-    loading: boolean = false;
-    message: string = '';
-    messageType: 'success' | 'info' | 'warn' | 'error' = 'info';
+export class PermissionComponent {
+    private permissionService = inject(PermissionService);
+    
+    // Inputs (Signals)
+    initialPermissions = input<string[]>([]);
+    isRoleEditing = input<boolean>(false);
+    
+    // Outputs (Signals)
+    onSave = output<{ data: string[] }>();
+    
+    // Internal State
+    permissionTreeData = this.permissionService.permissionTree;
+    selectedNodes = signal<TreeNode[]>([]);
+    loading = signal<boolean>(false);
+    message = signal<string>('');
+    messageType = signal<'success' | 'info' | 'warn' | 'error'>('info');
 
     // Statistics
-    selectedPermissionCount = 0;
-    totalPermissionCount = 0;
-    activeModulesCount = 0;
-    @Input() isRoleEditing: boolean = false;
-    @Output() onSave = new EventEmitter<{ data: string[] }>();
-    constructor(private permissionService: PermissionService) {}
+    totalPermissionCount = computed(() => this.permissionService.getAllAvailablePermissions().length);
+    selectedPermissionCount = computed(() => this.selectedNodes().length);
 
-    ngOnInit() {
-        this.initializePermissions();
-    }
+    constructor() {
+        // Automatically load permissions when input changes or component is initialized
+        effect(() => {
+            const perms = this.initialPermissions();
+            const tree = this.permissionTreeData();
+            
+            // Only proceed if we have a tree to map permissions to
+            if (tree.length > 0) {
+                untracked(() => {
+                    // Check if the new initial permissions are actually different from current selection
+                    const currentPerms = this.permissionService.getPermissionsFromNodes(this.selectedNodes());
+                    const currentKeys = Object.keys(currentPerms).sort();
+                    const newKeys = [...perms].sort();
 
-    private initializePermissions() {
-        this.permissionTreeData = this.permissionService.getPermissionTree();
-        this.totalPermissionCount = this.permissionService.getAllAvailablePermissions().length;
-    }
-
-    loadPermissionsFromApiResponse(apiResponse: grantedPermissions) {
-        this.loading = true;
-        try {
-            if (this.isRoleEditing) {
-                this.permissionService.loadRolePermissions(apiResponse);
+                    if (JSON.stringify(currentKeys) !== JSON.stringify(newKeys)) {
+                        this.loadPermissions(perms);
+                    }
+                });
             }
-            // Refresh the tree data
-            this.permissionTreeData = this.permissionService.getPermissionTree();
-            this.totalPermissionCount = this.permissionService.getAllAvailablePermissions().length;
+        });
+    }
 
-            // Update selected nodes based on context
-            if (this.isRoleEditing) {
-                this.selectedNodes = this.permissionService.getSelectedRolePermissionNodes(this.permissionTreeData);
+    private loadPermissions(apiResponse: grantedPermissions) {
+        this.loading.set(true);
+        try {
+            if (this.isRoleEditing()) {
+                // Update the service state
+                this.permissionService.loadRolePermissions(apiResponse);
+                
+                // Map the data to tree nodes for UI
+                const tree = this.permissionTreeData();
+                const nodes = this.permissionService.getSelectedRolePermissionNodes(tree);
+                this.selectedNodes.set(nodes);
             }
         } catch (error) {
-            console.error('Error loading permissions from API:', error);
+            console.error('Error loading permissions:', error);
         } finally {
-            this.loading = false;
+            this.loading.set(false);
         }
+    }
+
+    // Public method for legacy support if needed
+    loadPermissionsFromApiResponse(apiResponse: grantedPermissions) {
+        this.loadPermissions(apiResponse);
     }
 
     savePermissions() {
         try {
-            const permissions = this.permissionService.getPermissionsFromNodes(this.selectedNodes);
-            if (this.isRoleEditing) {
+            const permissions = this.permissionService.getPermissionsFromNodes(this.selectedNodes());
+            if (this.isRoleEditing()) {
                 this.permissionService.saveRolePermissions(permissions);
                 const permissionKeys: string[] = Object.keys(permissions);
                 this.onSave.emit({ data: permissionKeys });
             }
         } catch (error) {
             console.error('Error saving permissions:', error);
-        } finally {
         }
     }
 
     onSelectionChange(selectedNodes: TreeNode[]) {
-        this.selectedNodes = selectedNodes;
+        this.selectedNodes.set(selectedNodes);
         this.savePermissions();
     }
 
-    onNodeSelectionChange(event: TreeSelectionEvent) {
-        // Handle individual node selection if needed
-        // console.log('Node selection changed:', event);
-    }
+    onNodeSelectionChange(event: TreeSelectionEvent) {}
 
-    // Utility methods for template
     hasPermission(permission: string): boolean {
         const rolePermissions = this.permissionService.getRolePermissions();
         return !!rolePermissions[permission];
     }
+
     getCurrentPermissions(): PermissionData {
         return this.permissionService.getRolePermissions();
     }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, forwardRef, inject, input, output, computed } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
@@ -19,33 +19,32 @@ import { SelectModule } from 'primeng/select';
     ]
 })
 export class SelectComponent implements ControlValueAccessor {
-    @Input() id: string = '';
-    @Input() placeholder: string = '';
-    @Input() label: string = '';
-    @Input() containerClass: string = '';
-    @Input() selectClass: string = '';
-    @Input() disabled: boolean = false;
-    @Input() mark: boolean = false;
-    @Input() options: any[] = [];
-    @Input() optionLabel: string = 'label';
-    @Input() optionValue: string = 'value';
-    @Output() userSelectionChanged = new EventEmitter<any>();
+    private cdr = inject(ChangeDetectorRef);
 
-    get isRequired(): boolean {
-        return this.mark;
-    }
+    id = input<string>('');
+    placeholder = input<string>('');
+    label = input<string>('');
+    containerClass = input<string>('');
+    selectClass = input<string>('');
+    disabledInput = input<boolean>(false, { alias: 'disabled' });
+    mark = input<boolean>(false);
+    options = input<any[]>([]);
+    optionLabel = input<string>('label');
+    optionValue = input<string>('value');
+    
+    userSelectionChanged = output<any>();
+
+    isRequired = computed(() => this.mark());
 
     value: any = null;
+    isDisabled = false;
     private onChange: (_: any) => void = () => {};
     private onTouched: () => void = () => {};
 
-    constructor(private cdr: ChangeDetectorRef) {}
-
-    // Called when the select value changes
     onSelectionChange(event: any): void {
         this.value = event.value;
         this.onChange(event.value);
-        this.onTouched(); // Add this to mark as touched
+        this.onTouched();
         this.userSelectionChanged.emit(event.value);
     }
 
@@ -53,10 +52,8 @@ export class SelectComponent implements ControlValueAccessor {
         this.onTouched();
     }
 
-    // Required methods for ControlValueAccessor
     writeValue(value: any): void {
         this.value = value;
-        // Trigger change detection to update the view
         this.cdr.detectChanges();
     }
 
@@ -69,7 +66,7 @@ export class SelectComponent implements ControlValueAccessor {
     }
 
     setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
+        this.isDisabled = isDisabled;
         this.cdr.detectChanges();
     }
 }

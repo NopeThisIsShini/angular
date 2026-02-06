@@ -1,14 +1,14 @@
 {
     "layoutConfig": {
         "preset": "Aura",
-        "primary": "emerald",
+        "primary": "blue",
         "surface": null,
         "darkTheme": false,
-        "menuMode": "static"
+        "menuMode": "horizontal"
     },
     "features": {
-        "showConfigOptions": true,
-        "allowMenuModeChange": true,
+        "showConfigOptions": false,
+        "allowMenuModeChange": false,
         "allowThemeChange": true
     }
 }

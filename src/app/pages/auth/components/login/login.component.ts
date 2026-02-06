@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { SharedModule } from '@/app/shared/shared.imports';
-import { LocalStorageService } from '@/app/shared/services';
 import { AuthService } from '@/app/pages/services';
 
 @Component({
@@ -13,46 +12,45 @@ import { AuthService } from '@/app/pages/services';
     styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-    loginForm!: FormGroup;
-    isLoading: boolean = false;
+    private router = inject(Router);
+    private fb = inject(FormBuilder);
+    private authServ = inject(AuthService);
+    private messageServ = inject(MessageService);
 
-    constructor(
-        private router: Router,
-        private fb: FormBuilder,
-        private authServ: AuthService,
-        private messageServ: MessageService,
-        private localStorage: LocalStorageService
-    ) {
-        this.loginForm = this.fb.group({
-            email: ['', [Validators.required]],
-            password: ['', [Validators.required]],
-            rememberMe: [false]
-        });
-    }
+    loginForm = this.fb.group({
+        email: ['', [Validators.required]],
+        password: ['', [Validators.required]],
+        rememberMe: [false]
+    });
+
+    isLoading = signal<boolean>(false);
 
     onSignIn(): void {
-        if (this.loginForm.valid) {
-            const payload = {
-                email: this.loginForm.controls['email'].value,
-                password: this.loginForm.controls['password'].value
-                // rememberClient: this.loginForm.controls['rememberMe'].value
-            };
-
-            this.isLoading = true;
-
-            this.authServ.login(payload).subscribe({
-                next: () => {
-                    this.messageServ.add({ severity: 'success', summary: 'Success', detail: 'Logged in successfully' });
-                    this.router.navigate(['/']);
-                },
-                error: (err) => {
-                    this.isLoading = false;
-                    this.messageServ.add({ severity: 'error', summary: 'Error', detail: err.message || 'Login failed' });
-                },
-                complete: () => {
-                    this.isLoading = false;
-                }
-            });
+        if (this.loginForm.invalid) {
+            this.loginForm.markAllAsTouched();
+            return;
         }
+
+        const val = this.loginForm.getRawValue();
+        const payload = {
+            email: val.email!,
+            password: val.password!
+        };
+
+        this.isLoading.set(true);
+
+        this.authServ.login(payload).subscribe({
+            next: () => {
+                this.messageServ.add({ severity: 'success', summary: 'Success', detail: 'Logged in successfully' });
+                this.router.navigate(['/']);
+            },
+            error: (err) => {
+                this.isLoading.set(false);
+                this.messageServ.add({ severity: 'error', summary: 'Error', detail: err.message || 'Login failed' });
+            },
+            complete: () => {
+                this.isLoading.set(false);
+            }
+        });
     }
 }

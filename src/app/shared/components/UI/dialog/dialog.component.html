@@ -1,15 +1,15 @@
 <p-dialog 
     [(visible)]="visible" 
-    [modal]="modal" 
-    [header]="header"
-    [style]="dialogStyle" 
-    [breakpoints]="breakpoints"
-    [position]="position"
-    [styleClass]="'ng-dialog-wrapper ' + styleClass"
-    [closable]="closable"
-    [draggable]="draggable"
-    [resizable]="resizable"
-    [dismissableMask]="dismissableMask"
+    [modal]="modal()" 
+    [header]="header()"
+    [style]="dialogStyle()" 
+    [breakpoints]="breakpoints()"
+    [position]="position()"
+    [styleClass]="'ng-dialog-wrapper ' + styleClass()"
+    [closable]="closable()"
+    [draggable]="draggable()"
+    [resizable]="resizable()"
+    [dismissableMask]="dismissableMask()"
     (onHide)="handleHide()">
     
     <ng-template #header *ngIf="headerTemplate">
@@ -21,18 +21,18 @@
     </div>
 
     <ng-template #footer>
-        <div *ngIf="showFooter && !footerTemplate" class="flex justify-end gap-2">
+        <div *ngIf="showFooter() && !footerTemplate" class="flex justify-end gap-2">
             <p-button 
-                [label]="footerCancelLabel" 
+                [label]="footerCancelLabel()" 
                 [text]="true" 
                 severity="secondary" 
                 (click)="handleCancel()" />
             <p-button 
-                [label]="footerConfirmLabel" 
+                [label]="footerConfirmLabel()" 
                 [outlined]="true" 
-                [severity]="severity" 
-                [loading]="loading"
-                [disabled]="confirmDisabled"
+                [severity]="severity()" 
+                [loading]="loading()"
+                [disabled]="confirmDisabled()"
                 (click)="handleConfirm()" />
         </div>
         <ng-container *ngIf="footerTemplate">
